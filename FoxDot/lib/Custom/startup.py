@@ -6,19 +6,13 @@ import sys
 from random import randint
 
 ### SYNTHDEFS #####
-try:
-    from .Crashserver.crashSynthDefs import * ### Crash Custom SynthDefs
-    from .Crashserver.crashFX import * ### Crash Custom Fx
-except:
-    print("Error in import SynthDef")
+from .Crashserver.crashSynthDefs import * ### Crash Custom SynthDefs
+from .Crashserver.crashFX import * ### Crash Custom Fx
 
 ### EXTENSIONS #######
-try:
-    from .Crashserver.speech.voice import *   ### Text2Speech
-    # from .Extensions.timer.hack import * ### Crash Server Timer
-    #from .Extensions.Video.video2 import *    ### Video player
-except:
-    print("Error in importing extensions")
+from .Crashserver.speech.voice import *   ### Text2Speech
+# from .Extensions.timer.hack import * ### Crash Server Timer
+#from .Extensions.Video.video2 import *    ### Video player
 
 ## Path Snd
 FOXDOT_SND   = os.path.realpath(FOXDOT_ROOT + "/lib/Crashserver/crash_snd/")
@@ -26,9 +20,9 @@ FOXDOT_LOOP  = os.path.realpath(FOXDOT_ROOT + "/lib/Crashserver/crash_snd/_loop_
 FoxDotCode.use_sample_directory(FOXDOT_SND)
 
 # OSC VIDEO FORWARD
-my_client = OSCClient()
-my_client.connect(("127.0.0.1", 12345)) # Video OSC Ip:port
-DefaultServer.forward = my_client
+# my_client = OSCClient()
+# my_client.connect(("127.0.0.1", 12345)) # Video OSC Ip:port
+# DefaultServer.forward = my_client
 
 
 #########################
