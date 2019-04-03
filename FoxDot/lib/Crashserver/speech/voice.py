@@ -26,7 +26,7 @@ class Voix(Thread):
 		Foxdot implantation
 		"""
 
-	def __init__(self, text="", rate=0.5, amp=1.0, voix=2, lang="eng"):
+	def __init__(self, text="", rate=0.5, amp=1.0, voix=0, lang=""):
 		Thread.__init__(self)
 		pythoncom.CoInitialize()
 		self.voice = comtypes.client.CreateObject('Sapi.SpVoice')
@@ -58,6 +58,7 @@ class Voix(Thread):
 
 	def select_lang(self, lang):
 		"""Select the .txt according to language selected"""
+		crash_text = ""
 		if lang == "fr":
 			crash_text = "crash_text_fr.txt"
 			self.text_init = "Serveur initialisé"
@@ -65,7 +66,7 @@ class Voix(Thread):
 		if lang == "eng":
 			crash_text = "crash_text_eng.txt"
 			self.text_init = "Initialized server"
-			self.voix = 2
+			self.voix = 2	
 		return os.path.join(os.getcwd(), "FoxDot", "lib", "Crashserver", "speech", crash_text)	
 		#return os.path.join(os.getcwd(), crash_text)
 
@@ -77,7 +78,6 @@ class Voix(Thread):
 			while line:
 				text_list.append(line.rstrip('\n'))
 				line = text.readline()
-			print(text_list)
 			return text_list
 
 	def get_text_length(self):
