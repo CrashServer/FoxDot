@@ -27,7 +27,11 @@ setup(name='FoxDot',
                 'FoxDot.lib.Patterns',
                 'FoxDot.lib.SCLang',
                 'FoxDot.lib.Settings',
-                'FoxDot.lib.Utils'],
+                'FoxDot.lib.Utils',
+                'FoxDot.lib.Crashserver',
+                'FoxDot.lib.Crashserver.speech',
+                'FoxDot.lib.Crashserver.crash_snd',
+                ],
       long_description=long_description,
       long_description_content_type="text/markdown",
       entry_points={'gui_scripts' : ['FoxDot = FoxDot.__init__:main']},
@@ -52,5 +56,3 @@ setup(name='FoxDot',
                                  ],
                       'FoxDot.lib.Workspace': ['img/*', 'tmp/*'],
                       'FoxDot.lib.Settings' : ['conf.txt']})
-
-
