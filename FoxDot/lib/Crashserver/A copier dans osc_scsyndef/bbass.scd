@@ -14,5 +14,5 @@ SynthDef(\bbass, { arg bus=0, freq = 440, amp = 0.5, gate = 1, pan=0, sus=1, blu
 	osc=output;
 	osc = Mix(osc) * 0.1; // correct amplitude
 	osc = Pan2.ar(osc * env , pan);
-	ReplaceOut.ar(bus, osc);
+	ReplaceOut.ar(bus, osc * amp);
 	}).add;
