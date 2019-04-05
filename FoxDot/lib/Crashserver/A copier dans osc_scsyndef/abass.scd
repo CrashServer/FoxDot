@@ -16,9 +16,10 @@ SynthDef(\abass, { arg bus=0, amp=1, gate=1, pan=0, spread=0.8, freq=440, sus=1,
 	sig = HPF.ar(sig, \hpf.kr(80));
 	sig = sig * EnvGen.ar(\iadsr.kr(Env.adsr(0.01,0.1,0.8,0.1)),\igate.kr(1),doneAction:0);
 	sig = sig * EnvGen.ar(\adsr.kr(Env.adsr(0.005,0.1,0.8,0.1)),gate,doneAction:0);
-	env=EnvGen.ar(Env.perc(level: amp,releaseTime: sus,attackTime: 0.02,curve: 'lin'), doneAction: 0);
+	// env=EnvGen.ar(Env.perc(level: amp,releaseTime: sus,attackTime: 0.1,curve: 'lin'), doneAction: 0);
+	env=EnvGen.ar(Env.adsr(releaseTime: sus,attackTime: 0.02,curve: 'lin'), doneAction: 0);
 
 	// sig = sig.tanh;
 	osc = Mix(sig) * 0.25;
-	osc = Pan2.ar(osc * env, pan);
+	osc = Pan2.ar(osc * env , pan);
 	ReplaceOut.ar(bus, osc)}).add;
