@@ -22,4 +22,4 @@ SynthDef(\abass, { arg bus=0, amp=1, gate=1, pan=0, spread=0.8, freq=440, sus=1,
 	// sig = sig.tanh;
 	osc = Mix(sig) * 0.25;
 	osc = Pan2.ar(osc * env , pan);
-	ReplaceOut.ar(bus, osc)}).add;
+	ReplaceOut.ar(bus, osc * amp)}).add;
