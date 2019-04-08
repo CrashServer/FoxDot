@@ -5,6 +5,7 @@ import os # Allows checking if using Windows
 from threading import Thread 
 import pythoncom
 import comtypes.client  # Importing comtypes.client will make the gen subpackage
+import time
 
 try:
     from comtypes.gen import SpeechLib  # comtypes
@@ -43,10 +44,10 @@ class Voix(Thread):
 	def main(self):
 		self.set_rate(self.rate)  # Speed of speech
 		self.set_amp(self.amp)    # Volume 
-		self.select_lang(self.lang)
 		self.set_voice(self.voix) # This is the VOICE 
 
-	def initi(self):
+	def initi(self, lieu=""):
+		self.lieu = lieu
 		self.crash_text_path = self.select_lang(self.lang) # return the .txt EN/FR/NL/... 
 		self.crash_text = self.text_as_list(self.crash_text_path) # return the text as a list	
 		self.set_voice(self.voix)
@@ -56,17 +57,18 @@ class Voix(Thread):
 	def intro(self):
 		self.say(self.crash_text)	
 
-	def select_lang(self, lang):
+	def select_lang(self, lang, lieu=""):
 		"""Select the .txt according to language selected"""
 		crash_text = ""
 		if lang == "fr":
 			crash_text = "crash_text_fr.txt"
-			self.text_init = "Serveur initialisé"
-			self.voix = 0
+			self.text_init = "Le Serveur {} est initialisé à {} heures, \
+				{} minutes, et {} secondes.".format(self.lieu, str(time.strftime("%H")), str(time.strftime("%M")), str(time.strftime("%S")))
 		if lang == "eng":
 			crash_text = "crash_text_eng.txt"
-			self.text_init = "Initialized server"
-			self.voix = 2	
+			self.text_init = "The Server {} is initialized at {} hours, \
+				{} minutes, and {} seconds".format(self.lieu, str(time.strftime("%H")), str(time.strftime("%M")), str(time.strftime("%S")))
+			
 		return os.path.join(os.getcwd(), "FoxDot", "lib", "Crashserver", "speech", crash_text)	
 		#return os.path.join(os.getcwd(), crash_text)
 
@@ -136,6 +138,10 @@ class Voix(Thread):
 
 	def set_voice(self, voix):
 		"""Set the voice to the given voice"""
+		if self.lang == "fr":
+			self.voix = 0
+		if self.lang == "eng":
+			self.voix = 1	
 		self.voice.Voice = self.get_voices(self.voice_win[self.voix])[0]
 		return
 
@@ -181,4 +187,5 @@ class Voix(Thread):
 
 
 if __name__ == '__main__':
-	v = Voix(lang="fr")
+	v = Voix(lang="eng")
+	v.initi("de la maison")
