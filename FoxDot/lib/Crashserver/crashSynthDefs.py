@@ -2,6 +2,18 @@
 
 from ..SCLang.SynthDef import SynthDef, SampleSynthDef, FileSynthDef
 
+abass = FileSynthDef("abass")
+abass.add()
+
+bbass = FileSynthDef("bbass")
+bbass.add()
+
+click = FileSynthDef("click")
+click.add()
+
+cluster = FileSynthDef("cluster")
+cluster.add()
+
 faim = FileSynthDef("faim")
 faim.add()
 
@@ -28,3 +40,4 @@ varicelle.add()
 
 video = FileSynthDef("video")
 video.add()
+
