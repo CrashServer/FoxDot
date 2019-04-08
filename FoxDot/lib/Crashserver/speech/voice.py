@@ -6,6 +6,8 @@ from threading import Thread
 import pythoncom
 import comtypes.client  # Importing comtypes.client will make the gen subpackage
 import time
+from ...Settings import FOXDOT_ROOT
+
 
 try:
     from comtypes.gen import SpeechLib  # comtypes
@@ -69,7 +71,7 @@ class Voix(Thread):
 			self.text_init = "The Server {} is initialized at {} hours, \
 				{} minutes, and {} seconds".format(self.lieu, str(time.strftime("%H")), str(time.strftime("%M")), str(time.strftime("%S")))
 			
-		return os.path.join(os.getcwd(), "FoxDot", "lib", "Crashserver", "speech", crash_text)	
+		return os.path.join(FOXDOT_ROOT, "lib", "Crashserver", "speech", crash_text)	
 		#return os.path.join(os.getcwd(), crash_text)
 
 	def text_as_list(self, text_path):
