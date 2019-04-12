@@ -90,7 +90,7 @@ class _StartupFile:
                 code = file.read()
                 file.close()
                 return code
-            except (IOError, OSError):
+            except FileNotFoundError:
                 WarningMsg("'{}' startup file not found.".format(self.path))
         return ""
 
