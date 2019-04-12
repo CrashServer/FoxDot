@@ -1,0 +1,8 @@
+TODO For a good Crash Server Edition install
+
+# copy the directory to FoxDot/lib/
+# copy the 'a copier dans' directory to osc/scyndef
+# copy the startup.py to /Custom/startup.py
+# replace the readme.md
+# change in ServerManager, self.num_output_busses to 4, line 143 & 202
+# pip install pywin32 & comtypes  for text2speech
