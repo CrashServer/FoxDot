@@ -3,7 +3,7 @@ SynthDef.new(\stretch,
 var osc, env;
 sus = sus * blur;
 rate = In.kr(bus, 1);
-osc = LoopBuf.ar(1, buf, BufFrames.kr(buf) / (dur*44100), gate: 1, startPos: BufFrames.kr(buf) * index, startLoop: BufFrames.kr(buf) * index, endLoop: BufFrames.kr(buf), interpolation: 2);
+osc = LoopBuf.ar(1, buf, BufFrames.kr(buf) / (dur*44100), gate: 1, startPos: BufFrames.kr(buf) * (1-(index/2)), startLoop: BufFrames.kr(buf) * (1-(index/2)), endLoop: BufFrames.kr(buf) * (index/2), interpolation: 2);
 osc = osc * EnvGen.ar(Env([0,1,1,0],[0.05, sus-0.05, 0.05]));
 osc=(osc * amp);
 osc = Mix(osc) * 0.5;

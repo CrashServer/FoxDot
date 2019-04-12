@@ -49,8 +49,10 @@ except:
 ### CRASH SERVER SET  ###
 #########################
 
+### Lieu du Server
+lieu = "de la maison"
 ### Longueur mesure d'intro
-tmps = 4
+tmps = 16
 ### Language
 lang = "fr"
 ### BPM intro
@@ -65,10 +67,7 @@ root_intro = "E"
 try: 
 	def initial():
 			voix = Voix(lang=lang, rate=0.45, amp=1.0)
-			voix.initi()
-			#def voix1():
-				#voix.intro()
-
+			voix.initi(lieu)
 			Clock.future(tmps, lambda: voix.intro())
 except:
 	print("Error in intro Inital function", sys.exc_info()[0])
@@ -87,12 +86,6 @@ def intro():
 		r1 >> sos(dur=8, mpf=linvar([60,3800],[tmps*1.5, inf], start=now))
 		Clock.future(tmps/2, lambda: samples_crash())
 		Clock.future(tmps*1.5, lambda: initial())
-
-
-
-
-
-
 
 
 
