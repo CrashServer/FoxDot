@@ -64,28 +64,31 @@ root_intro = "E"
 
 
 ##### PART I : INTRODUCTION ################
+	
 try: 
-	def initial():
-			voix = Voix(lang=lang, rate=0.45, amp=1.0)
-			voix.initi(lieu)
-			Clock.future(tmps, lambda: voix.intro())
+	def init():
+		voix = Voix(lang=lang, rate=0.45, amp=1.0)
+		voix.initi(lieu)
+		Clock.future(tmps, lambda: voix.intro())
 except:
 	print("Error in intro Inital function", sys.exc_info()[0])
 
-
-def intro():
+try:
+	def connect():
+		print("Welcome CrAsh ServEr \nC0nnect_the_S&rV3r")
 		Clock.bpm = bpm_intro
 		Scale.default = scale_intro
 		Root.default = root_intro
+		
+		def samples_intro():
+			#z1 >> play("z...", mpf=expvar([10,4800],[tmps,inf], start=now), amp=0.7)
+			i1 >> play("I.....", amp=linvar([0,0.7],[tmps*2,tmps*4], start=now), dur=PRand([4,8,2,16]),rate=-0.5, room=PWhite(0,1), mix=PWhite(0,0.6))
 
-		def samples_crash():
-			z1 >> play("z...", mpf=expvar([10,4800],[tmps,inf], start=now), amp=0.7)
-			i2 >> play("I.....", amp=linvar([0,0.7],[tmps*2,inf], start=now), dur=4, rate=-0.5)
-
-
-		r1 >> sos(dur=8, mpf=linvar([60,3800],[tmps*1.5, inf], start=now))
-		Clock.future(tmps/2, lambda: samples_crash())
-		Clock.future(tmps*1.5, lambda: initial())
+		i3 >> sos(dur=8, mpf=linvar([60,3800],[tmps*1.5, tmps*3], start=now))
+		#Clock.future(tmps*1.5, lambda: init())
+		Clock.future(tmps, lambda: samples_intro())
+except:
+	print("Error in connect function", sys.exc_info()[0])
 
 
 
