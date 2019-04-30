@@ -1,3 +1,5 @@
+# coding: utf8
+#!/usr/bin/env python3
 #####  CRASH SERVER CUSTOM STARTUP ###########
 from __future__ import absolute_import, division, print_function
 
@@ -40,7 +42,7 @@ try:
 							OSCClient.send(self, message, *args)
 		
 	my_client = FilterOSCClient()
-	my_client.connect(("localhost", 12345))
+	my_client.connect(("192.168.0.10", 12345))
 	Server.forward = my_client
 except:
 	print("Error forwarding OSC to video", sys.exc_info()[0])
@@ -50,13 +52,13 @@ except:
 #########################
 
 ### Lieu du Server
-lieu = "de la maison"
+lieu = str("de Sprinnnhgue Taie orie")
 ### Longueur mesure d'intro
 tmps = 16
 ### Language
 lang = "fr"
 ### BPM intro
-bpm_intro = 95
+bpm_intro = 98
 ### Scale intro
 scale_intro = "minor"
 ### Root intro
