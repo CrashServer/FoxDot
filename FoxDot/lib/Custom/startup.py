@@ -42,7 +42,7 @@ try:
 							OSCClient.send(self, message, *args)
 		
 	my_client = FilterOSCClient()
-	my_client.connect(("192.168.0.10", 12345))
+	my_client.connect(("192.168.0.14", 12345))
 	Server.forward = my_client
 except:
 	print("Error forwarding OSC to video", sys.exc_info()[0])
@@ -77,6 +77,7 @@ except:
 
 try:
 	def connect():
+		Master().reset()
 		print("Welcome CrAsh ServEr \nC0nnect_the_S&rV3r")
 		Clock.bpm = bpm_intro
 		Scale.default = scale_intro
@@ -86,7 +87,9 @@ try:
 			#z1 >> play("z...", mpf=expvar([10,4800],[tmps,inf], start=now), amp=0.7)
 			i1 >> play("I.....", amp=linvar([0,0.7],[tmps*2,tmps*4], start=now), dur=PRand([4,8,2,16]),rate=-0.5, room=PWhite(0,1), mix=PWhite(0,0.6))
 
+		vi >> video(vid=0, speed=1, vfx1=0, vfx2=0)
 		i3 >> sos(dur=8, mpf=linvar([60,3800],[tmps*1.5, tmps*3], start=now))
+		
 		#Clock.future(tmps*1.5, lambda: init())
 		Clock.future(tmps, lambda: samples_intro())
 except:
