@@ -151,13 +151,14 @@ class TempoClock(object):
             err = "Unable to reach EspGrid. Make sure the application is running and try again."
             raise RequestTimeout(err)
         
-        self.espgrid.set_clock_mode(5)
-        self._espgrid_update_tempo(True)
+        self.espgrid.set_clock_mode(2)
+        self.schedule(lambda: self._espgrid_update_tempo(True))
+        # self._espgrid_update_tempo(True) # could schedule this for next bar?
         return
 
     def _espgrid_update_tempo(self, force=False):
         """ Retrieves the current tempo from EspGrid and updates internal values """
-        
+
         data = self.espgrid.get_tempo()
 
         # If the tempo hasn't been started, start it here and get updated data
@@ -171,7 +172,8 @@ class TempoClock(object):
             self.bpm_start_beat = data[4]
             object.__setattr__(self, "bpm", self._convert_json_bpm(data[1]))
 
-        self.schedule(self._espgrid_update_tempo)
+        # self.schedule(self._espgrid_update_tempo)
+        self.schedule(self._espgrid_update_tempo, int(self.now() + 1))
         
         return
 
@@ -256,9 +258,16 @@ class TempoClock(object):
         bpm_start_beat = next_bar
 
         def func():
-            object.__setattr__(self, "bpm", self._convert_json_bpm(bpm))
-            self.last_now_call = self.bpm_start_time = bpm_start_time
-            self.bpm_start_beat = bpm_start_beat
+            
+            if self.espgrid is not None:
+
+                self.espgrid.set_tempo(bpm)
+
+            else:
+
+                object.__setattr__(self, "bpm", self._convert_json_bpm(bpm))
+                self.last_now_call = self.bpm_start_time = bpm_start_time
+                self.bpm_start_beat = bpm_start_beat
 
         # Give next bar value to bpm_start_beat
         self.schedule(func, next_bar, is_priority=True)
@@ -326,19 +335,27 @@ class TempoClock(object):
 
             # If connected to EspGrid, just update that
 
-            if self.espgrid is not None:
+            # if self.espgrid is not None:
 
-                self.espgrid.set_tempo(value)
+            #     self.espgrid.set_tempo(value)
 
-            else:
+            # else:
 
-                # Schedule for next bar
+            #     # Schedule for next bar
 
-                start_beat, start_time = self.update_tempo(value)
+            #     start_beat, start_time = self.update_tempo(value)
 
-                # Checks if any peers are connected and updates them also
+            #     # Checks if any peers are connected and updates them also
 
-                self.update_network_tempo(value, start_beat, start_time)
+            #     self.update_network_tempo(value, start_beat, start_time)
+
+            # Schedule for next bar
+
+            start_beat, start_time = self.update_tempo(value)
+
+            # Checks if any peers are connected and updates them also
+
+            self.update_network_tempo(value, start_beat, start_time)
 
         elif attr == "midi_nudge" and self.__setup:
 

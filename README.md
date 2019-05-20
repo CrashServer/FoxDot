@@ -3,6 +3,12 @@ FoxDot - Live Coding with Python v0.7
 
 FoxDot is a Python programming environment that provides a fast and user-friendly abstraction to SuperCollider. It also comes with its own IDE, which means it can be used straight out of the box; all you need is Python and SuperCollider and you're ready to go!
 
+```diff
++ Added auto-run of FoxDot along with a custom startup file that only runs when you run the file using FoxDot (python -m FoxDot)
+
+- Has not been tested for Mac
+```
+
 ### v0.7 fixes and updates
 
 - Add `.reload()` method for `loop` player to reload the file used, in case it has been overwritten.
@@ -196,4 +202,4 @@ FoxDot's audio files have been obtained from a number of sources but I've lost r
 - Many samples have been obtained from http://freesound.org and have been placed in the public domain via the Creative Commons 0 License: http://creativecommons.org/publicdomain/zero/1.0/ - thank you to the original creators
 - Other samples have come from the [Dirt Sample Engine](https://github.com/tidalcycles/Dirt-Samples/tree/c2db9a0dc4ffb911febc613cdb9726cae5175223) which is part of the TidalCycles live coding language created by Yaxu - another huge amount of thanks.
 
-If you feel I've used a sample where I shouldn't have, please get it touch!
+If you feel I've used a sample where I shouldn't have, please get in touch!
