@@ -5,8 +5,6 @@ from __future__ import absolute_import, division, print_function
 
 import os
 import sys
-from random import randint
-
 
 ### SYNTHDEFS #####
 try:
@@ -19,6 +17,9 @@ except:
 ### EXTENSIONS #######
 try:
 	from .Crashserver.speech.voice import *   ### Text2Speech
+	from .Crashserver.arpy import *
+	from .Crashserver.sdur import *
+	from .Chords import *
 	# from .Extensions.timer.hack import * ### Crash Server Timer
 	#from .Extensions.Video.video2 import *    ### Video player
 except:
@@ -52,7 +53,7 @@ except:
 #########################
 
 ### Lieu du Server
-lieu = str("de Sprinnnhgue Taie orie")
+lieu = str("de l'elastique bar")
 ### Longueur mesure d'intro
 tmps = 16
 ### Language
@@ -63,13 +64,14 @@ bpm_intro = 98
 scale_intro = "minor"
 ### Root intro
 root_intro = "E"
-
+### Setup
+part = ["augmentation()", "aspiration()", "attack()", "attention()", "absolution()"]
 
 ##### PART I : INTRODUCTION ################
 	
 try: 
 	def init():
-		voix = Voix(lang=lang, rate=0.45, amp=1.0)
+		voix = Voice(lang=lang, rate=0.45, amp=1.0)
 		voix.initi(lieu)
 		Clock.future(tmps, lambda: voix.intro())
 except:
@@ -87,8 +89,8 @@ try:
 			#z1 >> play("z...", mpf=expvar([10,4800],[tmps,inf], start=now), amp=0.7)
 			i1 >> play("I.....", amp=linvar([0,0.7],[tmps*2,tmps*4], start=now), dur=PRand([4,8,2,16]),rate=-0.5, room=PWhite(0,1), mix=PWhite(0,0.6))
 
+		i3 >> sos(dur=8, mpf=linvar([60,3800],[tmps*1.5, tmps*3], start=now)).only()
 		vi >> video(vid=0, speed=1, vfx1=0, vfx2=0)
-		i3 >> sos(dur=8, mpf=linvar([60,3800],[tmps*1.5, tmps*3], start=now))
 		
 		#Clock.future(tmps*1.5, lambda: init())
 		Clock.future(tmps, lambda: samples_intro())
@@ -104,70 +106,3 @@ except:
 
 
 
-
-
-
-
-##### SDur by Quantuum #####
-def SDur(target):
-	sr = random.SystemRandom()
-	indexes = random.randint(1,target+4)
-	dividers = [1,1,1,2,2,2,2,4,8] # 1/4 and 1/8-typed notes get more scarce
-	list=[]
-	for i in range(0,indexes):
-			if target%2 == 0:
-					a = random.randint(1,target/2)/sr.choice(dividers)
-			else:
-					a = random.randint(1,(target-1)/2)/sr.choice(dividers)
-			if sum(list)+a < target/2:
-					list.append(a)
-			if sum(list)+a < target:
-					list.append(a)
-	list.append(target-sum(list))
-	return P[list].shuffle() # always return a list of durations with total duration equals target
-
-# variation giving shorter durations
-def SmDur(target):
-	sr = random.SystemRandom()
-	indexes = random.randint(1,target+4)
-	dividers = [1,1,1,2,2,2,2,4,8] # 1/4 and 1/8-typed notes get more scarce
-	list=[]
-	for i in range(0,indexes):
-			if target%2 == 0:
-					a = random.randint(1,target/2)/sr.choice(dividers)
-			else:
-					a = random.randint(1,(target-1)/2)/sr.choice(dividers)
-			if sum(list)+a < target/2:
-					list.append(a)
-			if sum(list)+a/2 < target:
-					list.append(a/2)
-	list.append(target-sum(list))
-	return P[list].shuffle() # always return a list of durations with total duration equals target
-
-# a variation with score-like durations
-def ScDur(target):
-	sr = random.SystemRandom()
-	indexes = random.randint(1,target+4)
-	standards = [0.25,0.375,0.75,0.5,1,2,3,4] # standard dur values found in scores
-	dividers = [1,1,2] # skip 1/4 and 1/8 (comes after)
-	list=[]
-	for i in range(0,indexes):
-			if target%2 == 0:
-					a = random.randint(1,target/2)/sr.choice(dividers)
-			else:
-					a = random.randint(1,(target-1)/2)/sr.choice(dividers)
-			if sum(list)+a < target/4:
-					list.append(a)
-			if sum(list)+a/2 < target/2:
-					list.append(a/2)
-			if sum(list)+a < target:
-					list.append(a)
-			if sum(list)+a/4 < target:
-					list.append(a/4)
-	if sum(list) < target:
-			for i in range(0,len(standards)):
-					if target-sum(list)%standards[i] != 0 and standards[i] < target-sum(list):
-							list.append(standards[i])
-			if sum(list) < target:
-					list.append(target-sum(list))
-	return P[list].shuffle() # always return a list of durations with total duration equals target

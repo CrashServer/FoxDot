@@ -23,7 +23,7 @@ except:
 	raise RuntimeError("Windows is required.")
 
 
-class Voix(Thread):
+class Voice(Thread):
 	""" CRASH SERVER - TEXT 2 SPEECH
 		A text to speech thread using the Microsoft SAPI through COM
 		Foxdot implantation
