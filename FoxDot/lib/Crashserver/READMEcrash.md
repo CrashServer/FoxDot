@@ -5,6 +5,28 @@ FoxDot Crash Server Edition - Live Coding with Python v0.7.19
 CRASH SERVER EDITS
 =====================================
 
+23/05/2019 New stuff
+### Move everything to startup.py 
+### Add PArp([k1,k2,k3,k4], index_of_Arpdict)
+Arpdict : (0-9) : Standard simple 3 notes Arp
+		  (10-17) : More complex 3 notes Arp
+		  (20-23) : 2 notes Arp scale
+		  (30-30) : complex 3 notes Arp
+		  (40-44) : 4 notes Arp
+		  (50,54) : Simple 3 notes Arp	
+```python
+print(PArp([0,2,4],1))
+P[4,2,0,4,2,0,4,2,0,4,2],0,4,2,0,2]
+```
+
+### Text2Speech (Windows only for now)
+```python
+v1 = Voice("Crache serveur") 
+```
+
+### Change lpf to spf & restore the original lpf
+
+
 05/02/2019 Snd Rearange & add
 ### Change the default snd directory to crashSnd_mod for test ####
 ### Nice sounds, try : 

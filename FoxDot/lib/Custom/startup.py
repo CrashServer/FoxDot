@@ -67,6 +67,9 @@ root_intro = "E"
 ### Setup
 part = ["augmentation()", "aspiration()", "attack()", "attention()", "absolution()"]
 
+
+##############   BEGIN ##############################################
+
 ##### PART I : INTRODUCTION ################
 	
 try: 
@@ -98,8 +101,10 @@ except:
 	print("Error in connect function", sys.exc_info()[0])
 
 
+################# END #################################################
 
-
+def lost(partie):
+	print(part[partie])
 
 
 

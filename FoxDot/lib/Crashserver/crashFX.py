@@ -20,13 +20,14 @@ fx = FxList.new("leg", "leg", {"leg":0, "sus":1 }, order = 0)
 fx.add("osc = osc * XLine.ar(Rand(0.5,1.5)*leg,1,0.05*sus)")
 fx.save()
 
-# lpf slide
-fx = FxList.new('lpf','lowPassFilter', {'lpf': 0, 'lpr': 1, 'lpfslide':1, 'lpfend':15000}, order=2)
-fx.add_var("lpfenv")
-fx.add('lpfenv = EnvGen.ar(Env.new([lpf, lpfend], [lpfslide]))')
-fx.add('osc = RLPF.ar(osc, lpfenv, lpr)')
+# Lpf slide
+fx = FxList.new('spf','SLPF', {'spf': 0, 'spr': 1, 'spfslide':1, 'spfend':15000}, order=2)
+fx.add_var("spfenv")
+fx.add('spfenv = EnvGen.ar(Env.new([spf, spfend], [spfslide]))')
+fx.add('osc = RLPF.ar(osc, spfenv, spr)')
 fx.save()
 
+# MoogLPF
 fx = FxList.new('mpf','MoogFF', {'mpf': 0, 'mpr': 0}, order=2)
 fx.doc("MoogFF filter")
 fx.add('osc = MoogFF.ar(osc, mpf, mpr,0,1)')
