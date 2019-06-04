@@ -1,5 +1,5 @@
 from ..Patterns import P, Pattern
-from random import randint
+import random
 
 ##### SDur by Quantuum #####
 def SDur(target):

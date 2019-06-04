@@ -94,4 +94,14 @@ fx.add("osc_filtered = Amplitude.ar(osc_low, attackTime:0.1, releaseTime: 0.5, m
 fx.add("osc = LinXFade2.ar((Clip.ar(TwoPole.ar(osc * ((osc_filtered * octafuz) * 10), [60, 20000], 0.9), -0.75, 4).tanh + osc_low) / 4, osc, 1-octamix)")
 fx.save()
 
+fx = FxList.new("krush", "dirt_krush", {"krush":0, "kcutoff":15000}, order=2)
+fx.add_var("signal")
+fx.add_var("freq")
+fx.add("freq = Select.kr(kcutoff > 0, [DC.kr(4000), kutoff])")
+fx.add("signal = (osc.squared + (krush * osc)) / (osc.squared + (osc.abs * (krush-1.0)) + 1.0)")
+fx.add("signal = RLPF.ar(signal, clip(freq, 20, 10000), 1)")
+fx.add("osc = SelectX.ar(krush * 2.0, [osc, signal])")
+fx.save()
+
+
 Effect.server.setFx(FxList)

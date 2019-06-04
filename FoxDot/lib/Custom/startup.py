@@ -27,9 +27,12 @@ except:
 
 
 ## Path Snd
+
+crash_path = os.path.realpath(FOXDOT_ROOT + "/lib/Crashserver/crash_snd/")
+
 try: 
-	FOXDOT_SND   = os.path.realpath(FOXDOT_ROOT + "/lib/Crashserver/crash_snd/")
-	FOXDOT_LOOP  = os.path.realpath(FOXDOT_ROOT + "/lib/Crashserver/crash_snd/_loop_/")
+	FOXDOT_SND   = crash_path
+	FOXDOT_LOOP  = os.path.realpath(crash_path + "/_loop_/")
 	FoxDotCode.use_sample_directory(FOXDOT_SND)
 	Samples.addPath(FOXDOT_LOOP)
 except:
@@ -65,7 +68,7 @@ scale_intro = "minor"
 ### Root intro
 root_intro = "E"
 ### Setup
-part = ["augmentation()", "aspiration()", "attack()", "attention()", "absolution()"]
+part = ["augmentation()", "aspiration()", "attack()", "attention()", "absolution()", "annihilation()"]
 
 
 ##############   BEGIN ##############################################
@@ -82,7 +85,6 @@ except:
 
 try:
 	def connect():
-		Master().reset()
 		print("Welcome CrAsh ServEr \nC0nnect_the_S&rV3r")
 		Clock.bpm = bpm_intro
 		Scale.default = scale_intro
@@ -106,8 +108,28 @@ except:
 def lost(partie):
 	print(part[partie])
 
+def OSCVideo(adresse):
+	my_client = FilterOSCClient()
+	my_client.connect((adresse, 12345))
+	Server.forward = my_client
 
+### List of synth 
+synthlist = []
+for i in SynthDefs:
+    synthlist.append(i)
 
-
-
-
+def check_available_sample(path=FOXDOT_SND):    
+    if os.path.isdir(path):
+        for dirpath, dirnames, filenames in os.walk(path):
+            numb = len(filenames)
+            if 0 < numb < 10:
+                pth = dirpath.split(path)[-1]
+                char, uplow = os.path.split(pth)
+                if uplow == "lower":
+                    descr = DESCRIPTIONS[str(char[1:]).lower()]
+                elif uplow == "upper":
+                    descr = DESCRIPTIONS[str(char[1:]).upper()] 
+                #print(descr)
+                print(dirpath.split(path)[-1], " : ", str(10-numb), "slots, ", descr)
+    else:
+        print("Directory {} doesn't exist".format(path))

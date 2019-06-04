@@ -14,6 +14,9 @@ click.add()
 cluster = FileSynthDef("cluster")
 cluster.add()
 
+dafbass = FileSynthDef("dafbass")
+dafbass.add()
+
 faim = FileSynthDef("faim")
 faim.add()
 
@@ -25,6 +28,9 @@ prof.add()
 
 rsin = FileSynthDef("rsin")
 rsin.add()
+
+sine = FileSynthDef("sine")
+sine.add()
 
 sos = FileSynthDef("sos")
 sos.add()
