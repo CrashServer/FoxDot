@@ -94,14 +94,46 @@ fx.add("osc_filtered = Amplitude.ar(osc_low, attackTime:0.1, releaseTime: 0.5, m
 fx.add("osc = LinXFade2.ar((Clip.ar(TwoPole.ar(osc * ((osc_filtered * octafuz) * 10), [60, 20000], 0.9), -0.75, 4).tanh + osc_low) / 4, osc, 1-octamix)")
 fx.save()
 
-fx = FxList.new("krush", "dirt_krush", {"krush":0, "kcutoff":15000}, order=2)
+### TIDAL FX ####
+fx = FxList.new("krush", "dirt_krush", {"krush":0, "kutoff":15000}, order=2)
 fx.add_var("signal")
 fx.add_var("freq")
-fx.add("freq = Select.kr(kcutoff > 0, [DC.kr(4000), kutoff])")
+fx.add("freq = Select.kr(kutoff > 0, [DC.kr(4000), kutoff])")
 fx.add("signal = (osc.squared + (krush * osc)) / (osc.squared + (osc.abs * (krush-1.0)) + 1.0)")
 fx.add("signal = RLPF.ar(signal, clip(freq, 20, 10000), 1)")
 fx.add("osc = SelectX.ar(krush * 2.0, [osc, signal])")
 fx.save()
 
+fx = FxList.new("drop", "waveloss", {"drop":0, "dropof": 100}, order=2)
+fx.add("osc = WaveLoss.ar(osc, drop, outof: dropof, mode: 2)")
+fx.save()
+
+fx = FxList.new("squiz", "squiz", {"squiz":0}, order=2)
+fx.add("osc = Squiz.ar(osc, squiz)")
+fx.save()
+
+fx = FxList.new("triode", "triode", {"triode":0}, order=2)
+fx.add_var("sc")
+fx.add("sc = triode * 10 + 1e-3")
+fx.add("osc = (osc * (osc > 0)) + (tanh(osc * sc) / sc * (osc < 0))")
+fx.add("osc = LeakDC.ar(osc)*1.2")
+fx.save()
+
+#### Need Tweak ##############
+fx = FxList.new("octer", "octer", {"octer":0, "octersub": 0, "octersubsub": 0}, order=1)
+fx.add_var("oct1")
+fx.add_var("oct2")
+fx.add_var("oct3")
+fx.add_var("sub")
+fx.add("oct1 = 2.0 * LeakDC.ar(abs(osc))")
+fx.add("sub = LPF.ar(osc, 440)")
+fx.add("oct2 = ToggleFF.ar(sub)")
+fx.add("oct3 = ToggleFF.ar(oct2)")
+fx.add("osc = SelectX.ar(octer, [osc, octer*oct1, DC.ar(0)])")
+fx.add("osc = osc + (octersub * oct2 * sub) + (octersubsub * oct3 * sub)")
+fx.save()
+
+
+###########
 
 Effect.server.setFx(FxList)
