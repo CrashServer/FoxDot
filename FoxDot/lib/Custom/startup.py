@@ -62,13 +62,13 @@ tmps = 16
 ### Language
 lang = "fr"
 ### BPM intro
-bpm_intro = 98
+bpm_intro = 48
 ### Scale intro
 scale_intro = "minor"
 ### Root intro
 root_intro = "E"
 ### Setup
-part = ["augmentation()", "aspiration()", "attack()", "attention()", "absolution()", "annihilation()"]
+part = ["augmentation()", "aspiration()", "attention()", "absolution()", "annihilation()"]
 
 
 ##############   BEGIN ##############################################
@@ -106,7 +106,7 @@ except:
 ################# END #################################################
 
 def lost(partie):
-	print(part[partie])
+	print(part[partie-1])
 
 def OSCVideo(adresse):
 	my_client = FilterOSCClient()
