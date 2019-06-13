@@ -26,7 +26,7 @@ Numlock::
 ::augmentation()::
 (
 #########################################
-# PART I : Augmentation() 
+# Loading... Part I : Augmentation()    # 
 #########################################
 init()
 
@@ -51,7 +51,7 @@ a3 >> play("a ", sample=5, amp=1)
 
 ::augmentation2()::
 (
-### PART I.2 ####
+### Loading Part I.2 ####
 d1 >> play("(x.).(..x.)(.x)", sample=4)
 d3 >> play("(x.).(..x.)(x.)", sample=1)
 
@@ -67,9 +67,9 @@ g1 >> play("@", sample=PTri(8), dur=PDur(5,8), coarse=1/8)
 
 ::aspiration()::
 (
-#################################################
-# PART II : Aspiration() 
-################################################# 
+#######################################
+# Loading... Part II : Aspiration()   #
+####################################### 
 b1.only()
 
 k1 >> play("(x.).(.x)(x.)", sample=(0,1,3), dur=1/2, mpf=linvar([400,8800],[240,0])).every(17, "trim", 3)
@@ -83,7 +83,7 @@ d6 >> play("<X:><..u.>", dur=1/4,slide=linvar([0, 4], [8, 4]),triode=PRand(128),
 
 ::aspiration2()::
 (
-### PART II.2 ######
+### Loading... Part II.2 ######
 
 e1 >> play("E", sample=2, rate=linvar([0.4, 0.8], [16]), dur=var([1/4,32],[16, 1]), dist=0.1, amp=1)
 b3 >> bass([0, 2, 2, 4, P[0:3], 0], dur=1/4, scale=Scale.locrian, amp=1)
@@ -96,9 +96,9 @@ c1 >> creep(0, dur=1/4, oct=((3, 3.03), linvar([3, 3.03], [64])), fmod=8, hpf=li
 	
 ::attention()::
 (
-#################################################
-# PART III : Attention()
-################################################# 
+#######################################
+# Loading... Part III : Attention()   #
+####################################### 
 
 d8 >> play("X ", sample=2, mpf=4000, amp=1).every(9, "amp.offadd", -1,0.75).every(7, "stutter", 4, rate=PWhite(0.5,8), pan=[-1,1]).only()
 q1 >> play("//", sample=1, dur=4, hpf=30, mpf=16000, amp=0.5, rate=4)
@@ -114,7 +114,7 @@ i2 >> play("i", dur=8, sample=6, leg=21, room=1, mix=0.2, echo=[(0.33, 0.25), 0.
 
 ::attention2()::
 (
-### PART III.2 :
+### Loading PART III.2 : ###
 s3 >> star([0, 3, [3, 7], 0.5, PRand([3, 7, 0, (0.5, 3, 0)])], crush=linvar([128, 0], [16, inf], start=now),dur=1/8, oct=6, scale=Scale.locrianMajor, formant=PRand([0, 4]), amp=0.5) + Pvar([0, 3, 0, 0, 2, 0], [4, 2])
 s4 >> saw([0, 3, [3, 7], 0.5, PRand([3, 7, 0, (0.5, 3, 0)])],dur=PDur(5, 8) / 2, oct=5, octafuz=0.5, scale=Scale.minor, amp=linvar([0, 1], [128, inf], start=now), echo=0.125, echotime=s3.degree).spread() + Pvar([0, 3, 0, 0, 2, 0], [4, 2])
 o1 >> play("o", dur=[8, 1/2, 1/2], sample=[3, 4, PRand(4)], delay=(0.5, [3.5, 0.5, 0.25]), echo=(1/4, 1/2), echotime=4)
@@ -126,9 +126,9 @@ f1 >> faim(PArp([0,1,0.5],11), oct=(3, 4), dur=1/4, drive=0, lpf=200)
 
 ::absolution()::
 (
-#######################################################################
-# Part V: Absolution()
-#######################################################################
+#####################################
+# Loading... Part V: Absolution()   #
+#####################################
 
 Clock.bpm = linvar([120,150,120,60],[PRand([4, 8, 16, 2])])
 
@@ -144,9 +144,9 @@ k4 >> play("X:", mpf=120)
 
 ::annihilation()::
 (
-#######################################################################
-# Part VI : Annihilation()
-#######################################################################
+#########################################
+# Loading... Part VI : Annihilation()   #
+#########################################
 
 j1 >> play("j", sample=PRand(16), room=1, mix=0.5, amp=1, rate=(PSine(16)/100,-0.25), echo=1, echotime=4, drive=PWhite(0,0.1), chop=PWhite(0,4), dur=16, spf=1900, spfslide=4, spfend=4000).spread()
 k5 >> play(PEuclid2(3,8,"X","|=2|"), sample=1,rate=var([1,0.7],[16,2]),lpf=linvar([800,5800],[24,0]), triode=PRand(16), lpr=linvar([1,0.05],[24,0])).often("stutter", Cycle([2,3,12]), amp=1, hpf=1800).sometimes("amen")
