@@ -94,7 +94,8 @@ try:
 			#z1 >> play("z...", mpf=expvar([10,4800],[tmps,inf], start=now), amp=0.7)
 			i1 >> play("I.....", amp=linvar([0,0.7],[tmps*2,tmps*4], start=now), dur=PRand([4,8,2,16]),rate=-0.5, room=PWhite(0,1), mix=PWhite(0,0.6))
 
-		i3 >> sos(dur=8, mpf=linvar([60,3800],[tmps*1.5, tmps*3], start=now)).only()
+		
+		i3 >> sos(dur=8, mpf=linvar([60,4800],[tmps*1.5, tmps*3], start=now), hpf=expvar([0,500],[tmps*6, tmps*2]))
 		vi >> video(vid=0, speed=1, vfx1=0, vfx2=0)
 		
 		#Clock.future(tmps*1.5, lambda: init())
