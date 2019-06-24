@@ -1017,7 +1017,7 @@ class Player(Repeatable):
         Eg : p1.unison(4, 0.5) => pshift=(-0.5,-0.25,0.25,0.5), pan=(-1.0,-0.5,0.5,1.0)
              p1.unison(5, 0.8) => pshift=(-0.8,-0.4,0,0.4,0.8), pan=(-1.0,-0.5,0,0.5,1.0)
         """
-        if unison != 0:
+        if unison >= 2:
             pan=[]
             pshift=[]
             uni = int(unison if unison%2==0 else unison-1)
