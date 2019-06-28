@@ -28,7 +28,7 @@ setup(name='FoxDot',
                 'FoxDot.lib.Patterns',
                 'FoxDot.lib.SCLang',
                 'FoxDot.lib.Settings',
-                'FoxDot.lib.Utils'
+                'FoxDot.lib.Utils',
                 'FoxDot.lib.Crashserver',
                 'FoxDot.lib.Crashserver.speech',],
       long_description=long_description,
@@ -59,5 +59,3 @@ setup(name='FoxDot',
                                  ],
                       'FoxDot.lib.Workspace': ['img/*', 'tmp/*'],
                       'FoxDot.lib.Settings' : ['conf.txt']})
-
-
