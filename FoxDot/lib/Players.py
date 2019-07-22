@@ -321,6 +321,7 @@ class Player(Repeatable):
         self.attr  = {}
         self.modifier = Pattern()
         self.mod_data = 0
+        self.filename = None
 
         # Keyword arguments that are used internally
 
@@ -797,6 +798,11 @@ class Player(Repeatable):
 
         # Make sure all values are reset to start
 
+        if "filename" in kwargs:
+
+            self.filename = kwargs["filename"]
+            del kwargs["filename"]
+
         if self.isplaying is False:
 
             self.reset() 
@@ -1023,7 +1029,7 @@ class Player(Repeatable):
         Eg : p1.unison(4, 0.5) => pshift=(-0.5,-0.25,0.25,0.5), pan=(-1.0,-0.5,0.5,1.0)
              p1.unison(5, 0.8) => pshift=(-0.8,-0.4,0,0.4,0.8), pan=(-1.0,-0.5,0,0.5,1.0)
         """
-        if unison >= 2:
+        if unison != 0:
             pan=[]
             pshift=[]
             uni = int(unison if unison%2==0 else unison-1)
@@ -1852,6 +1858,15 @@ class Player(Repeatable):
 
         self.amplify  = this_key.transform(lambda value: rule(value, other_key.now()))
         other.amplify = this_key.transform(lambda value: not rule(value, other_key.now()))
+
+        return self
+
+    def reload(self):
+        """ If this is a 'play' or 'loop' SynthDef, reload the filename used"""
+
+        if self.synthdef == LoopPlayer:
+
+            Samples.reload(self.filename)
 
         return self
 
