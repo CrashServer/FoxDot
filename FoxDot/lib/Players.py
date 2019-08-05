@@ -1978,6 +1978,7 @@ class Player(Repeatable):
         if isinstance(new_synth, SynthDef):
             new_synth = str(new_synth.name)
         self.synthdef = new_synth
+        print(new_synth)
         return self
 
     """
