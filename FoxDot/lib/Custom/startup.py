@@ -46,7 +46,7 @@ try:
 							OSCClient.send(self, message, *args)
 		
 	my_client = FilterOSCClient()
-	my_client.connect(("192.168.0.14", 12345))
+	my_client.connect(("192.168.0.22", 12345))
 	Server.forward = my_client
 except:
 	print("Error forwarding OSC to video", sys.exc_info()[0])
@@ -113,24 +113,3 @@ def OSCVideo(adresse):
 	my_client = FilterOSCClient()
 	my_client.connect((adresse, 12345))
 	Server.forward = my_client
-
-### List of synth 
-synthlist = []
-for i in SynthDefs:
-    synthlist.append(i)
-
-def check_available_sample(path=FOXDOT_SND):    
-    if os.path.isdir(path):
-        for dirpath, dirnames, filenames in os.walk(path):
-            numb = len(filenames)
-            if 0 < numb < 10:
-                pth = dirpath.split(path)[-1]
-                char, uplow = os.path.split(pth)
-                if uplow == "lower":
-                    descr = DESCRIPTIONS[str(char[1:]).lower()]
-                elif uplow == "upper":
-                    descr = DESCRIPTIONS[str(char[1:]).upper()] 
-                #print(descr)
-                print(dirpath.split(path)[-1], " : ", str(10-numb), "slots, ", descr)
-    else:
-        print("Directory {} doesn't exist".format(path))
