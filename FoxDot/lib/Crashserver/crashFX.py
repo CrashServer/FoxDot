@@ -113,6 +113,7 @@ fx.add("osc = osc_low + osc_med + osc_high")
 fx.add("osc = DFM1.ar(osc, 200, 0.99, 0.2, 0) + osc")
 fx.add("osc = InsideOut.ar(osc, tekd) + osc")
 fx.add("osc = RHPF.ar(Gammatone.ar(osc, tekr), tekr, mul:2) + osc")
+fx.add("osc = LinXFade2.ar(osc_base, osc, tek)")
 fx.save()
 
 
