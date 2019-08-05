@@ -94,6 +94,28 @@ fx.add("osc_filtered = Amplitude.ar(osc_low, attackTime:0.1, releaseTime: 0.5, m
 fx.add("osc = LinXFade2.ar((Clip.ar(TwoPole.ar(osc * ((osc_filtered * octafuz) * 10), [60, 20000], 0.9), -0.75, 4).tanh + osc_low) / 4, osc, 1-octamix)")
 fx.save()
 
+fx = FxList.new('tek', 'tek', {'tek': 0, 'tekr':4000, 'tekd':0.05}, order=2)
+fx.add_var("osc_low")
+fx.add_var("osc_med")
+fx.add_var("osc_high")
+fx.add_var("osc_base")
+fx.add_var("lfo")
+fx.add("lfo = SinOsc.ar(0.5, phase: 0, mul: 50, add: 100)")
+fx.add("osc = In.ar(bus, 2)")
+fx.add("osc_base = osc")
+fx.add("osc_low = LPF.ar(osc, lfo) * 4")
+fx.add("osc_med = BPF.ar(osc, lfo * 8)")
+fx.add("osc_med = osc_med + Ringz.ar(CrossoverDistortion.ar(osc_med, 0.1, 0.1, 0.4),100, decaytime: 0.45, mul:0.1)")
+fx.add("osc_med = LeakDC.ar(osc_med)")
+fx.add("osc_high = HPF.ar(osc, 4000 + SinOsc.ar(8, mul: 800))")
+fx.add("osc_high = Ringz.ar(osc_high, lfo * SinOsc.ar(1, mul: 1, add:1))")
+fx.add("osc = osc_low + osc_med + osc_high")
+fx.add("osc = DFM1.ar(osc, 200, 0.99, 0.2, 0) + osc")
+fx.add("osc = InsideOut.ar(osc, tekd) + osc")
+fx.add("osc = RHPF.ar(Gammatone.ar(osc, tekr), tekr, mul:2) + osc")
+fx.save()
+
+
 ### TIDAL FX ####
 fx = FxList.new("krush", "dirt_krush", {"krush":0, "kutoff":15000}, order=2)
 fx.add_var("signal")
