@@ -140,7 +140,7 @@ class ServerManager(object):
 
         self.node = 1000
         self.num_input_busses = 2
-        self.num_output_busses = 4
+        self.num_output_busses = 2
         self.bus = self.num_input_busses + self.num_output_busses
         self.max_busses = 100
         self.max_buffers = 1024
@@ -195,7 +195,7 @@ class SCLangServerManager(ServerManager):
 
         self.node = 1000
         self.num_input_busses = 2
-        self.num_output_busses = 4
+        self.num_output_busses = 2
         self.bus = self.num_input_busses + self.num_output_busses
         self.max_busses = 100
         self.max_buffers = 1024
