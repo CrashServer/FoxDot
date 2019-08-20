@@ -4,6 +4,11 @@ import sys
 from ..SCLang.SynthDef import SynthDefs
 from ..Settings import FOXDOT_SND, FOXDOT_LOOP
 
+try:
+    import librosa
+except:
+    print("Error importing Sample_bpm, install librosa")
+
 ### List of synth 
 synthlist = [i for i in SynthDefs][4:]
 ## sy >> blip().changeSynth(synthlist)
@@ -40,3 +45,10 @@ def binary(number):
     # return a list converted to binary from a number 
     binlist = [int(i) for i in str(bin(number)[2:])]
     return binlist
+
+
+def sample_bpm(path):
+    pth = os.path.join(FOXDOT_LOOP, path)
+    y, sr = librosa.load(pth)
+    print("BPM = ", librosa.beat.beat_track(y)[0])
+    return librosa.beat.beat_track(y)[0]    

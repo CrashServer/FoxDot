@@ -17,13 +17,18 @@ except:
 ### EXTENSIONS #######
 try:
 	from .Crashserver.speech.voice import *   ### Text2Speech
+except:
+	print("Error importing Speech Extension")
+
+try:	
 	from .Crashserver.arpy import *
 	from .Crashserver.sdur import *
+	#from .Crashserver.coolfunction import *
 	from .Chords import *
 	# from .Extensions.timer.hack import * ### Crash Server Timer
 	#from .Extensions.Video.video2 import *    ### Video player
 except:
-	print("Error importing Extensions : ", sys.exc_info()[0])
+	print("Error importing Extensions : ", sys.exc_info())
 
 
 ## Path Snd
@@ -56,7 +61,7 @@ except:
 #########################
 
 ### Lieu du Server
-lieu = str("de l'elastique bar")
+lieu = str("du Cosmic Festival")
 ### Longueur mesure d'intro
 tmps = 16
 ### Language
