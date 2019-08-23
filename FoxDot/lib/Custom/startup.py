@@ -61,7 +61,7 @@ except:
 #########################
 
 ### Lieu du Server
-lieu = str("du Cosmic Festival")
+lieu = str("du cosmique Festival")
 ### Longueur mesure d'intro
 tmps = 16
 ### Language

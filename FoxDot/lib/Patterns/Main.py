@@ -1015,6 +1015,7 @@ class metaPattern(object):
                 self.__dict__  = self.data[0].__dict__.copy()
                 
         return self
+    
 
 class Pattern(metaPattern):
     """ Base type pattern """
@@ -1455,6 +1456,10 @@ class GeneratorPattern:
         # new = self.child(0)        
         # new.calculate = mapping_function
         # return new
+
+    def rnd(self, base=2):        
+        """ Round up the generator value to nearest base value"""
+        return self.transform(lambda value: round(base * round(float(value) / base),2))    
 
 
 class PatternContainer(metaPattern):
