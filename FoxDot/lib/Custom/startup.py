@@ -15,7 +15,7 @@ except:
 
 ### EXTENSIONS #######
 try:
-	if sys.platform == "Windows":
+	if sys.platform.startswith("win"):
 		from .Crashserver.speech.voice import *   ### Text2Speech Windows
 	elif sys.platform.startswith("linux"):
 		from .Crashserver.speech.voice_linux import *   ### Text2Speech linux
@@ -83,11 +83,11 @@ part = ["augmentation()", "aspiration()", "attention()", "absolution()", "annihi
 ##############   BEGIN ##############################################
 
 def init():
-	if sys.platform == "Windows":
+	if sys.platform.startswith("win"):
 		voix = Voice(lang=lang, rate=0.45, amp=1.0)
 		voix.initi(lieu)
 		Clock.future(tmps, lambda: voix.intro())
-	if sys.platform.startswith("linux"):
+	elif sys.platform.startswith("linux"):
 		serv = init_server(lang, lieu)
 		txt_init = serv.initi()
 		crash_txt = serv.crash_txt()

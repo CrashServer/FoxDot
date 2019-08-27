@@ -62,15 +62,14 @@ class Voice(Thread):
 	def select_lang(self, lang, lieu=""):
 		"""Select the .txt according to language selected"""
 		crash_text = ""
-		if lang == "fr":
+		if lang == "french":
 			crash_text = "crash_text_fr.txt"
 			self.text_init = "Le Serveur {} est initialisé à {} heures, \
 				{} minutes, et {} secondes.".format(self.lieu, str(time.strftime("%H")), str(time.strftime("%M")), str(time.strftime("%S")))
-		if lang == "eng":
+		if lang == "english":
 			crash_text = "crash_text_eng.txt"
 			self.text_init = "The Server {} is initialized at {} hours, \
 				{} minutes, and {} seconds".format(self.lieu, str(time.strftime("%H")), str(time.strftime("%M")), str(time.strftime("%S")))
-			
 		return os.path.join(FOXDOT_ROOT, "lib", "Crashserver", "speech", crash_text)	
 		#return os.path.join(os.getcwd(), crash_text)
 
