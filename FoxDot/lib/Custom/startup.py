@@ -1,10 +1,9 @@
-# coding: utf8
+#coding: utf8
 #!/usr/bin/env python3
 #####  CRASH SERVER CUSTOM STARTUP ###########
-from __future__ import absolute_import, division, print_function
-
 import os
 import sys
+from .Settings import FOXDOT_ROOT
 
 ### SYNTHDEFS #####
 try:
@@ -16,7 +15,12 @@ except:
 
 ### EXTENSIONS #######
 try:
-	from .Crashserver.speech.voice import *   ### Text2Speech
+	if sys.platform == "Windows":
+		from .Crashserver.speech.voice import *   ### Text2Speech Windows
+	elif sys.platform.startswith("linux"):
+		from .Crashserver.speech.voice_linux import *   ### Text2Speech linux
+	else:
+		print("Txt2Speech don't work for ", sys.platform)
 except:
 	print("Error importing Speech Extension")
 
@@ -65,7 +69,7 @@ lieu = str("du cosmique Festival")
 ### Longueur mesure d'intro
 tmps = 16
 ### Language
-lang = "fr"
+lang = "french"
 ### BPM intro
 bpm_intro = 48
 ### Scale intro
@@ -78,15 +82,22 @@ part = ["augmentation()", "aspiration()", "attention()", "absolution()", "annihi
 
 ##############   BEGIN ##############################################
 
-##### PART I : INTRODUCTION ################
-	
-try: 
-	def init():
+def init():
+	if sys.platform == "Windows":
 		voix = Voice(lang=lang, rate=0.45, amp=1.0)
 		voix.initi(lieu)
 		Clock.future(tmps, lambda: voix.intro())
-except:
-	print("Error in intro Inital function", sys.exc_info()[0])
+	if sys.platform.startswith("linux"):
+		serv = init_server(lang, lieu)
+		txt_init = serv.initi()
+		crash_txt = serv.crash_txt()
+		def txt_intro():
+			Voice(crash_txt, rate=1, amp=1, lang=lang, voice=4)
+		print(crash_txt)
+		Voice(txt_init, rate=1, amp=1, lang=lang, voice=4)
+		Clock.future(tmps*2, lambda: txt_intro())	
+	else:
+		print("Sorry, we crash only from windows or linux")
 
 try:
 	def connect():
