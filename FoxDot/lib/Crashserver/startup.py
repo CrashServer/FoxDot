@@ -54,7 +54,7 @@ lieu = "de la maison"
 ### Longueur mesure d'intro
 tmps = 16
 ### Language
-lang = "fr"
+lang = "french"
 ### BPM intro
 bpm_intro = 95
 ### Scale intro

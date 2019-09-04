@@ -219,6 +219,8 @@ def PSum(n, total, **kwargs):
 @loop_pattern_func
 def PRange(start, stop=None, step=None):
     """ Returns a Pattern equivalent to ``Pattern(range(start, stop, step))`` """
+    if start > stop:
+        start, stop = stop, start
     return Pattern(list(range(*[val for val in (start, stop, step) if val is not None])))
 
 @loop_pattern_func
@@ -305,6 +307,8 @@ def PQuicken(dur=1/2, stepsize=3, steps=6):
     """ Returns a PGroup of delay amounts that gradually decrease """
     delay = []
     count = 0
+    if stepsize < 2:
+        stepsize = 2
     for i in range(steps):
         for j in range(stepsize-1):
             delay.append( count )
