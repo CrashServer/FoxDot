@@ -4,6 +4,7 @@
 import os
 import sys
 from .Settings import FOXDOT_ROOT
+import pyperclip as clip
 
 ### SYNTHDEFS #####
 try:
@@ -15,7 +16,7 @@ except:
 
 ### EXTENSIONS #######
 try:
-	if sys.platform.startswith("win"):
+	if sys.platform == "Windows":
 		from .Crashserver.speech.voice import *   ### Text2Speech Windows
 	elif sys.platform.startswith("linux"):
 		from .Crashserver.speech.voice_linux import *   ### Text2Speech linux
@@ -27,13 +28,17 @@ except:
 try:	
 	from .Crashserver.arpy import *
 	from .Crashserver.sdur import *
-	#from .Crashserver.coolfunction import *
 	from .Chords import *
+	#from .Crashserver.coolfunction import *
 	# from .Extensions.timer.hack import * ### Crash Server Timer
 	#from .Extensions.Video.video2 import *    ### Video player
 except:
 	print("Error importing Extensions : ", sys.exc_info())
 
+try:
+	from .Crashserver.weapons import *
+except:
+	print("Error in generating weapons code")
 
 ## Path Snd
 
@@ -65,11 +70,12 @@ except:
 #########################
 
 ### Lieu du Server
-lieu = str("du cosmique Festival")
+lieu = str("du diamand d'or")
 ### Longueur mesure d'intro
 tmps = 16
 ### Language
 lang = "french"
+voice = 4
 ### BPM intro
 bpm_intro = 48
 ### Scale intro
@@ -79,25 +85,7 @@ root_intro = "E"
 ### Setup
 part = ["augmentation()", "aspiration()", "attention()", "absolution()", "annihilation()"]
 
-
 ##############   BEGIN ##############################################
-
-def init():
-	if sys.platform.startswith("win"):
-		voix = Voice(lang=lang, rate=0.45, amp=1.0)
-		voix.initi(lieu)
-		Clock.future(tmps, lambda: voix.intro())
-	elif sys.platform.startswith("linux"):
-		serv = init_server(lang, lieu)
-		txt_init = serv.initi()
-		crash_txt = serv.crash_txt()
-		def txt_intro():
-			Voice(crash_txt, rate=1, amp=1, lang=lang, voice=4)
-		print(crash_txt)
-		Voice(txt_init, rate=1, amp=1, lang=lang, voice=4)
-		Clock.future(tmps*2, lambda: txt_intro())	
-	else:
-		print("Sorry, we crash only from windows or linux")
 
 try:
 	def connect():
@@ -120,10 +108,39 @@ except:
 	print("Error in connect function", sys.exc_info()[0])
 
 
+def attack(phase=0, part=0):
+	if phase == 42:
+		clip.copy(define_virus() + "\n" + random_virus())
+		Voice("virus généré aléatoirement", rate=1, lang=lang, voice=randint(1,5))
+	else:		
+		prompt = "# attack@file({}{}):~$ ".format(phase, part)
+		if phase == 0 & part == 0:
+			clip.copy(prompt + define_virus() + "\n" + code[phase][part])
+
+			if sys.platform.startswith("win"):
+				voix = Voice(lang=lang, rate=0.45, amp=1.0)
+				voix.initi(lieu)
+				Clock.future(tmps, lambda: voix.intro())
+			elif sys.platform.startswith("linux"):
+				serv = init_server(lang, lieu)
+				txt_init = serv.initi()
+				crash_txt = serv.crash_txt()
+				def txt_intro():
+					Voice(crash_txt, rate=1, amp=1, lang=lang, voice=voice)
+				Voice(txt_init, rate=1, amp=1, lang=lang, voice=voice)
+				Clock.future(tmps*2, lambda: txt_intro())	
+			else:
+				print("Sorry, we crash only from windows or linux")
+		
+		else:
+			clip.copy(prompt + define_virus() + "\n\n" + code[phase][part])
+
+
+
 ################# END #################################################
 
 def lost(partie):
-	print(part[partie-1])
+	print(code[partie-1])
 
 def OSCVideo(adresse):
 	my_client = FilterOSCClient()
