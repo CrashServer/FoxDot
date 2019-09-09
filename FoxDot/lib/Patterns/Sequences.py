@@ -217,14 +217,21 @@ def PSum(n, total, **kwargs):
     return Pattern(data)
 
 @loop_pattern_func
-def PRange(start, stop=None, step=None):
+def PRange(start, stop=None, step=1):
     """ Returns a Pattern equivalent to ``Pattern(range(start, stop, step))`` """
+    if stop is None:
+        
+        start, stop = 0, start
+
     if start == stop:
+
         return Pattern(start)
-    else:
-        if start - stop > 0 and step > 0:
-            step = step*-1    
-        return Pattern(list(range(*[val for val in (start, stop, step) if val is not None])))
+    
+    if (start > stop and step > 0) or (start < stop and step < 0):
+    
+        step = step*-1
+
+    return Pattern(list(range(start, stop, step)))
 
 @loop_pattern_func
 def PTri(start, stop=None, step=None):
@@ -310,8 +317,6 @@ def PQuicken(dur=1/2, stepsize=3, steps=6):
     """ Returns a PGroup of delay amounts that gradually decrease """
     delay = []
     count = 0
-    if stepsize < 2:
-        stepsize = 2
     for i in range(steps):
         for j in range(stepsize-1):
             delay.append( count )
