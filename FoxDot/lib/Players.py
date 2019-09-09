@@ -1036,7 +1036,7 @@ class Player(Repeatable):
             self.pshift=0
         return self
 
-    def unison(self, unison=2, detune=0.125, analog=10):
+    def unison(self, unison=2, detune=0.125):
         """ Like spread(), but can specify number of voices(unison)  
         Sets pan to (-1,-0.5,..,0.5,1) and pshift to (-0.125,-0.0625,...,0.0625,0.125)
         If unison is odd, an unchanged voice is added in the center
@@ -1051,8 +1051,8 @@ class Player(Repeatable):
                 pan.append(2*i/uni)
                 pan.insert(0, -2*i/uni)
             for i in range(1, int(uni/2)+1):
-                pshift.append(detune*(i/(uni/2))+PWhite(0,detune*(analog/100)))
-                pshift.insert(0,detune*-(i/(uni/2))+PWhite(0,-1*detune*(analog/100)))
+                pshift.append(detune*(i/(uni/2)))
+                pshift.insert(0,detune*-(i/(uni/2)))
             if unison%2!=0 and unison > 1:
                 pan.insert(int(len(pan)/2), 0)
                 pshift.insert(int(len(pan)/2), 0)              
@@ -1062,17 +1062,12 @@ class Player(Repeatable):
             self.pan=0
             self.pshift=0
         return self
-    
-    def human(self, velocity=20, humanize=5, swing=0):
-        """ Humanize the velocity, delay and add swing in % (less to more)"""
-        if velocity!=0:
-            self.delay=[0,PWhite((-1*humanize/100)*self.dur, (humanize/100)*self.dur) + (self.dur*swing/100)]
-            self.amplify=[1,PWhite((100-velocity)/100,1)]
-        else:
-            self.delay=0
-            self.amplify=1
-        return self
 
+    def seconds(self):
+        """ Sets the player bpm to 60 so duration will be measured in seconds """
+        self.bpm=60
+        return self
+    
     def slider(self, start=0, on=1):
         """ Creates a glissando effect between notes """
         if on:
@@ -1526,7 +1521,7 @@ class Player(Repeatable):
                 if len(event['sus']) > 1:
 
                     min_sus = min(event['sus']) if min(event['sus']) else 1
-                    
+
                     offset = PGroup([(sus / min_sus) for sus in event["sus"]])
 
                     event["blur"] = event["blur"] * offset
@@ -1992,7 +1987,6 @@ class Player(Repeatable):
         if isinstance(new_synth, SynthDef):
             new_synth = str(new_synth.name)
         self.synthdef = new_synth
-        print(new_synth)
         return self
 
     """
