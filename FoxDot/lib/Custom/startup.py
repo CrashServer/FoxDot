@@ -112,6 +112,8 @@ def attack(phase=0, part=0):
 	if phase == 42:
 		clip.copy(define_virus() + "\n" + random_virus())
 		Voice("virus généré aléatoirement", rate=1, lang=lang, voice=randint(1,5))
+	elif phase == 43:
+		clip.copy(random_virus_char())	
 	else:		
 		prompt = "# attack@file({}{}):~$ ".format(phase, part)
 		if phase == 0 & part == 0:

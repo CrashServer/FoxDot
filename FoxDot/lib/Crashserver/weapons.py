@@ -29,6 +29,17 @@ def random_virus():
 	random_virus = '{} >> {}({}, dur={}, {})'.format(r_player, r_synth, r_degree, r_dur, r_fx)
 	return random_virus
 
+def random_virus_char():
+	r_player = ''.join(choice(string.ascii_lowercase) for x in range(2))
+	r_synth = 'play'
+	r_degree = str(GENERATE_CHAR())
+	r_sample = '[{}]'.format(",".join([GENERATE_INTEGER() for i in range(randint(1,len(r_degree)))]))
+	r_dur = str(GENERATE_PATTERN("dur"))
+	r_rate = str(GENERATE_PATTERN("dur"))
+	r_fx = str(GENERATE_FX())
+	random_virus_char = '{} >> {}("{}", sample={}, dur={}, rate={}, {})'.format(r_player, r_synth, r_degree, r_sample, r_dur, r_rate, r_fx)
+	return random_virus_char
+
 ### The Code ###
 ### PART I : Augmentation ###
 v10 = 'g1 >> faim([2,3,[5,7]], slide=var([0,[-4,4]], [7,1]), leg=PWhite(0,4), sus=g1.dur*PWhite(0.2,1.5), oct=4, dur=([[1,1,1/2],2,1/2,4,1/2]*PRand([2,3,1,4])), hpf=60, chop=[0,4,16], amp=0.4, room=1, mix=PWhite(0.2,0.5)).spread().sometimes("shuffle") + (0,[2,[4,6]])'

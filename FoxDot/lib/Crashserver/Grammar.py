@@ -5,6 +5,7 @@ if __name__ != "__main__":
     from ..SCLang   import SynthDef, SynthDefs
     from ..Players  import Player
     from ..Patterns import Sequences
+    from ..Buffers import alpha, nonalpha
     from ..Patterns.Sequences import *
     from ..Effects.Util import FxList
 
@@ -154,6 +155,7 @@ def GENERATE_RDM(keyword=None):
     return str(round(random(),2))
 
 def GENERATE_FREQLIST(keyword=None):
+    freq1 = []
     return 'linvar([{},{}],{})'.format(str(randint(300, 12000)),str(randint(300, 12000)),GENERATE_LIST())
 
 def GENERATE_FX():
@@ -165,6 +167,22 @@ def GENERATE_FX():
     else:
         fx_arg = str(round(random(),2))    
     return str(fx_rnd) + "=" + fx_arg
+
+def GENERATE_CHAR():
+    rnd_char_list = []
+    clr_list = ["1","2","3","4","?","!"] 
+    clr_nonalpha = [x for x in nonalpha.keys()]
+    for i in clr_list:
+        clr_nonalpha.remove(i)
+    for i in range(randint(3,10)):
+        if random() > 0.3:
+            if random() > 0.5:
+                rnd_char_list.append(choice(list(clr_nonalpha)))
+            else:
+                rnd_char_list.append(choice(list(alpha.upper())+list(alpha))) 
+        else:
+            rnd_char_list.append(".")               
+    return "".join(rnd_char_list)    
 
 def GEN_CHOOSE_VALUE(keyword=None):
     r = random()

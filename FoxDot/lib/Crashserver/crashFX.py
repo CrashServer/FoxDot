@@ -1,11 +1,9 @@
 from ..Effects import *
 
 # Fx LOOP
-fx = FxList.new('fx1','fxout', {'fx1': 0, 'tmp1': 0, 'fx1_lvl':1}, order=1)
+fx = FxList.new('fx1','fxout', {'fx1': 0}, order=1)
 fx.doc("FX1 Bus")
-fx.add("Out.ar(2, Mix.ar(osc*fx1_lvl))")
-fx.add("tmp1 = AudioIn.ar(1)")
-fx.add("osc = SelectX.ar(fx1, [osc, tmp1])")
+fx.add("Out.ar(2, Mix.ar(osc*fx1))")
 fx.save()
 
 fx = FxList.new('fx2','fx2out', {'fx2': 0, 'tmp2': 0, 'fx2_lvl':1}, order=1)
