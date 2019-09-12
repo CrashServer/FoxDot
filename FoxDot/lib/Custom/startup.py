@@ -58,12 +58,35 @@ try:
 			def send(self, message, *args):
 					if "video" in str(message.message):
 							OSCClient.send(self, message, *args)
-		
-	my_client = FilterOSCClient()
-	my_client.connect(("192.168.0.22", 12345))
-	Server.forward = my_client
+	def OSCVideo(adresse):
+		my_client = FilterOSCClient()
+		my_client.connect((adresse, 12345))
+		Server.forward = my_client
 except:
 	print("Error forwarding OSC to video", sys.exc_info()[0])
+
+def init_voice():
+	if sys.platform.startswith("win"):
+		voix = Voice(lang=lang, rate=0.45, amp=1.0)
+		voix.initi(lieu)
+		Clock.future(tmps, lambda: voix.intro())
+	elif sys.platform.startswith("linux"):
+		serv = init_server(lang, lieu)
+		txt_init = serv.initi()
+		crash_txt = serv.crash_txt()
+		def txt_intro():
+			Voice(crash_txt, rate=1, amp=1, lang=lang, voice=voice)
+		Voice(txt_init, rate=1, amp=1, lang=lang, voice=voice)
+		Clock.future(tmps, lambda: txt_intro())	
+	else:
+		print("Sorry, we crash only from windows or linux")
+
+def voice_lpf(freq=400):
+	Master().lpf=freq
+
+def calc_dur_voice(phrase=""):
+	print((round((60/100)*len(phrase.split())*(Clock.bpm/60))))
+	return (round((60/100)*len(phrase.split())*(Clock.bpm/60)))
 
 #########################
 ### CRASH SERVER SET  ###
@@ -75,76 +98,58 @@ lieu = str("du diamand d'or")
 tmps = 16
 ### Language
 lang = "french"
-voice = 4
+voice = 0
 ### BPM intro
 bpm_intro = 48
 ### Scale intro
 scale_intro = "minor"
 ### Root intro
 root_intro = "E"
-### Setup
-part = ["augmentation()", "aspiration()", "attention()", "absolution()", "annihilation()"]
+### Video  
+video = 0
+adresse = "192.168.0.22"
+
 
 ##############   BEGIN ##############################################
 
-try:
-	def connect():
-		print("Welcome CrAsh ServEr \nC0nnect_the_S&rV3r")
-		Clock.bpm = bpm_intro
-		Scale.default = scale_intro
-		Root.default = root_intro
-		
-		def samples_intro():
-			#z1 >> play("z...", mpf=expvar([10,4800],[tmps,inf], start=now), amp=0.7)
-			i1 >> play("I.....", amp=linvar([0,0.7],[tmps*2,tmps*4], start=now), dur=PRand([4,8,2,16]),rate=-0.5, room=PWhite(0,1), mix=PWhite(0,0.6))
 
-		
-		i3 >> sos(dur=8, mpf=linvar([60,4800],[tmps*1.5, tmps*3], start=now), hpf=expvar([0,500],[tmps*6, tmps*2]))
-		vi >> video(vid=0, speed=1, vfx1=0, vfx2=0)
-		
-		#Clock.future(tmps*1.5, lambda: init())
-		Clock.future(tmps, lambda: samples_intro())
-except:
-	print("Error in connect function", sys.exc_info()[0])
+def connect(video=video):
+	print(code["connect"][0])
+	Clock.bpm = bpm_intro
+	Scale.default = scale_intro
+	Root.default = root_intro
+	if video==1:
+		OSCClient(adresse)
+		vi >> video(vid=0, speed=1, vfx1=0, vfx2=0)		
+	i3 >> sos(dur=8, lpf=linvar([60,4800],[tmps*1.5, tmps*3], start=now), hpf=expvar([0,500],[tmps*6, tmps*2]))
+	clip.copy(code["connect"][1])
 
 
-def attack(phase=0, part=0):
-	if phase == 42:
-		clip.copy(define_virus() + "\n" + random_virus())
-		Voice("virus généré aléatoirement", rate=1, lang=lang, voice=randint(1,5))
-	elif phase == 43:
-		clip.copy(random_virus_char())	
-	else:		
-		prompt = "# attack@file({}{}):~$ ".format(phase, part)
-		if phase == 0 & part == 0:
-			clip.copy(prompt + define_virus() + "\n" + code[phase][part])
-
-			if sys.platform.startswith("win"):
-				voix = Voice(lang=lang, rate=0.45, amp=1.0)
-				voix.initi(lieu)
-				Clock.future(tmps, lambda: voix.intro())
-			elif sys.platform.startswith("linux"):
-				serv = init_server(lang, lieu)
-				txt_init = serv.initi()
-				crash_txt = serv.crash_txt()
-				def txt_intro():
-					Voice(crash_txt, rate=1, amp=1, lang=lang, voice=voice)
-				Voice(txt_init, rate=1, amp=1, lang=lang, voice=voice)
-				Clock.future(tmps*2, lambda: txt_intro())	
-			else:
-				print("Sorry, we crash only from windows or linux")
-		
-		else:
-			clip.copy(prompt + define_virus() + "\n\n" + code[phase][part])
-
-
+def attack(part="default"):
+	if type(part) is not str:  ### so we can type attack(42) or attack(43)
+		part = str(part)
+	elif part == "default":    ### Random choice of part
+		part = choice([i for i in code.keys() if i not in ["init", "connect"]])
+	exten = ''.join(choice(string.ascii_lowercase) for x in range(3))
+	prompt = "# attack@{}.{}:~$ ".format(part, exten)
+	if part == "init":    ### Init Server
+		init_voice()
+		clip.copy(prompt + define_virus()+ "\n" + code[part][1])
+	if part == "42" or part == "random":   ### Random Synth code
+		clip.copy(prompt + define_virus()+ "\n" + random_virus())
+	elif part=="43":  ### Random play code
+		clip.copy(prompt + define_virus()+ "\n" + random_virus_char())
+	else:
+		if code[part][1] is not None:
+			clip.copy(prompt + define_virus()+ "\n" + code[part][1])
+	if code[part][0] is not None:   ### Voice generator
+		voice_lpf(400)
+		Voice(code[part][0], rate=1, lang=lang, voice=randint(1,5))		
+		Clock.future(calc_dur_voice(code[part][0]), lambda: voice_lpf(0))
 
 ################# END #################################################
 
-def lost(partie):
-	print(code[partie-1])
+def lost():
+	print([i for i in code.keys()])
 
-def OSCVideo(adresse):
-	my_client = FilterOSCClient()
-	my_client.connect((adresse, 12345))
-	Server.forward = my_client
+
