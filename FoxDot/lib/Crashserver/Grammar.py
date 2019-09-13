@@ -37,9 +37,12 @@ if __name__ != "__main__":
     del patternNames["PBeat"]
     del patternNames["PDelay"]
 
-    synthdefNames.remove("video")
-    fxNames.remove("fx1")
-    fxNames.remove("fx2")
+    try:
+        synthdefNames.remove("video")
+        fxNames.remove("fx1")
+        fxNames.remove("fx2")
+    except:
+        pass
     
 # Grammar
 

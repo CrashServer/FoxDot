@@ -5,16 +5,39 @@ import os
 import sys
 from .Settings import FOXDOT_ROOT
 import pyperclip as clip
+#  OPTIONAL ASCII GENERATOR
+from pyfiglet import figlet_format
 
-### SYNTHDEFS #####
+#########################
+### SERVER CONFIG     ###
+#########################
+
+### Lieu du Server
+lieu = str("du diamand d'or")
+### Longueur mesure d'intro
+tmps = 16
+### Language
+lang = "french"
+voice = 0
+### BPM intro
+bpm_intro = 48
+### Scale intro
+scale_intro = "minor"
+### Root intro
+root_intro = "E"
+### Video  
+video = 0
+adresse = "192.168.0.22"
+
+### LOAD CUSTOM SYNTHDEFS #####
 try:
 	from .Crashserver.crashSynthDefs import * ### Crash Custom SynthDefs
 	from .Crashserver.crashFX import * ### Crash Custom Fx
-	from .Crashserver.Buffers_crash import * ### Crash Buffers
 except:
 	print("Error importing SynthDefs, FX or Loop player : ", sys.exc_info()[0])
 
 ### EXTENSIONS #######
+### TXT 2 Speech ####
 try:
 	if sys.platform == "Windows":
 		from .Crashserver.speech.voice import *   ### Text2Speech Windows
@@ -25,6 +48,7 @@ try:
 except:
 	print("Error importing Speech Extension")
 
+### Foxdot tools
 try:	
 	from .Crashserver.arpy import *
 	from .Crashserver.sdur import *
@@ -35,13 +59,13 @@ try:
 except:
 	print("Error importing Extensions : ", sys.exc_info())
 
+### Code generator
 try:
 	from .Crashserver.weapons import *
 except:
 	print("Error in generating weapons code")
 
 ## Path Snd
-
 crash_path = os.path.realpath(FOXDOT_ROOT + "/lib/Crashserver/crash_snd/")
 
 try: 
@@ -65,6 +89,7 @@ try:
 except:
 	print("Error forwarding OSC to video", sys.exc_info()[0])
 
+### Voice initialisation
 def init_voice():
 	if sys.platform.startswith("win"):
 		voix = Voice(lang=lang, rate=0.45, amp=1.0)
@@ -81,34 +106,16 @@ def init_voice():
 	else:
 		print("Sorry, we crash only from windows or linux")
 
+### LPF during Txt 2 Speech
 def voice_lpf(freq=400):
 	Master().lpf=freq
 
 def calc_dur_voice(phrase=""):
-	print((round((60/100)*len(phrase.split())*(Clock.bpm/60))))
 	return (round((60/100)*len(phrase.split())*(Clock.bpm/60)))
 
-#########################
-### CRASH SERVER SET  ###
-#########################
-
-### Lieu du Server
-lieu = str("du diamand d'or")
-### Longueur mesure d'intro
-tmps = 16
-### Language
-lang = "french"
-voice = 0
-### BPM intro
-bpm_intro = 48
-### Scale intro
-scale_intro = "minor"
-### Root intro
-root_intro = "E"
-### Video  
-video = 0
-adresse = "192.168.0.22"
-
+### Generate ASCII from text into the clipboard 
+def ascii_gen(text=""):
+	clip.copy(figlet_format(text))
 
 ##############   BEGIN ##############################################
 
@@ -122,30 +129,42 @@ def connect(video=video):
 		OSCClient(adresse)
 		vi >> video(vid=0, speed=1, vfx1=0, vfx2=0)		
 	i3 >> sos(dur=8, lpf=linvar([60,4800],[tmps*1.5, tmps*3], start=now), hpf=expvar([0,500],[tmps*6, tmps*2]))
-	clip.copy(code["connect"][1])
+	clip.copy(figlet_format(code["connect"][0]) + "\n\n\n" + code["connect"][2])
 
 
 def attack(part="default"):
 	if type(part) is not str:  ### so we can type attack(42) or attack(43)
 		part = str(part)
-	elif part == "default":    ### Random choice of part
+
+	### Random choice of part
+	elif part == "default":    
 		part = choice([i for i in code.keys() if i not in ["init", "connect"]])
+	
+	### Define prompt
 	exten = ''.join(choice(string.ascii_lowercase) for x in range(3))
 	prompt = "# attack@{}.{}:~$ ".format(part, exten)
-	if part == "init":    ### Init Server
+	
+	### Init server
+	if part == "init":    
 		init_voice()
-		clip.copy(prompt + define_virus()+ "\n" + code[part][1])
+		clip.copy(figlet_format(code[part][0]) + "\n\n\n" + prompt + define_virus()+ "\n" + code[part][2])
+	
+	### Random code generator
 	if part == "42" or part == "random":   ### Random Synth code
 		clip.copy(prompt + define_virus()+ "\n" + random_virus())
 	elif part=="43":  ### Random play code
 		clip.copy(prompt + define_virus()+ "\n" + random_virus_char())
+	
+	### Select Part and generate Ascii text
 	else:
-		if code[part][1] is not None:
-			clip.copy(prompt + define_virus()+ "\n" + code[part][1])
-	if code[part][0] is not None:   ### Voice generator
+		if code[part][2] and code[part][0] is not None:
+			clip.copy(figlet_format(code[part][0]) + "\n\n\n" + prompt + define_virus()+ "\n" + code[part][2])
+	
+	### Generate Voice
+	if code[part][1] is not None:   ### Voice generator
 		voice_lpf(400)
-		Voice(code[part][0], rate=1, lang=lang, voice=randint(1,5))		
-		Clock.future(calc_dur_voice(code[part][0]), lambda: voice_lpf(0))
+		Voice(code[part][1], rate=1, lang=lang, voice=randint(1,5))		
+		Clock.future(calc_dur_voice(code[part][1]), lambda: voice_lpf(0))
 
 ################# END #################################################
 
