@@ -115,7 +115,8 @@ def calc_dur_voice(phrase=""):
 
 ### Generate ASCII from text into the clipboard 
 def ascii_gen(text=""):
-	clip.copy(figlet_format(text))
+	if text is not None:
+		clip.copy(figlet_format(text))
 
 ##############   BEGIN ##############################################
 

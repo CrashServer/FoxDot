@@ -57,21 +57,20 @@ code = {
 	"aspiration": ["Aspiration", "Faille dans le serveur detectée, risque d'instabilité niveau 2", \
 			'sa >> saw((0,1), oct=(3,[4,5]), lpf=PRand(8800), lpr=PWhite(0.1,0.9), amp=[0,0.4,0], dur=var([4,1/4,2],16), chop=8, drive=0.2, slide=(PWhite(-2,2),PWhite(-1,1))).unison(16, analog=40)'],
 	"attention" : ["Attention", "Attention, le server subit une attaque de classe 3, défense activée", \
-			'd8 >> play("X ", sample=2, mpf=4000, amp=1).every(9, "amp.offadd", -1,0.75).every(7, "stutter", 4, rate=PWhite(0.5,8), pan=[-1,1]).only()\n\
-q1 >> play("//", sample=1, dur=4, hpf=30, mpf=16000, amp=0.5, rate=4)\n\
-s2 >> play("<|a3|.><(A.).><B><b.>", dur=2, sample=2, delay=0.5, hpf=(0, 400, 100, 1000))\n\
-g1 >> play("p ", sample=2, dur=1/2, amp=0.4, leg=25, pan=PWhite(-0.25,0.25))\n\
-g2 >> play("p ", sample=1, dur=PDur([3, 5], 8), amp=0.8, leg=25, pan=PWhite(0.5,-1))\n\
-g3 >> play("q ", sample=1, dur=PDur([3, 5], 8), amp=0.8, leg=PWhite(50, 150), pan=PWhite(-0.3,0.7))\n\
-g4 >> play("q ", sample=2, dur=PDur([1, 6], 8), amp=0.8, leg=25, pan=PWhite(-1,1))\n\
-c2 >> cluster([0, 2, 0], para1=[14, 21, 28, 32, 128], mult=0, mpf=400, fmod=12, amp=1)\n\
-p4 >> prof(oct=(3,4), triode=[0,2,4,6], fmod=4, dur=1, amp=[1,0]).spread()\n\
+			'd8 >> play("X ", sample=2, mpf=4000, amp=1).every(9, "amp.offadd", -1,0.75).every(7, "stutter", 4, rate=PWhite(0.5,8), pan=[-1,1]).only()\
+q1 >> play("//", sample=1, dur=4, hpf=30, mpf=16000, amp=0.5, rate=4)\
+s2 >> play("<|a3|.><(A.).><B><b.>", dur=2, sample=2, delay=0.5, hpf=(0, 400, 100, 1000))\
+g3 >> play("q ", sample=1, dur=PDur([3, 5], 8), amp=0.8, leg=PWhite(50, 150), pan=PWhite(-0.3,0.7))\
+g4 >> play("q ", sample=2, dur=PDur([1, 6], 8), amp=0.8, leg=25, pan=PWhite(-1,1))\
+c2 >> cluster([0, 2, 0], para1=[14, 21, 28, 32, 128], mult=0, mpf=400, fmod=12, amp=1)\
 i2 >> play("i", dur=8, sample=6, leg=21, room=1, mix=0.2, echo=[(0.33, 0.25), 0.25],mpf=12000).spread()'],
-	"random": ["virus généré aléatoirement", ""],
-	"42": [None,None],
-	"43": [None,None],
-	"desynchro": ["Alerte!, Desynchronisation du server temporel", "Clock.bpm = var([{}],{})".format(", ".join([str(randint(38,220)) for n in range(randint(2,9))]), str([randint(2,16) for n in range(randint(2,9))]))],
-	#"blabla": ["ceci est un blalbla pour dire absolument n'importe quoi et c'est tant mieux comme cela", ""],
+	"absolution": ["Absolution", "Le serveur est mis en quarataine, l'attaque a échouée. Ah Ah Ah Ah!", \
+			'Clock.bpm = linvar([120,150,120,60],[PRand([4, 8, 16, 2])]) \
+			p5 >> pianovel(Pvar([Scale.major, Scale.minor, Scale.locrian]).palindrome(), flanger=PWhite(0, 0.1), oct=P[3:7], lpf=Clock.bpm * 10, delay=(0, 0.5, 0.05), sus=PWhite(0.5,1.2), velocity=PWhite(40,80))'],
+	"random": [None, "virus généré aléatoirement", ""],
+	"42": [None, None,None],
+	"43": [None, None,None],
+	"desynchro": [None, "Alerte!, Desynchronisation du server temporel", "Clock.bpm = var([{}],{})".format(", ".join([str(randint(38,220)) for n in range(randint(2,9))]), str([randint(2,16) for n in range(randint(2,9))]))],
 }
 
 
