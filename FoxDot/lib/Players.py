@@ -1064,7 +1064,7 @@ class Player(Repeatable):
             self.pshift=0
         return self
 
-     def human(self, velocity=20, humanize=5, swing=0):
+    def human(self, velocity=20, humanize=5, swing=0):
         """ Humanize the velocity, delay and add swing in % (less to more)"""
         if velocity!=0:
             self.delay=[0,PWhite((-1*humanize/100)*self.dur, (humanize/100)*self.dur) + (self.dur*swing/100)]
