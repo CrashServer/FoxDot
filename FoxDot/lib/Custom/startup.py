@@ -119,10 +119,10 @@ def ascii_gen(text=""):
 		clip.copy(figlet_format(text))
 
 ##############   BEGIN ##############################################
-
+main_part = ["init", "connect", "aspiration", "attention", "corrosion", "absolution"]
 
 def connect(video=video):
-	print(code["connect"][0])
+	print(code["connect"][1])
 	Clock.bpm = bpm_intro
 	Scale.default = scale_intro
 	Root.default = root_intro
@@ -139,8 +139,12 @@ def attack(part="default"):
 
 	### Random choice of part
 	elif part == "default":    
-		part = choice([i for i in code.keys() if i not in ["init", "connect"]])
+		part = choice([i for i in code.keys() if i not in main_part])
 	
+	blase = code[part][0]
+	voice_txt = code[part][1]
+	code_txt = code[part][2]
+
 	### Define prompt
 	exten = ''.join(choice(string.ascii_lowercase) for x in range(3))
 	prompt = "# attack@{}.{}:~$ ".format(part, exten)
@@ -148,7 +152,7 @@ def attack(part="default"):
 	### Init server
 	if part == "init":    
 		init_voice()
-		clip.copy(figlet_format(code[part][0]) + "\n\n\n" + prompt + define_virus()+ "\n" + code[part][2])
+		clip.copy(figlet_format(blase) + "\n\n" + prompt + define_virus()+ "\n" + code_txt)
 	
 	### Random code generator
 	if part == "42" or part == "random":   ### Random Synth code
@@ -158,14 +162,13 @@ def attack(part="default"):
 	
 	### Select Part and generate Ascii text
 	else:
-		if code[part][2] and code[part][0] is not None:
-			clip.copy(figlet_format(code[part][0]) + "\n\n\n" + prompt + define_virus()+ "\n" + code[part][2])
+		clip.copy((figlet_format(blase) if blase is not None else "") + "\n\n" + prompt + define_virus()+ "\n" + (code_txt if code_txt is not None else ""))
 	
 	### Generate Voice
-	if code[part][1] is not None:   ### Voice generator
+	if voice_txt is not None:   ### Voice generator
 		voice_lpf(400)
-		Voice(code[part][1], rate=1, lang=lang, voice=randint(1,5))		
-		Clock.future(calc_dur_voice(code[part][1]), lambda: voice_lpf(0))
+		Voice(voice_txt, rate=1, lang=lang, voice=randint(1,5))		
+		Clock.future(calc_dur_voice(voice_txt), lambda: voice_lpf(0))
 
 ################# END #################################################
 
