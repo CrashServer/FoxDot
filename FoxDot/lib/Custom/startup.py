@@ -59,13 +59,13 @@ try:
 except:
 	print("Error importing Extensions : ", sys.exc_info())
 
-### Code generator
+### Load weapons - Code generator
 try:
 	from .Crashserver.weapons import *
 except:
 	print("Error in generating weapons code")
 
-## Path Snd
+### Path Snd
 crash_path = os.path.realpath(FOXDOT_ROOT + "/lib/Crashserver/crash_snd/")
 
 try: 
@@ -76,7 +76,7 @@ try:
 except:
 	print("Error importing Custom Sound", sys.exc_info()[0])
 
-# OSC VIDEO Filtered FORWARD
+### OSC VIDEO Filtered FORWARD
 try:
 	class FilterOSCClient(OSCClient):
 			def send(self, message, *args):
@@ -111,7 +111,10 @@ def voice_lpf(freq=400):
 	Master().lpf=freq
 
 def calc_dur_voice(phrase=""):
-	return (round((60/100)*len(phrase.split())*(Clock.bpm/60)))
+	try:
+		return (round((60/100)*len(phrase.split())*(Clock.bpm/60)))
+	except:
+		return 8
 
 ### Generate ASCII from text into the clipboard 
 def ascii_gen(text=""):
@@ -119,7 +122,7 @@ def ascii_gen(text=""):
 		clip.copy(figlet_format(text))
 
 ##############   BEGIN ##############################################
-main_part = ["init", "connect", "aspiration", "attention", "corrosion", "absolution"]
+main_part = ["init", "connect", "aspiration", "attention", "corrosion", "absolution", "annihilation"]
 
 def connect(video=video):
 	print(code["connect"][1])
@@ -130,14 +133,14 @@ def connect(video=video):
 		OSCClient(adresse)
 		vi >> video(vid=0, speed=1, vfx1=0, vfx2=0)		
 	i3 >> sos(dur=8, lpf=linvar([60,4800],[tmps*1.5, tmps*3], start=now), hpf=expvar([0,500],[tmps*6, tmps*2]))
-	clip.copy(figlet_format(code["connect"][0]) + "\n\n\n" + code["connect"][2])
+	clip.copy(figlet_format(code["connect"][0]) + "\n" + code["connect"][2])
 
 
 def attack(part="default"):
 	if type(part) is not str:  ### so we can type attack(42) or attack(43)
 		part = str(part)
 
-	### Random choice of part
+	### Random choice of Part
 	elif part == "default":    
 		part = choice([i for i in code.keys() if i not in main_part])
 	
@@ -147,12 +150,12 @@ def attack(part="default"):
 
 	### Define prompt
 	exten = ''.join(choice(string.ascii_lowercase) for x in range(3))
-	prompt = "# attack@{}.{}:~$ ".format(part, exten)
+	prompt = "### attack@{}.{}:~$ ".format(part, exten)
 	
 	### Init server
 	if part == "init":    
 		init_voice()
-		clip.copy(figlet_format(blase) + "\n\n" + prompt + define_virus()+ "\n" + code_txt)
+		clip.copy(figlet_format(blase) + "\n" + prompt + define_virus()+ "\n" + code_txt)
 	
 	### Random code generator
 	if part == "42" or part == "random":   ### Random Synth code
@@ -162,7 +165,7 @@ def attack(part="default"):
 	
 	### Select Part and generate Ascii text
 	else:
-		clip.copy((figlet_format(blase) if blase is not None else "") + "\n\n" + prompt + define_virus()+ "\n" + (code_txt if code_txt is not None else ""))
+		clip.copy((figlet_format(blase) if blase is not None else "") + "\n" + prompt + define_virus()+ "\n" + (code_txt if code_txt is not None else ""))
 	
 	### Generate Voice
 	if voice_txt is not None:   ### Voice generator
@@ -174,5 +177,13 @@ def attack(part="default"):
 
 def lost():
 	print([i for i in code.keys()])
+
+def binary(number):
+    # return a list converted to binary from a number 
+    binlist = [int(i) for i in str(bin(number)[2:])]
+    return binlist
+
+def desynchro():
+	clip.copy(random_bpm())    	
 
 
