@@ -55,7 +55,7 @@ def random_bpm():
 #{"nom": [ascii_text, dialogue, code]}
 
 code = {
-	"connect": ["Crash Server", "Welcome CrAsh ServEr \nC0nnect_the_S&rV3r", \
+	"connect": ["Crash Server", "Welcome CrAsh ServEr \nC0nnect_the_S&rV3r \n -- StageLimiter : Active \n -- Carla : Active \n -- Record : Active", \
 			'i3 >> sos(dur=8, lpf=linvar([60,4800],[tmps*1.5, tmps*3]), hpf=expvar([0,500],[tmps*6, tmps*2]))'], 
 	
 	"init": ['Augmentation', None , \
