@@ -111,8 +111,12 @@ def voice_lpf(freq=400):
 	Master().lpf=freq
 
 def calc_dur_voice(phrase=""):
+	phrase = len(phrase.split())
 	try:
-		return (round((60/100)*len(phrase.split())*(Clock.bpm/60)))
+		if phrase or phrase > 0:
+			return (Clock.seconds_to_beats(phrase * 0.6))
+		else:
+			return 8
 	except:
 		return 8
 
@@ -186,4 +190,7 @@ def binary(number):
 def desynchro():
 	clip.copy(random_bpm())    	
 
+def PTime():
+    ### Generate a pattern from the local machine time
+    return [int(t) for t in str(Clock.get_time_at_beat(int(Clock.now()))) if t is not '.']
 

@@ -1,12 +1,15 @@
 ### Custom SynthDefs, Alphabetical order
 
-from ..SCLang.SynthDef import SynthDef, SampleSynthDef, FileSynthDef
+from ..SCLang.SynthDef import FileSynthDef
 
 abass = FileSynthDef("abass")
 abass.add()
 
 bbass = FileSynthDef("bbass")
 bbass.add()
+
+bounce = FileSynthDef("bounce")
+bounce.add()
 
 click = FileSynthDef("click")
 click.add()
@@ -19,6 +22,9 @@ dafbass.add()
 
 faim = FileSynthDef("faim")
 faim.add()
+
+mpluck = FileSynthDef("mpluck")
+mpluck.add()
 
 pianovel = FileSynthDef("pianovel")
 pianovel.add()
