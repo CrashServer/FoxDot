@@ -194,3 +194,9 @@ def PTime():
     ### Generate a pattern from the local machine time
     return [int(t) for t in str(Clock.get_time_at_beat(int(Clock.now()))) if t is not '.']
 
+def PTimebin():
+	### Generate a pattern of actual time converted to binary
+	return binary(int(Clock.get_time_at_beat(int(Clock.now()))))
+
+def lininf(start=0, finish=1, time=32):
+    return linvar([start,finish],[time,inf], start=now)

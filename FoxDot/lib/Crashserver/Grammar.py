@@ -173,7 +173,7 @@ def GENERATE_FX():
 
 def GENERATE_CHAR():
     rnd_char_list = []
-    clr_list = ["1","2","3","4","?","!"] 
+    clr_list = ["1","2","3","4","?","!", "\\"] 
     clr_nonalpha = [x for x in nonalpha.keys()]
     for i in clr_list:
         clr_nonalpha.remove(i)
