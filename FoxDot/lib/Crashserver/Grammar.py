@@ -36,11 +36,13 @@ if __name__ != "__main__":
     del patternNames["PJoin"]
     del patternNames["PBeat"]
     del patternNames["PDelay"]
+    del patternNames["PQuicken"]
 
     try:
         synthdefNames.remove("video")
         fxNames.remove("fx1")
         fxNames.remove("fx2")
+        fxNames.remove("tek")
     except:
         pass
     
@@ -162,6 +164,7 @@ def GENERATE_FREQLIST(keyword=None):
     return 'linvar([{},{}],{})'.format(str(randint(300, 12000)),str(randint(300, 12000)),GENERATE_LIST())
 
 def GENERATE_FX():
+    ### Generate a fx LIST
     fx_rnd =  choice([x for x in fxNames])
     if fx_rnd in fx_integer:
         fx_arg = GENERATE_PATTERN() 
@@ -172,6 +175,7 @@ def GENERATE_FX():
     return str(fx_rnd) + "=" + fx_arg
 
 def GENERATE_CHAR():
+    ### Generate a character LIST 
     rnd_char_list = []
     clr_list = ["1","2","3","4","?","!", "\\"] 
     clr_nonalpha = [x for x in nonalpha.keys()]

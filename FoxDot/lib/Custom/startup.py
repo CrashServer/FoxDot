@@ -73,6 +73,7 @@ try:
 	FOXDOT_LOOP  = os.path.realpath(crash_path + "/_loop_/")
 	FoxDotCode.use_sample_directory(FOXDOT_SND)
 	Samples.addPath(FOXDOT_LOOP)
+	loops = sorted([fn.rsplit(".",1)[0] for fn in os.listdir(FOXDOT_LOOP)])
 except:
 	print("Error importing Custom Sound", sys.exc_info()[0])
 
