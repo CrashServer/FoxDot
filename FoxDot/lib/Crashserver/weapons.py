@@ -67,13 +67,23 @@ b2 >> faim([3,PRand(7)], dur=PDur(9,11), oct=[[5,6],4], room=0.7, mix=0.3, krush
 sw >> pasha(b2.degree + (0,var(P*[6,3,2],4),4), amplify=[1,b2.amp>0.5], dur=PDur(7,9,2,var(P*[0.25,0.5,1],[6,2,4])), leg=PWhite(0,2), glide=PWhite(0.2,2), swell=0.4, sus=sw.dur*PWhite(0.1,0.9), oct=[5,6], room=1, mix=0.3).unison(4,0.125)'],
 	
 	"attention" : ["Attention", "Attention, le server subit une attaque de classe 3, défense activée", \
-			'd8 >> play("X ", sample=2, mpf=4000, amp=1).every(9, "amp.offadd", -1,0.75).every(7, "stutter", 4, rate=PWhite(0.5,8), pan=[-1,1]).only()\n\
-q1 >> play("//", sample=1, dur=4, hpf=30, mpf=16000, amp=0.5, rate=4)\n\
-s2 >> play("<|a3|.><(A.).><B><b.>", dur=2, sample=2, delay=0.5, hpf=(0, 400, 100, 1000))\n\
-g3 >> play("q ", sample=1, dur=PDur([3, 5], 8), amp=0.8, leg=PWhite(50, 150), pan=PWhite(-0.3,0.7))\n\
+			'a1 >> rsin(dur=var(PRand([1,1/2,1/4,2]),8), hpf=linvar([30,180],23), oct=5, para1=PWhite(200, 8000), vib=4, fmod=8, lpf=linvar([3000,8000],19), sus=a1.dur+0.25)\n\
+q1 >> play("//", sample=PRand(1), room=1, mix=0.2, dur=16, hpf=40, spf=40, spfslide=5, spfend=8000, amp=0.5, rate=[PWhite(-1,-0.1), PWhite(2,8)], pan=(PWhite(-1,1),PWhite(-1,1)))\n\
+s2 >> play("<|a3|.><(A.).><B><b.>", dur=2, sample=2, delay=0.5, hpf=(40, 400, 100, 1000))\n\
+i2 >> play("i", dur=8, sample=6, leg=21, room=1, mix=0.2, echo=[(0.33, 0.25), 0.25],mpf=12000).spread()\n\
+g1 >> play("p ", sample=2, dur=1/2, lpf=7000, lpr=0.1, amplify=sinvar([0,1],37), amp=0.4, leg=8, pan=PWhite(-0.25,0.25))\n\
+g2 >> play("p ", sample=1, dur=PDur([3, 5], 8), lpf=8000, amplify=sinvar([0,1],13), lpr=0.3, amp=0.8, leg=8, pan=PWhite(0.5,-1))\n\
+g3 >> play("q ", sample=1, dur=PDur([3, 5], 8), amp=0.5, spf=8800, spfend=340, spfslide=2, chop=1/2, leg=PWhite(150), hpf=140, pshift=0, pan=PWhite(-0.4,0.7))\n\
 g4 >> play("q ", sample=2, dur=PDur([1, 6], 8), amp=0.8, leg=25, pan=PWhite(-1,1))\n\
-c2 >> cluster([0, 2, 0], para1=[14, 21, 28, 32, 128], mult=0, mpf=400, fmod=12, amp=1)\n\
-i2 >> play("i", dur=8, sample=6, leg=21, room=1, mix=0.2, echo=[(0.33, 0.25), 0.25],mpf=12000).spread()'],
+c2 >> cluster([0, 2, 0], para1=[14, 21, 28, 32, 128], mult=0, mpf=400, hpf=40, fmod=12, amp=1)\n\
+c3 >> cluster([0, 2, 0], oct=PStep(4,3,6), para1=[14, 21, 28, 32, 128], dur=4, hpf=40, mult=16, mpf=400, fmod=128, amp=1)\n\
+c4 >> cluster([0, 2, 0], para1=[14, 21, 28, 32, 128], dur=2, hpf=40, mult=4, mpf=400, fmod=12, amp=1)\n\n\
+d8 >> play("<X(..{XxK.})X(..X)(X.)>", sample=2, lpf=linvar([400,1500],[32,7]), lpr=PWhite(0.3,1), amp=0.7, amplify=1).every(PRand(1,9), "stutter", PRand([6,8,12,16]), rate=PWhite(1,1.125), pan=[-1,1], bpf=1500, drive=0.2)\n\
+c1 >> click(oct=[5,4], vib=[1, 2, 4, 8, 2, 16], echo=PStep([7,[3,6]],0,0.25), dur=[2,4,6], mult=PRand(16), amp=0.2, shape=0.2, slide=0.3, pan=PWhite(-1,1))\n\n\
+bd >> dbass(PSine(256)*0.3, dur=PDur(6,11), amplify=0.8*(d8.degree!="X"), leg=PRand(128), oct=5, lpf=3000, fx1=1, hpf=60).unison(3)\n\n\
+d8 >> play("<X(.....{X[XX]xv})><..O.><|x4|.>", fx2=1, amplify=1, lpf=8000)\n\
+dy >> play("<[-{---|:4|}]><.:>", sample=5, lpf=13000 ,pan=PWhite(-0.5,0.5), rate=PWhite(0.99,1.01)).human(80,3,4).sometimes("stutter", PRand(4))\n\
+s6 >> sawbass(bd.degree, dur=[6,2], oct=(4,[5,[6,7]]), leg=16, bend=([4,5],[3,2]), benddelay=([0.85,0.95,0.75],[0.65,1,0.35]), shape=PWhite(0,0.5), cutoff=linvar([2500,6000],24), amplify= 0.7, hpf=50, chop=var([0,4],[[6,14,2],[2,4]])).unison(3, 0.25, 80)'],
 	
 	"corrosion": ["corrosion", None, "s3 >> star([0, 3, [3, 7], 0.5, PRand([3, 7, 0, (0.5, 3, 0)])], crush=linvar([128, 0], [16, inf], start=now),dur=1/8, oct=6, scale=Scale.locrianMajor, formant=PRand([0, 4]), amp=0.5) + Pvar([0, 3, 0, 0, 2, 0], [4, 2])\n\
 f1 >> faim(PArp([0,1,0.5],11), oct=(3, 4), dur=1/4, lpf=200)"],
@@ -126,5 +136,21 @@ d6 >> play("X ", amp=2)'],
 	"blank": ["__Blank", None,\
 	'__null__'],
 	
+	"syphy": [" //* SYPHY *//", None, \
+'sq >> squish(oct=(3,[4,5]), dur=P*[8,4,2,1,0.5,0.125], echo=sq.dur/PRand([4,2,8]), echotime=sq.echo*PRand([1,2,0.5]), rate=PStep(8,PRand(40),1), triode=0.8, leg=4, lpf=4800, lpr=0.2, room=0.8, mix=0.1, amplify=0.2*PBern(24)).unison(5,0.2,80)\n\
+dd >> play("p", dur=1/4, amplify=PTimebin(), sample=PRand(1,4), bpf=linvar([200,4000],32), bpr=1, pan=P*[-1,1])\n\
+ds >> play("..O.", lpf=7800, shape=0.1, cut=1/2, sample=6, pan=(0.2,-0.2))\n\
+hh >> play("[--]", sample=4, cut=1/P[1:8], pan=PWhite(-1,1), bpf=linvar([1200,8080],36), bpr=PWhite(0.1,0.9), bpnoise=PRand(4)).human(50,-4)\n\
+dk >> play("<X.>", triode=(0,8,PRand(8)), sample=(6,3,2), amp=(2,0.5,0.7), lpf=(4800,PRand(120,1450),0), pshift=(-12,0,PRand(12))).sometimes("stutter")'],
+
+	"ebola": ["~~~ EBOLA ~~~", None, \
+'cl >> click(dur=PDur(var(PRand(2,7),PRand(2,8)),8), hpf=40, drive=linvar([.1,0.3],64), oct=(3,4), octer=1, octersub=2, octersubsub=var([2, 2222], [15, 1]), triode=4, amplify=0.8).unison(4).sometimes("stutter",PRand(16), oct=6, pan=[-1,1])\n\
+db >> bass([[0,2,-1],0,0,4], dur=cl.dur, lpf=[0,PRand(900,4500)], leg=[0,2], hpf=60).penta() + var([0,PRand(7)],[6,2])\n\
+pr >> prophet(db.degree, glide=pr.sus*cl.dur, dur=6, sus=8, oct=P*[4,5,6,7], chop=PRand(0,8).rnd(2), amplify=0.6, drive=0.1, hpf=300, mpf=8080).unison(3,0.5,80)\n\
+d2 >> play("<xd>", sample=[7,1], amp=3, dur=cl.dur, pan=[0,[-1,1]]).sometimes("stutter")\n\
+d3 >> play("<X-><..O.>", amp=3, sample=0, crush=0)\n\
+d3 >> play("<X(.[XX].X){..[.X].}(..X)><..O{..([.O].{[.O.][..O][OOO]})}><[-]:>", sample=(1,5,4), crush=4)']
+
+
 }
 

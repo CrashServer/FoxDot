@@ -52,6 +52,7 @@ except:
 try:	
 	from .Crashserver.arpy import *
 	from .Crashserver.sdur import *
+	from .Crashserver.drumspattern import *
 	from .Chords import *
 	#from .Crashserver.coolfunction import *
 	# from .Extensions.timer.hack import * ### Crash Server Timer
@@ -201,3 +202,32 @@ def PTimebin():
 
 def lininf(start=0, finish=1, time=32):
     return linvar([start,finish],[time,inf], start=now)
+
+def PDrum(style=None):
+	# Generate a drum pattern style
+	if style == None:
+		print(DrumsPattern.keys())
+	else:	
+		clip.copy(DrumsPattern[style])
+
+def darker():
+    ### Change Scale to a darkest one
+    gamme = ["locrianMajor", "locrian", "phrygian", "minor", "dorian", "mixolydian", "major", "lydian", "lydianAug"]
+    if Scale.default.name not in gamme:
+        Scale.default = "major"
+    if Scale.default.name == gamme[0]:
+        print("Darkest scale reach !")
+    else:
+        actual = Scale.default.name        
+        Scale.default = gamme[gamme.index(actual) - 1]
+
+def lighter():
+	### Change Scale to a lightest one
+    gamme = ["locrianMajor", "locrian", "phrygian", "minor", "dorian", "mixolydian", "major", "lydian", "lydianAug"]
+    if Scale.default.name not in gamme:
+        Scale.default = "major"
+    if Scale.default.name == gamme[-1]:
+        print("Lightest scale reach !")
+    else:
+        actual = Scale.default.name        
+        Scale.default = gamme[gamme.index(actual) - 1]
