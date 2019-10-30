@@ -149,8 +149,46 @@ db >> bass([[0,2,-1],0,0,4], dur=cl.dur, lpf=[0,PRand(900,4500)], leg=[0,2], hpf
 pr >> prophet(db.degree, glide=pr.sus*cl.dur, dur=6, sus=8, oct=P*[4,5,6,7], chop=PRand(0,8).rnd(2), amplify=0.6, drive=0.1, hpf=300, mpf=8080).unison(3,0.5,80)\n\
 d2 >> play("<xd>", sample=[7,1], amp=3, dur=cl.dur, pan=[0,[-1,1]]).sometimes("stutter")\n\
 d3 >> play("<X-><..O.>", amp=3, sample=0, crush=0)\n\
-d3 >> play("<X(.[XX].X){..[.X].}(..X)><..O{..([.O].{[.O.][..O][OOO]})}><[-]:>", sample=(1,5,4), crush=4)']
+d3 >> play("<X(.[XX].X){..[.X].}(..X)><..O{..([.O].{[.O.][..O][OOO]})}><[-]:>", sample=(1,5,4), crush=4)'],
 
-
+	"slaap": ["/// SLAAP - DARKWATER - REMIX ///", None, \
+'Samples.addPath("/mnt/70225B03225ACDAA/CRASH SERVER/Production/Slaap - remix/zbdm version/")\n\
+Root.default="C"\n\
+Scale.default="minor"\n\
+Clock.bpm=176\n\n\
+w1 >> stretch("sl_wind", dur=P[16,32,64], sus=[32,64], lpf=1800, amp=0.2, rate=PWhite(-1,1)).unison(4)\n\
+w2 >> loop("sl_voice1", formant=1, dur=12, hpr=0.1, hpf=4000, amp=0.2, room=1, mix=0.6, pan=(-1,1))\n\
+w3 >> loop("sl_wind", 4, dur=6, sus=[12, 24], spin=[4, 8, 16, 2], hpr=0.1, hpf=0, amp=0.3, room=1, mix=0.4, pan=(-1,1))\n\n\
+w_all.stop()\n\
+g1 >> loop("sl_guit2", dur=32, shape=0)\n\n\
+g9 >> loop("sl_guit2", dur=[8,[16,4]], delay=[12,8,16,24], cut=[1/4,1/2,1/8], sus=16, chop=[16,32], room=0.3, mix=0.2, pan=(-1,1), crush=2)\n\
+l3 >> loop("sl_drum1", dur=32)\n\
+g3 >> loop("sl_guit3", dur=PRand([16,32]), chopwave=PRand(8), chop=PRand(8), room=1, mix=0.4, lpf=7800).unison(4)\n\
+g4 >> loop("sl_guit3", dur=PRand([8,16]), chopwave=PRand(8), chop=PRand(8), room=1, mix=0.4, lpf=7800).unison(4)\n\n\
+v1 >> loop("sl_voice2", dur=[16], shape=0.1, amplify=1).unison(0).after(16,"stop")\n\
+v2 >> loop("sl_voice3", dur=12, shape=0.2, amplify=1).after(12, "stop")\n\
+v3 >> loop("sl_voice1", dur=16, spin=0.4, amplify=PBern(8), room=1, mix=0.6).after(1, "stop")\n\
+v4 >> loop("sl_voice2", dur=15, spin=0.2, amplify=1, octafuz=1, room=1, mix=0.6).after(1, "stop")\n\
+v5 >> loop("sl_voice1", dur=14, spin=0.4, amp=PwRand([0, 1], [15, 1]), room=1, mix=0.6).after(1, "stop")\n\n\
+a1 >> play("x-", dur=1, sample=var(P[0:10],64), crush=0, amp=0.2).sometimes("stutter", PRand(8), rate=4).unison(5).sometimes("amen")\n\n\
+v_all.stop()\n\
+g_all.stop()\n\
+b1 >> loop("sl_bass1", dur=8, sus=8, shape=0.1, lpf=linvar([800,4800],[64,0]), lpr=PWhite(0,1)).unison(3)\n\
+b2 >> loop("sl_bass2", dur=16, shape=0.2, sus=16, amp=1.5, cut=[2/3,[0,1/3]], chop=[0,2,4]).unison(2)\n\
+b3 >> loop("sl_bass2", dur=16, lpf=800, sus=16)\n\
+k1 >> loop("sl_drum2", dur=32, lpf=4800)\n\
+k2 >> loop("fill4", sample=2, dur=8, hpf=4000)\n\
+k3 >> loop("fill4", sample=4, dur=8, hpf=2000)\n\n\
+b_all.stop()\n\
+v_all.stop()\n\
+k_all.stop()\n\n\
+p0 >> stretch("sl_guit1", pshift=-7, delay=8, dur=16, pan=-1)\n\
+p4 >> stretch("sl_guit1", pshift=-7, dur=8, pan=1)\n\
+p1 >> loop("sl_guit1", delay=4, dur=16, sus=32)\n\
+f1 >> loop("sl_guit1", dur=32)\n\
+p3 >> loop("sl_guit1", dur=16)\n\n\
+l4 >> loop("break16", sample=0, dur=16)\n\
+l5 >> loop("core16", sample=3, dur=16, chop=2, lpf=7800, amp=0.5)\n\
+l6 >> loop("core16", sample=2, dur=16)']
 }
 

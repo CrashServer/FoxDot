@@ -4,8 +4,9 @@
 import os
 import sys
 from .Settings import FOXDOT_ROOT
+# copy / paste code
 import pyperclip as clip
-#  OPTIONAL ASCII GENERATOR
+# ASCII GENERATOR
 from pyfiglet import figlet_format
 
 #########################
@@ -13,7 +14,7 @@ from pyfiglet import figlet_format
 #########################
 
 ### Lieu du Server
-lieu = str("du diamand d'or")
+lieu = str("de euh meille zine")
 ### Longueur mesure d'intro
 tmps = 16
 ### Language
@@ -80,14 +81,15 @@ except:
 
 ### OSC VIDEO Filtered FORWARD
 try:
-	class FilterOSCClient(OSCClient):
-			def send(self, message, *args):
-					if "video" in str(message.message):
-							OSCClient.send(self, message, *args)
-	def OSCVideo(adresse):
-		my_client = FilterOSCClient()
-		my_client.connect((adresse, 12345))
-		Server.forward = my_client
+	if video == 1:
+		class FilterOSCClient(OSCClient):
+				def send(self, message, *args):
+						if "video" in str(message.message):
+								OSCClient.send(self, message, *args)
+		def OSCVideo(adresse):
+			my_client = FilterOSCClient()
+			my_client.connect((adresse, 12345))
+			Server.forward = my_client
 except:
 	print("Error forwarding OSC to video", sys.exc_info()[0])
 
@@ -210,9 +212,10 @@ def PDrum(style=None):
 	else:	
 		clip.copy(DrumsPattern[style])
 
+gamme = ["locrianMajor", "locrian", "phrygian", "minor", "dorian", "mixolydian", "major", "lydian", "lydianAug"]
+
 def darker():
     ### Change Scale to a darkest one
-    gamme = ["locrianMajor", "locrian", "phrygian", "minor", "dorian", "mixolydian", "major", "lydian", "lydianAug"]
     if Scale.default.name not in gamme:
         Scale.default = "major"
     if Scale.default.name == gamme[0]:
@@ -223,11 +226,10 @@ def darker():
 
 def lighter():
 	### Change Scale to a lightest one
-    gamme = ["locrianMajor", "locrian", "phrygian", "minor", "dorian", "mixolydian", "major", "lydian", "lydianAug"]
     if Scale.default.name not in gamme:
         Scale.default = "major"
     if Scale.default.name == gamme[-1]:
         print("Lightest scale reach !")
     else:
         actual = Scale.default.name        
-        Scale.default = gamme[gamme.index(actual) - 1]
+        Scale.default = gamme[gamme.index(actual) + 1]
