@@ -182,6 +182,8 @@ def attack(part="default"):
 		Clock.future(calc_dur_voice(voice_txt), lambda: voice_lpf(0))
 
 ################# END #################################################
+crash_function = ["lost", "binary", "desynchro", "PTime", "PTimebin" "lininf", "PDrum", "darker", "lighter", "human", "unison", "ascii_gen", "attack"]
+
 
 def lost():
 	print([i for i in code.keys()])
@@ -233,3 +235,5 @@ def lighter():
     else:
         actual = Scale.default.name        
         Scale.default = gamme[gamme.index(actual) + 1]
+
+
