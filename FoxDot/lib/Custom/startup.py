@@ -104,8 +104,8 @@ def init_voice():
 		txt_init = serv.initi()
 		crash_txt = serv.crash_txt()
 		def txt_intro():
-			Voice(crash_txt, rate=1, amp=1, lang=lang, voice=voice)
-		Voice(txt_init, rate=1, amp=1, lang=lang, voice=voice)
+			Voice(crash_txt, rate=100, amp=1, lang=lang, voice=voice)
+		Voice(txt_init, rate=100, amp=1, lang=lang, voice=voice)
 		Clock.future(tmps, lambda: txt_intro())	
 	else:
 		print("Sorry, we crash only from windows or linux")
@@ -178,7 +178,7 @@ def attack(part="default"):
 	### Generate Voice
 	if voice_txt is not None:   ### Voice generator
 		voice_lpf(400)
-		Voice(voice_txt, rate=1, lang=lang, voice=randint(1,5))		
+		Voice(voice_txt, rate=100, lang=lang, voice=randint(1,5))		
 		Clock.future(calc_dur_voice(voice_txt), lambda: voice_lpf(0))
 
 ################# END #################################################

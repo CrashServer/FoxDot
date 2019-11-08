@@ -18,7 +18,7 @@ class Voice(Thread):
 		Thread.__init__(self)
 		self.engine = pyttsx3.init()
 		self.text = str(text)
-		self.rate = rate / 100
+		self.rate = rate
 		self.amp = float(amp)
 		self.lang = lang
 		self.voice = voice
