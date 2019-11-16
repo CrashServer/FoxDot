@@ -3,32 +3,60 @@
 #####  CRASH SERVER CUSTOM STARTUP ###########
 import os
 import sys
+import pickle
 from .Settings import FOXDOT_ROOT
 # copy / paste code
 import pyperclip as clip
 # ASCII GENERATOR
 from pyfiglet import figlet_format
 
+
 #########################
 ### SERVER CONFIG     ###
 #########################
 
+file = os.path.realpath(FOXDOT_ROOT + "/lib/Crashserver/crash_gui/server_data.cs")
+with open(file, "rb") as fichier:
+	mon_depickler = pickle.Unpickler(fichier)
+	code_server = mon_depickler.load()
+
+server_data = code_server["server_data"]
+attack_data = code_server["attack_data"]
+
 ### Lieu du Server
-lieu = str("de euh meille zine")
+lieu = str(server_data["lieu"])
 ### Longueur mesure d'intro
-tmps = 16
+tmps = int(server_data["tmps"])
 ### Language
-lang = "french"
-voice = 0
+lang = str(server_data["lang"])
+voice = int(server_data["voice"])
 ### BPM intro
-bpm_intro = 48
+bpm_intro = int(server_data["bpm_intro"])
 ### Scale intro
-scale_intro = "minor"
+scale_intro = str(server_data["scale_intro"])
 ### Root intro
-root_intro = "E"
+root_intro = str(server_data["root_intro"])
 ### Video  
-video = 0
-adresse = "192.168.0.22"
+video = int(server_data["video"])
+adresse = str(server_data["adresse"])
+
+rate_voice = 100
+# ### Lieu du Server
+# lieu = str("de euh meille zine")
+# ### Longueur mesure d'intro
+# tmps = 16
+# ### Language
+# lang = "french"
+# voice = 0
+# ### BPM intro
+# bpm_intro = 48
+# ### Scale intro
+# scale_intro = "minor"
+# ### Root intro
+# root_intro = "E"
+# ### Video  
+# video = 0
+# adresse = "192.168.0.22"
 
 ### LOAD CUSTOM SYNTHDEFS #####
 try:
@@ -104,8 +132,9 @@ def init_voice():
 		txt_init = serv.initi()
 		crash_txt = serv.crash_txt()
 		def txt_intro():
-			Voice(crash_txt, rate=100, amp=1, lang=lang, voice=voice)
-		Voice(txt_init, rate=100, amp=1, lang=lang, voice=voice)
+			Voice(crash_txt, rate=rate_voice, amp=1, lang=lang, voice=voice)
+		  Voice(txt_init, rate=rate_voice, amp=1, lang=lang, voice=voice)
+
 		Clock.future(tmps, lambda: txt_intro())	
 	else:
 		print("Sorry, we crash only from windows or linux")
@@ -133,7 +162,7 @@ def ascii_gen(text=""):
 main_part = ["init", "connect", "aspiration", "attention", "corrosion", "absolution", "annihilation"]
 
 def connect(video=video):
-	print(code["connect"][1])
+	print(attack_data["connect"][1])
 	Clock.bpm = bpm_intro
 	Scale.default = scale_intro
 	Root.default = root_intro
@@ -141,7 +170,7 @@ def connect(video=video):
 		OSCClient(adresse)
 		vi >> video(vid=0, speed=1, vfx1=0, vfx2=0)		
 	i3 >> sos(dur=8, lpf=linvar([60,4800],[tmps*1.5, tmps*3], start=now), hpf=expvar([0,500],[tmps*6, tmps*2]))
-	clip.copy(figlet_format(code["connect"][0]) + "\n" + code["connect"][2])
+	clip.copy(figlet_format(attack_data["connect"][0]) + "\n" + attack_data["connect"][2])
 
 
 def attack(part="default"):
@@ -152,9 +181,9 @@ def attack(part="default"):
 	elif part == "default":    
 		part = choice([i for i in code.keys() if i not in main_part])
 	
-	blase = code[part][0]
-	voice_txt = code[part][1]
-	code_txt = code[part][2]
+	blase = attack_data[part][0]
+	voice_txt = attack_data[part][1]
+	code_txt = attack_data[part][2]
 
 	### Define prompt
 	exten = ''.join(choice(string.ascii_lowercase) for x in range(3))
@@ -178,15 +207,18 @@ def attack(part="default"):
 	### Generate Voice
 	if voice_txt is not None:   ### Voice generator
 		voice_lpf(400)
-		Voice(voice_txt, rate=100, lang=lang, voice=randint(1,5))		
+		Voice(voice_txt, rate=rate_voice, lang=lang, voice=randint(1,5))		
 		Clock.future(calc_dur_voice(voice_txt), lambda: voice_lpf(0))
 
 ################# END #################################################
 crash_function = ["lost", "binary", "desynchro", "PTime", "PTimebin" "lininf", "PDrum", "darker", "lighter", "human", "unison", "ascii_gen", "attack"]
 
 
-def lost():
-	print([i for i in code.keys()])
+def lost(mainpart=1):
+	if mainpart==0:
+		print([i for i in attack_data.keys() if int(attack_data[i][3]) > 0])
+	else:
+		print([i for i in attack_data.keys()])
 
 def binary(number):
     # return a list converted to binary from a number 
