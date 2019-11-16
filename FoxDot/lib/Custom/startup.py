@@ -133,7 +133,8 @@ def init_voice():
 		crash_txt = serv.crash_txt()
 		def txt_intro():
 			Voice(crash_txt, rate=rate_voice, amp=1, lang=lang, voice=voice)
-		Voice(txt_init, rate=rate_voice, amp=1, lang=lang, voice=voice)
+		  Voice(txt_init, rate=rate_voice, amp=1, lang=lang, voice=voice)
+
 		Clock.future(tmps, lambda: txt_intro())	
 	else:
 		print("Sorry, we crash only from windows or linux")
@@ -210,6 +211,8 @@ def attack(part="default"):
 		Clock.future(calc_dur_voice(voice_txt), lambda: voice_lpf(0))
 
 ################# END #################################################
+crash_function = ["lost", "binary", "desynchro", "PTime", "PTimebin" "lininf", "PDrum", "darker", "lighter", "human", "unison", "ascii_gen", "attack"]
+
 
 def lost(mainpart=1):
 	if mainpart==0:
@@ -264,3 +267,5 @@ def lighter():
     else:
         actual = Scale.default.name        
         Scale.default = gamme[gamme.index(actual) + 1]
+
+

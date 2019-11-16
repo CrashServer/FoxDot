@@ -185,15 +185,17 @@ with SynthDef("pluck") as pluck:
     freq = instance('freq')
     pluck.amp  = pluck.amp + 0.00001
     pluck.freq = pluck.freq + [0, LFNoise2.ar(50).range(-2,2)]
-    pluck.osc  = SinOsc.ar(freq * 1.002, phase=VarSaw.ar(freq, width=Line.ar(1,0.2,2))) * 0.3 + SinOsc.ar(freq, phase=VarSaw.ar(freq, width=Line.ar(1,0.2,2))) * 0.3
+    pluck.osc  = SinOsc.ar(freq * 1.002, phase=VarSaw.ar(freq, iphase=pluck.rate, width=Line.ar(1,0.2,2))) * 0.3 + SinOsc.ar(freq, phase=VarSaw.ar(freq, iphase=pluck.rate, width=Line.ar(1,0.2,2))) * 0.3
     pluck.osc  = pluck.osc * XLine.kr(pluck.amp, pluck.amp/10000, pluck.sus * 4, doneAction=2) * 0.3
+    pluck.adsr(atk=0.001, decay=0.01, rel=0.01)
 
 with SynthDef("spark") as synth:
     freq = instance('freq')
     synth.amp  = synth.amp + 0.00001
-    synth.freq = synth.freq + [0, LFNoise2.ar(50).range(-2,2)]
+    synth.freq = synth.freq + [0, LFNoise2.ar(50).range((-2-synth.rate),(2+synth.rate))]
     synth.osc  = LFSaw.ar(freq * 1.002, iphase=Saw.ar(0.1)) * 0.3 + LFSaw.ar(freq, iphase=Saw.ar(0.1)) * 0.3
     synth.osc  = (synth.osc * Line.ar(synth.amp, synth.amp/10000, synth.sus * 1.5) * 0.3) * Line.ar(0.01, 1, synth.sus * 0.033)
+    synth.adsr(atk=0.001, decay=0.01, rel=0.01)
 spark = synth
 
 with SynthDef("blip") as synth:
@@ -203,6 +205,7 @@ with SynthDef("blip") as synth:
     synth.freq = synth.freq * 2
     synth.osc  = (LFCub.ar(freq * 1.002, iphase=1.5) + LFTri.ar(freq, iphase=Line.ar(2,0,0,2)) * 0.3) * Blip.ar(freq / 2, synth.rate)
     synth.osc  = synth.osc * XLine.ar(synth.amp, synth.amp/10000, synth.sus * 2) * 0.3
+    synth.adsr(atk=0.0001, decay=0.01, rel=0.01)
 blip = synth
 del freq
 
