@@ -133,7 +133,7 @@ def init_voice():
 		crash_txt = serv.crash_txt()
 		def txt_intro():
 			Voice(crash_txt, rate=rate_voice, amp=1, lang=lang, voice=voice)
-		  Voice(txt_init, rate=rate_voice, amp=1, lang=lang, voice=voice)
+			Voice(txt_init, rate=rate_voice, amp=1, lang=lang, voice=voice)
 
 		Clock.future(tmps, lambda: txt_intro())	
 	else:
