@@ -211,7 +211,7 @@ def attack(part="default"):
 		Clock.future(calc_dur_voice(voice_txt), lambda: voice_lpf(0))
 
 ################# END #################################################
-crash_function = ["lost", "binary", "desynchro", "PTime", "PTimebin" "lininf", "PDrum", "darker", "lighter", "human", "unison", "ascii_gen", "attack"]
+crash_function = ["lost", "binary", "desynchro", "PTime", "PTimebin" "lininf", "PDrum", "darker", "lighter", "human", "unison", "ascii_gen", "attack", "PCircle"]
 
 
 def lost(mainpart=1):
@@ -268,4 +268,23 @@ def lighter():
         actual = Scale.default.name        
         Scale.default = gamme[gamme.index(actual) + 1]
 
-
+class PChords(GeneratorPattern):
+    def __init__(self, chord=None, **kwargs):
+        GeneratorPattern.__init__(self, **kwargs)
+        self.list_chords = {"I": I, "II": II, "III": III, "IV": IV, "V": V, "VI": VI, "VII":VII}
+        self.last_value = None
+        self.chord = None
+        self.list_of_choice = []
+    def func(self, index, list_of_choice=[]):
+        self.list_of_choice = []
+        if self.chord is None:
+            self.chord = tuple(self.list_chords[choice(list(self.list_chords))])
+        for keys, values in self.list_chords.items():
+            for note in values:
+                if note in list(self.chord):
+                    if values not in self.list_of_choice:
+                        self.list_of_choice.append(values)
+        self.list_of_choice.remove(self.chord)
+        self.last_value = choice(self.list_of_choice)
+        self.chord = self.last_value
+        return self.last_value

@@ -52,3 +52,25 @@ def sample_bpm(path):
     y, sr = librosa.load(pth)
     print("BPM = ", librosa.beat.beat_track(y)[0])
     return librosa.beat.beat_track(y)[0]    
+
+
+class PChords(GeneratorPattern):
+    def __init__(self, chord=None, **kwargs):
+        GeneratorPattern.__init__(self, **kwargs)
+        self.list_chords = {"I": I, "II": II, "III": III, "IV": IV, "V": V, "VI": VI, "VII":VII}
+        self.last_value = None
+        self.chord = None
+        self.list_of_choice = []
+    def func(self, index, list_of_choice=[]):
+        self.list_of_choice = []
+        if self.chord is None:
+            self.chord = tuple(self.list_chords[choice(list(self.list_chords))])
+        for keys, values in self.list_chords.items():
+            for note in values:
+                if note in list(self.chord):
+                    if values not in self.list_of_choice:
+                        self.list_of_choice.append(values)
+        self.list_of_choice.remove(self.chord)
+        self.last_value = choice(self.list_of_choice)
+        self.chord = self.last_value
+        return self.last_value      
