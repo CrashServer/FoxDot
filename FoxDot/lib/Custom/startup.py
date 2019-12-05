@@ -131,10 +131,10 @@ def init_voice():
 		serv = init_server(lang, lieu)
 		txt_init = serv.initi()
 		crash_txt = serv.crash_txt()
+		Voice(txt_init, rate=rate_voice, amp=1, lang=lang, voice=voice)
 		def txt_intro():
 			Voice(crash_txt, rate=rate_voice, amp=1, lang=lang, voice=voice)
-			Voice(txt_init, rate=rate_voice, amp=1, lang=lang, voice=voice)
-
+			
 		Clock.future(tmps, lambda: txt_intro())	
 	else:
 		print("Sorry, we crash only from windows or linux")

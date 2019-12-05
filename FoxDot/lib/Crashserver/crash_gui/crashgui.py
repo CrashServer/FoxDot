@@ -19,7 +19,7 @@ class ServerConf:
 		self.window = Tk()
 		self.window.title("Crash Server Configurator")
 		self.window.geometry("1080x720")
-		self.window.minsize(800,900)
+		self.window.minsize(800,600)
 		#self.window.iconbitmap("logo.ico")
 		self.window.config(background="#e6e7d0")
 		self.code_dict = {}
@@ -28,10 +28,11 @@ class ServerConf:
 		#Initialisationd des composants
 		self.title_frame = Frame(self.window, bg='#e6e7d0', pady=3, height=50, relief=RAISED, borderwidth=3)
 		self.frame = Frame(self.window, bg='#e6e7d0')
+		self.button_frame = Frame(self.window, bg='#e6e7d0', height=100, relief=RAISED, borderwidth=3)
 		self.attack_frame = Frame(self.window)
 		self.attack =  Frame(self.attack_frame)
 		self.part = Frame(self.attack_frame)
-		self.button_frame = Frame(self.window, bg='#e6e7d0', height=50, relief=RAISED, borderwidth=3)
+		
 
 		#Lecture des données du server actif
 		if os.path.isfile('server_data.cs'):
@@ -41,18 +42,18 @@ class ServerConf:
 		self.create_widgets()
 
 		#empaquetage
-		self.title_frame.pack(fill=X, expand=True)
+		#self.title_frame.pack(fill=X, expand=True)
 		self.frame.pack(fill=X, expand=True)
+		self.button_frame.pack(side=BOTTOM, fill=Y, expand=True)
 		self.attack_frame.pack(fill=X, expand=True)
 		self.part.pack(side= LEFT, fill=X, expand=True)
 		self.attack.pack(side=LEFT, fill=X, expand=True)
-		self.button_frame.pack(fill=Y, expand=True)
-
+		
 		#lecture des données du server
 		self.load_server_data()
 
 	def create_widgets(self):
-		self.create_title()
+		#self.create_title()
 
 		### SERVER CONFIG
 		self.create_lieu()
@@ -71,6 +72,10 @@ class ServerConf:
 		#self.create_separator(self.attack)
 
 		### BUTTONS
+		self.create_up_button()
+		self.create_down_button()
+		self.create_left_button()
+		self.create_right_button()
 		self.create_save_button()
 		self.create_open_button()	
 		self.create_quit_button()
@@ -193,13 +198,25 @@ class ServerConf:
 
 		label_part = Label(frame_part, text="Parties principales/secondaires :")
 		label_part.pack(side=TOP, padx=5, pady=5)
-		self.part_list = Listbox(frame_part, relief=SUNKEN, selectmode=SINGLE)
+		
+		# self.left_right_button_frame = Frame(frame_part)
+		# self.left_right_button_frame.pack(side=TOP, fill=X, padx=5, pady=5)
+
+		self.up_down_button_frame = Frame(frame_part)
+		self.up_down_button_frame.pack(side=LEFT, fill=Y, padx=5, pady=5)
+
+		self.part_list_frame = Frame(frame_part)
+		self.part_list_frame.pack(side=LEFT, fill=Y, padx=5, pady=5)
+		self.part_list = Listbox(self.part_list_frame, relief=SUNKEN, selectmode=SINGLE)
 		self.part_list.config(height = 10)
 		self.part_list.pack(side=LEFT, fill=Y, padx=5)
 
-		self.sec_part_list = Listbox(frame_part, relief=SUNKEN, selectmode=SINGLE)
+		self.sec_part_list_frame = Frame(frame_part)
+		self.sec_part_list_frame.pack(side=LEFT, fill=Y, padx=5, pady=5)
+		self.sec_part_list = Listbox(self.sec_part_list_frame, relief=SUNKEN, selectmode=SINGLE)
 		self.sec_part_list.config(height=20)
 		self.sec_part_list.pack(side=LEFT, fill=Y, padx=5)
+		
 		self.part_get()
 		self.part_list.bind("<<ListboxSelect>>", self.change_part)
 		self.sec_part_list.bind("<<ListboxSelect>>", self.change_part)
@@ -211,15 +228,13 @@ class ServerConf:
 
 
 	def change_part(self, val):
-		#print("avant: ", self.main_part.get(), val)
 		if val:
 			part_name = self.get_name_from_list(val)
-			print(part_name, self.main_part.get())
 			if part_name:
 				self.get_attack_data()
 				self.reset_data()
 				self.load_attack_data(part_name)
-			#print("après: ", self.main_part.get())
+			
 
 	def create_nom(self):
 		# Nom du server
@@ -232,28 +247,6 @@ class ServerConf:
 		self.nom = Entry(frame_nom, textvariable = var_nom)
 		self.nom.pack(side=LEFT, fill=X, padx=5, expand=True)
 		
-		# Main part
-		label_main_part = Label(frame_nom, text="Main Part: ", width=12)
-		label_main_part.pack(side=LEFT, padx=5, pady=5)
-		var_main_part = IntVar()
-		self.main_part = Entry(frame_nom, textvariable = var_main_part, width=2)
-		self.main_part.pack(side=LEFT, fill=X, padx=5, expand=False)
-		
-		# Secondary weapons
-		label_sec_part = Label(frame_nom, text="Secondary Weapons: ", width=20)
-		label_sec_part.pack(side=LEFT, padx=5, pady=5)
-		self.var_sec_part = IntVar()
-		self.sec_part = Checkbutton(frame_nom, variable = self.var_sec_part, command=self.check_main_part)
-		self.sec_part.pack(side=LEFT, fill=X, padx=5, expand=False)
-		
-	def check_main_part(self):
-		# Switch between main and secondary part
-		if self.var_sec_part.get() == 1:
-			self.main_part.delete(0, len(self.main_part.get()))
-			self.main_part.insert(0, 0)
-			self.main_part.config(state=DISABLED)
-		else:
-			self.main_part.config(state=NORMAL)	
 
 	def create_ascii(self):
 		frame_ascii = Frame(self.attack)
@@ -271,20 +264,36 @@ class ServerConf:
 
 		label_dialogue = Label(frame_dialogue, text="DIALOGUE : ", width=20)
 		label_dialogue.pack(side=LEFT, padx=5, pady=5)
-		self.dialogue = Text(frame_dialogue)
+		self.dialogue = Text(frame_dialogue, wrap=WORD)
 		self.dialogue.config(height=5)
 		self.dialogue.pack(side=LEFT, fill=X, padx=5, expand=True)
 
 	def create_code(self):
 		frame_code = Frame(self.attack)
-		frame_code.pack(expand=True, fill=BOTH)
+		frame_code.pack(expand=True, fill=X)
 
 		label_code = Label(frame_code, text="CODE : ", width=20)
 		label_code.pack(side=LEFT, padx=5, pady=5)
-		self.code = Text(frame_code)
+		self.code = Text(frame_code, wrap=WORD)
 		self.code.pack(side=LEFT, fill=X, padx=5, expand=True)
 
 	### BUTTONS
+
+	def create_up_button(self):
+		self.bouton_up = Button(self.up_down_button_frame, text="UP", command=self.up_button)
+		self.bouton_up.pack(side=TOP, padx=5, pady=5)
+
+	def create_down_button(self):
+		self.bouton_down = Button(self.up_down_button_frame, text="DOWN", command=self.down_button)
+		self.bouton_down.pack(side=TOP, padx=5, pady=5)
+
+	def create_left_button(self):
+		self.bouton_left = Button(self.part_list_frame, text="LEFT", command=self.left_button)
+		self.bouton_left.pack(side=TOP, padx=5, pady=5)
+
+	def create_right_button(self):
+		self.bouton_right = Button(self.part_list_frame, text="RIGHT", command=self.right_button)
+		self.bouton_right.pack(side=TOP, padx=5, pady=5)
 
 	def create_save_button(self):
 		self.bouton_save = Button(self.button_frame, text="Generate Server", command=self.save_button)
@@ -324,17 +333,17 @@ class ServerConf:
 		### load the parts in the listbox
 		self.part_list.delete(0, 'end')
 		self.sec_part_list.delete(0, 'end')
-		i = 1
 		for k in self.attack_data.keys():
 			try:
 				if int(self.attack_data[k][3]) > 0:
 					self.part_list.insert(int(self.attack_data[k][3]), str(k))
+				elif int(self.attack_data[k][4]) > 0:
+					self.sec_part_list.insert(int(self.attack_data[k][4]), str(k))
 				else: 
-					self.sec_part_list.insert(i, str(k))
-					i += 1
+					self.sec_part_list.insert(self.sec_part_list.size()+1, str(k))			
 			except Exception as e:
-				self.sec_part_list.insert(i, str(k))
-				i += 1
+				self.sec_part_list.insert(self.sec_part_list.size()+1, str(k))
+
  
 	def save_button(self):
 		self.get_server_data()
@@ -353,6 +362,8 @@ class ServerConf:
 		self.part_get()
 
 	def add_button(self):
+		self.main_part_index = 0
+		self.sec_part_index = self.sec_part_list.size() + 1
 		self.get_attack_data()
 		self.part_get()
 
@@ -360,7 +371,84 @@ class ServerConf:
 		self.part_get()		
 
 	def new_button(self):
-		self.reset_data()	
+		self.reset_data()
+
+	def up_button(self):
+		# print("Name: {}, part_list selection {} ".format(self.nom.get(), self.part_list.curselection()))
+		# print("UP BEFORE main_part_index : {}, sec: {} ".format(self.main_part_index, self.sec_part_index))
+		if self.part_list.curselection() is not ():
+			if self.part_list.curselection()[0] > 0:
+				self.main_part_index =  self.part_list.curselection()[0]
+			else:
+				self.main_part_index = 1
+		else: 
+			self.main_part_index = 0
+		
+		if self.sec_part_list.curselection() is not ():
+			if self.sec_part_list.curselection()[0] > 0:
+				sec_part_index =  self.sec_part_list.curselection()[0]
+			else:
+				self.sec_part_index = 1	
+		else:
+			self.sec_part_index = 0
+		self.get_attack_data()
+		self.part_get()	
+		# print("UP AFTER main_part_index : {}, sec: {}".format(self.main_part_index, self.sec_part_index))
+		
+
+	def down_button(self):
+		# print("Name {}, part_list selection {} ".format(self.nom.get(), self.part_list.curselection()))
+		# print("DOWN BEFORE // main_part_index : {}, sec: {} ".format(self.main_part_index, self.sec_part_index))
+		if self.part_list.curselection() is not ():
+			if self.part_list.curselection()[0] < (self.part_list.size() - 1):
+				self.attack_data[part_name][3] += -1
+				self.main_part_index =  self.part_list.curselection()[0] + 1 
+			else:
+				self.main_part_index = self.part_list.size()
+		else: 
+			self.main_part_index = 0
+		
+		if self.sec_part_list.curselection() is not ():
+			if self.sec_part_list.curselection()[0] < (self.sec_part_list.size() - 1):
+				sec_part_index =  self.sec_part_list.curselection()[0] + 1
+			else:
+				self.sec_part_index = 1	
+		else:
+			self.sec_part_index = 0
+
+		self.get_attack_data()
+		self.part_get()
+		# print("DOWN AFTER main_part_index : {}, sec: {}".format(self.main_part_index, self.sec_part_index))
+		
+	
+	def left_button(self):
+		if self.part_list.curselection() is not ():
+			pass
+		else: 
+			pass
+
+		if self.sec_part_list.curselection() is not ():
+			self.sec_part_index = 0
+			self.main_part_index = self.part_list.size() + 1	
+		else:
+			pass
+		self.get_attack_data()
+		self.part_get()	
+	
+	def right_button(self):
+		if self.part_list.curselection() is not ():
+			self.main_part_index = 0
+			self.sec_part_index = self.sec_part_list.size() + 1
+		else: 
+			pass
+		
+		if self.sec_part_list.curselection() is not ():
+			pass	
+		else:
+			pass
+		self.get_attack_data()
+		self.part_get()	
+
 
 	def get_server_data(self):
 		lieu = self.lieu.get()
@@ -386,15 +474,24 @@ class ServerConf:
 			}
 
 	def reset_data(self):
+		# Clear attack data
 		self.nom.delete(0, len(self.nom.get()))
-		self.main_part.delete(0, len(self.main_part.get()))
-		self.sec_part.deselect()
 		self.ascii.delete(0, len(self.ascii.get()))
 		self.dialogue.delete("0.0", "end")
 		self.code.delete("0.0", "end")
 
 	def get_attack_data(self):
-		self.attack_data[self.nom.get()] = [self.ascii.get(), self.dialogue.get("0.0", "end"), self.code.get("0.0", "end"), self.main_part.get(), self.var_sec_part.get()]
+		# Get the windows data from the attack part
+
+		# if self.part_list.curselection() is not ():
+		# 	main_part_index =  self.part_list.curselection()[0] + 1
+		# else: 
+		# 	main_part_index = 0
+		# if self.sec_part_list.curselection() is not ():
+		# 	sec_part_index =  self.sec_part_list.curselection()[0] + 1
+		# else:
+		# 	sec_part_index = 0		
+		self.attack_data[self.nom.get()] = [self.ascii.get(), self.dialogue.get("0.0", "end"), self.code.get("0.0", "end"), self.main_part_index, self.sec_part_index]
 		self.reset_data()
 
 	def save(self):		
@@ -415,6 +512,8 @@ class ServerConf:
 		self.filename = filedialog.askopenfilename(initialdir = self.crash_gui_dir, title="Open a Server file", filetypes =(("crash server files", "*.cs"), ("all files", "*.*")))
 		if self.filename is not None:
 			self.read_data(self.filename)
+		self.load_server_data()
+		self.load_attack_data()	
 
 		
 	def read_data(self, file):
@@ -465,6 +564,7 @@ class ServerConf:
 			self.ip.config(state=DISABLED)
 
 	def get_name_from_list(self, val=None):
+		# Return the name of the selected part in the list
 		part_name = None
 		if val is not None:
 			sender = val.widget
@@ -488,24 +588,12 @@ class ServerConf:
 	def load_attack_data(self, part_name=None):
 		### ATTACK DATA LOAD
 		self.nom.insert(0, part_name)
-		self.main_part.insert(0, self.attack_data[part_name][3])
-		# except:
-		# 	self.main_part.insert(0,0)
-
-		try:
-			if self.attack_data[part_name][4] == 1:
-				self.sec_part.select()
-				self.main_part.config(state=DISABLED)
-			else:
-				self.sec_part.deselect()
-				self.main_part.config(state=NORMAL)
-		except:
-			self.sec_part.deselect()
-			self.main_part.config(state=NORMAL)
-
 		self.ascii.insert(0, self.attack_data[part_name][0])
 		self.dialogue.insert("0.0", self.attack_data[part_name][1])
 		self.code.insert("0.0", self.attack_data[part_name][2])
+		self.main_part_index = self.attack_data[part_name][3]
+		self.sec_part_index = self.attack_data[part_name][4]
+		
 
 #afficher
 server = ServerConf()

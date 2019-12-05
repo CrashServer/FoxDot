@@ -620,3 +620,88 @@ ReplaceOut.ar(bus, osc)}).add;
 // }).add;
 
 )
+
+
+
+// FOrked from https://github.com/bgold-cosmos/SuperDirt-extra/blob/master/Tidal5.scd
+(SynthDef.new(\superclassic,
+{|amp=1, sus=1, pan=0, freq=0, vib=0, fmod=0, rate=0, bus=0, voice=1|
+var osc, env, fenv, env2;
+freq = In.kr(bus, 1);
+freq = [freq, freq+fmod];
+env = EnvGen.ar(Env.linen(0.05, 0.9, 0.05), timeScale:sus, doneAction:2);
+env2 = EnvGen.ar(Env.linen(clip(0.03*sus, 0.03, 0.1), 0.9*sus, 0.07*sus));
+osc = Pulse.ar(freq + [1,-1]);
+osc = Integrator.ar(env2 * PulseDivider.ar(osc, 2), 0.995);
+osc = osc + osc.product;
+osc = LeakDC.ar(osc);
+osc = 1.5*atan(osc*0.3);
+osc = Mix(osc) * 0.5;
+osc = Pan2.ar(osc, pan);
+ReplaceOut.ar(bus, osc)}).add;
+)
+
+(SynthDef.new(\superharm,
+{|amp=1, sus=1, pan=0, freq=0, vib=0, fmod=0, rate=0, bus=0, voice=1, pitch1=1, pitch2=1|
+var osc, env, menv, es, os, as, fenv;
+freq = In.kr(bus, 1);
+freq = [freq, freq+fmod];
+menv = EnvGen.ar(Env.perc(0.05, 1.5), timeScale:sus, doneAction:2);
+env = Array.fill(7,{EnvGen.ar(Env.perc(ExpRand(0.01, 0.05), ExpRand(0.5, 1.5)), timeScale:sus)});
+es = freq * [2,4,6,8,12,16,22] * pitch1;
+os = freq * [3,5,7,11,17,19,29] * pitch2;
+as = [10, 7, 5, 4, 3, 2, 1, 1]/100;
+es = SinOsc.ar(es, mul:as);
+es = BLowPass4.ar(es, 5*freq, 0.3) * env;
+os = SinOsc.ar(os, mul:as);
+os = BLowPass4.ar(os, 5*freq, 0.3) * env;
+osc = SinOsc.ar(freq, mul:menv*0.5) + Mix.ar( SelectX.ar(voice*SinOsc.kr(5, mul:0.5, add:0.5), [es, os]) );
+osc = Mix(osc) * 0.5;
+osc = Pan2.ar(osc, pan);
+ReplaceOut.ar(bus, osc)}).add;
+)
+
+SynthDef.new(\superbass,
+{|amp=1, sus=1, pan=0, detune=0, freq=0, vib=0, fmod=0, rate=0, bus=0|
+var osc, env, fd, fenv;
+freq = In.kr(bus, 1);
+//freq = [freq, freq+fmod];
+env = EnvGen.ar(Env.linen(0.1, 0.8, 0.1), timeScale:sus, doneAction:2);
+fenv = EnvGen.ar(Env.perc(0.2,2, 2), timeScale:sus);
+fd = 0.01 + fmod;
+osc = Mix.ar(SawDPW.ar(freq*[1-fd,1+fd], [-0.5, 0.5]));
+osc = 3.0*RLPFD.ar(osc, (4256*((freq/4256)**0.5)*fenv).clip(20,20000), 0.2);
+osc = osc + (1.0 * clip(0.5*LPF.ar(osc, freq), -0.25,0.25) );
+osc = Mix(osc) * 0.5;
+osc = Pan2.ar(osc, pan);
+ReplaceOut.ar(bus, osc)}).add;
+
+SynthDef.new(\super4,
+{|amp=1, sus=1, pan=0, detune=0, freq=0, vib=0, fmod=0, rate=0, bus=0, pitch1=0, voice=0|
+var osc, env, fenv, mod1, mod2;
+freq = In.kr(bus, 1);
+freq = [freq, freq+fmod];
+env = EnvGen.ar(Env.linen(0.1, 0.7, 0.2, 1, [3,-3]), timeScale:sus, doneAction:2);
+fenv = EnvGen.ar(Env.perc(0.2, 2.0, 1, [4,0]), timeScale:sus);
+osc = LagUD.ar(Pulse.ar(freq, Line.ar(0.5,0.3,sus)+(voice/0.7)), [5,1]/4000, [1,5]/4000);
+mod1 = Lag.ar(ToggleFF.ar(osc)*2-1, 1/3000);
+mod2 = Fold.ar(Fold.ar(DelayN.ar(osc, 0.2, 0.001))*2-1)*2-1;
+osc = (osc + mod1 + mod2)*0.2;
+osc = RHPF.ar(RLPF.ar(osc, 2024.0*fenv.linexp(0,1,10**(pitch1-1),1), 1/Line.ar(1,4,sus)), 64.0, 1/3);
+osc = Splay.ar(osc, 0.7);
+osc = Mix(osc) * 0.5;
+osc = Pan2.ar(osc, pan);
+ReplaceOut.ar(bus, osc)}).add;
+
+SynthDef.new(\drone,
+{|amp=1, atk=0.001, decay=0.01, rel=0.01, sus=1, level=0.8, peak=1, pan=0, freq=0, vib=0, fmod=0, rate=0, bus=0, roc=0.5|
+var osc=0, env;
+freq = In.kr(bus, 1);
+freq = [freq, freq+fmod];
+15.do({arg count;
+osc = osc + SinOsc.ar(freq * (count + 1), mul: LFNoise1.kr(roc, mul: 1)/(count+1)**[1.5,1.09]);
+});
+env = EnvGen.ar(Env([0, peak, level, level, 0], [atk, decay, max((atk + decay + rel), sus - (atk + decay + rel)), rel], curve:\sin), doneAction: 0);
+osc = Mix(osc*env) * 0.5;
+osc = Pan2.ar(osc, pan);
+ReplaceOut.ar(bus, osc)}).add;
