@@ -288,3 +288,35 @@ class PChords(GeneratorPattern):
         self.last_value = choice(self.list_of_choice)
         self.chord = self.last_value
         return self.last_value
+
+
+### Chord progression, Root mouvement by fourths, thirds, seconds
+fourths = PChain({
+    I: [IV, V],
+    II: [V, VI],
+    III: [VI, VII],
+    IV: [VII, I],
+    V: [I, II],
+    VI: [II, III],
+    VII: [III, IV]   
+})
+
+thirds = PChain({
+    I: [III, VI],
+    II: [IV, VII],
+    III: [I, V],
+    IV: [II, VI],
+    V: [III, VII],
+    VI: [I, IV],
+    VII: [II, V]   
+})
+
+seconds = PChain({
+    I: [II, VII],
+    II: [I, III],
+    III: [II, IV],
+    IV: [III, V],
+    V: [IV, VI],
+    VI: [V, VII],
+    VII: [VI, I]   
+})

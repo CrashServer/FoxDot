@@ -8,6 +8,8 @@ from tkinter import filedialog
 import pickle
 import os
 from datetime import date
+import pyperclip as clip
+from pyfiglet import figlet_format
 
 class ServerConf:
 	
@@ -33,7 +35,6 @@ class ServerConf:
 		self.attack =  Frame(self.attack_frame)
 		self.part = Frame(self.attack_frame)
 		
-
 		#Lecture des données du server actif
 		if os.path.isfile('server_data.cs'):
 			self.read_data("server_data.cs")
@@ -42,7 +43,6 @@ class ServerConf:
 		self.create_widgets()
 
 		#empaquetage
-		#self.title_frame.pack(fill=X, expand=True)
 		self.frame.pack(fill=X, expand=True)
 		self.button_frame.pack(side=BOTTOM, fill=Y, expand=True)
 		self.attack_frame.pack(fill=X, expand=True)
@@ -53,8 +53,6 @@ class ServerConf:
 		self.load_server_data()
 
 	def create_widgets(self):
-		#self.create_title()
-
 		### SERVER CONFIG
 		self.create_lieu()
 		self.create_tmps()
@@ -69,26 +67,20 @@ class ServerConf:
 		self.create_dialogue()
 		self.create_code()
 		self.create_part()
-		#self.create_separator(self.attack)
-
+		
 		### BUTTONS
 		self.create_up_button()
 		self.create_down_button()
-		self.create_left_button()
-		self.create_right_button()
 		self.create_save_button()
 		self.create_open_button()	
 		self.create_quit_button()
+		self.create_test_button()
 		self.create_update_button()
 		self.create_delete_button()
 		self.create_new_button()
 		self.create_add_button()
-		
-
-	def create_title(self):
-		label_title = Label(self.title_frame, text="Configuration du Server", font=("Courrier", 40), bg="#41b770", fg='white')
-		label_title.pack(fill=X)
-		
+		#self.create_reset_button()
+				
 	def create_separator(self, sep_frame):
 		separator = ttk.Separator(sep_frame, orient="horizontal")
 		separator.pack(fill=X, padx=2, pady=2)
@@ -196,35 +188,25 @@ class ServerConf:
 		frame_part = Frame(self.part)
 		frame_part.pack(side=TOP, fill=X)
 
-		label_part = Label(frame_part, text="Parties principales/secondaires :")
+		label_part = Label(frame_part, text="Parties :")
 		label_part.pack(side=TOP, padx=5, pady=5)
-		
-		# self.left_right_button_frame = Frame(frame_part)
-		# self.left_right_button_frame.pack(side=TOP, fill=X, padx=5, pady=5)
 
 		self.up_down_button_frame = Frame(frame_part)
 		self.up_down_button_frame.pack(side=LEFT, fill=Y, padx=5, pady=5)
 
-		self.part_list_frame = Frame(frame_part)
-		self.part_list_frame.pack(side=LEFT, fill=Y, padx=5, pady=5)
-		self.part_list = Listbox(self.part_list_frame, relief=SUNKEN, selectmode=SINGLE)
-		self.part_list.config(height = 10)
-		self.part_list.pack(side=LEFT, fill=Y, padx=5)
+		self.part_box_frame = Frame(frame_part)
+		self.part_box_frame.pack(side=LEFT, fill=Y, padx=5, pady=5)
+		self.part_box = Listbox(self.part_box_frame, relief=SUNKEN, selectmode=SINGLE)
+		self.part_box.config(height = 30)
+		self.part_box.pack(side=LEFT, fill=Y, padx=5)
 
-		self.sec_part_list_frame = Frame(frame_part)
-		self.sec_part_list_frame.pack(side=LEFT, fill=Y, padx=5, pady=5)
-		self.sec_part_list = Listbox(self.sec_part_list_frame, relief=SUNKEN, selectmode=SINGLE)
-		self.sec_part_list.config(height=20)
-		self.sec_part_list.pack(side=LEFT, fill=Y, padx=5)
-		
 		self.part_get()
-		self.part_list.bind("<<ListboxSelect>>", self.change_part)
-		self.sec_part_list.bind("<<ListboxSelect>>", self.change_part)
-		self.part_list.select_set(0, None)
+		self.part_box.bind("<<ListboxSelect>>", self.change_part)
+		self.part_box.select_set(0, None)
 		self.reset_data()
-		self.load_attack_data(self.part_list.get(0))
-		self.button_part = Frame(self.part)
-		self.button_part.pack(side=BOTTOM)
+		self.load_attack_data(self.part_box.get(0))
+		self.button_part = Frame(self.part_box_frame)
+		self.button_part.pack(side=RIGHT)
 
 
 	def change_part(self, val):
@@ -234,8 +216,8 @@ class ServerConf:
 				self.get_attack_data()
 				self.reset_data()
 				self.load_attack_data(part_name)
-			
 
+			
 	def create_nom(self):
 		# Nom du server
 		frame_nom = Frame(self.attack)
@@ -285,15 +267,7 @@ class ServerConf:
 
 	def create_down_button(self):
 		self.bouton_down = Button(self.up_down_button_frame, text="DOWN", command=self.down_button)
-		self.bouton_down.pack(side=TOP, padx=5, pady=5)
-
-	def create_left_button(self):
-		self.bouton_left = Button(self.part_list_frame, text="LEFT", command=self.left_button)
-		self.bouton_left.pack(side=TOP, padx=5, pady=5)
-
-	def create_right_button(self):
-		self.bouton_right = Button(self.part_list_frame, text="RIGHT", command=self.right_button)
-		self.bouton_right.pack(side=TOP, padx=5, pady=5)
+		self.bouton_down.pack(side=TOP, padx=5, pady=5)	
 
 	def create_save_button(self):
 		self.bouton_save = Button(self.button_frame, text="Generate Server", command=self.save_button)
@@ -311,143 +285,103 @@ class ServerConf:
 		bouton_quitter.pack(side=RIGHT, padx=15, pady=5)
 
 	### PART BUTTONS
+	def create_test_button(self):
+		self.buton_test = Button(self.button_part, text="Test it", command=self.test_button)
+		self.buton_test.pack(side=TOP, padx=15, pady=5)
+
 	def create_add_button(self):
 		self.bouton_add = Button(self.button_part, text="Add", command=self.add_button)
-		self.bouton_add.pack(side=LEFT, padx=15, pady=5)
+		self.bouton_add.pack(side=TOP, padx=15, pady=5)
 
 	def create_delete_button(self):
 		self.bouton_delete = Button(self.button_part, text="Delete", command=self.delete_button)
-		self.bouton_delete.pack(side=LEFT, padx=15, pady=5)
+		self.bouton_delete.pack(side=TOP, padx=15, pady=5)
 
 	def create_update_button(self):
-		self.bouton_update = Button(self.button_part, text="Update", command=self.update_button)
-		self.bouton_update.pack(side=LEFT, padx=15, pady=5)
+		self.bouton_update = Button(self.button_part, text="Update", command=self.update)
+		self.bouton_update.pack(side=TOP, padx=15, pady=5)
 
 	def create_new_button(self):
 		self.bouton_new = Button(self.button_part, text="New", command=self.new_button)
-		self.bouton_new.pack(side=LEFT, padx=15, pady=5)
+		self.bouton_new.pack(side=TOP, padx=15, pady=5)
 
 
 	### Functions
 	def part_get(self):
-		### load the parts in the listbox
-		self.part_list.delete(0, 'end')
-		self.sec_part_list.delete(0, 'end')
-		for k in self.attack_data.keys():
-			try:
-				if int(self.attack_data[k][3]) > 0:
-					self.part_list.insert(int(self.attack_data[k][3]), str(k))
-				elif int(self.attack_data[k][4]) > 0:
-					self.sec_part_list.insert(int(self.attack_data[k][4]), str(k))
-				else: 
-					self.sec_part_list.insert(self.sec_part_list.size()+1, str(k))			
-			except Exception as e:
-				self.sec_part_list.insert(self.sec_part_list.size()+1, str(k))
+		pos = self.part_box.curselection()
+		self.part_box.delete(0, 'end')
+		self.part_list = []
+		self.part_list = [key for (key, value) in sorted(self.attack_data.items(), key= lambda x: x[1][3]) if value is not ""]		
+		for i, part in enumerate(self.part_list):
+			self.part_box.insert(i, part)		
+		if pos is not ():
+			self.part_box.selection_set(pos[0])
 
- 
 	def save_button(self):
 		self.get_server_data()
 		self.get_attack_data()
 		self.code_dict["server_data"] = self.server_data
 		self.code_dict["attack_data"] = self.attack_data
-		self.part_get()
 		self.save()
 
 	def delete_button(self):
 		try:
-			value = str(self.part_list.get(self.part_list.curselection())) 
+			value = str(self.part_box.get(self.part_box.curselection())) 
 		except:
-			value = str(self.sec_part_list.get(self.sec_part_list.curselection()))   
+			pass   
 		del self.attack_data[value]
-		self.part_get()
+		self.update()
 
 	def add_button(self):
-		self.main_part_index = 0
-		self.sec_part_index = self.sec_part_list.size() + 1
+		self.part_list.append(self.nom.get())
 		self.get_attack_data()
-		self.part_get()
+		self.update()
 
-	def update_button(self):
+	def update(self):
+		for i, part in enumerate(self.part_list):
+			if part in self.attack_data.keys():
+				self.attack_data[part][3] = i
 		self.part_get()		
 
 	def new_button(self):
 		self.reset_data()
 
+	def test_button(self):
+		blase = self.ascii.get()
+		code_txt = self.code.get("0.0", "end")
+		clip.copy((figlet_format(blase) if blase is not None else "") + "\n" + (code_txt if code_txt is not None else ""))
+
 	def up_button(self):
-		# print("Name: {}, part_list selection {} ".format(self.nom.get(), self.part_list.curselection()))
-		# print("UP BEFORE main_part_index : {}, sec: {} ".format(self.main_part_index, self.sec_part_index))
-		if self.part_list.curselection() is not ():
-			if self.part_list.curselection()[0] > 0:
-				self.main_part_index =  self.part_list.curselection()[0]
-			else:
-				self.main_part_index = 1
+		self.part_idx = self.part_box.curselection()
+		if self.part_idx is not None:
+			for pos in self.part_idx: 
+				if pos == 0:
+					continue
+				text = self.part_box.get(pos)
+				self.part_box.delete(pos)
+				self.part_box.insert(pos-1, text)
+				self.part_list.pop(pos)
+				self.part_list.insert(pos-1, text)
+				self.part_box.selection_set(pos-1)			
 		else: 
-			self.main_part_index = 0
-		
-		if self.sec_part_list.curselection() is not ():
-			if self.sec_part_list.curselection()[0] > 0:
-				sec_part_index =  self.sec_part_list.curselection()[0]
-			else:
-				self.sec_part_index = 1	
-		else:
-			self.sec_part_index = 0
-		self.get_attack_data()
-		self.part_get()	
-		# print("UP AFTER main_part_index : {}, sec: {}".format(self.main_part_index, self.sec_part_index))
-		
+			pass
+		self.update()
 
 	def down_button(self):
-		# print("Name {}, part_list selection {} ".format(self.nom.get(), self.part_list.curselection()))
-		# print("DOWN BEFORE // main_part_index : {}, sec: {} ".format(self.main_part_index, self.sec_part_index))
-		if self.part_list.curselection() is not ():
-			if self.part_list.curselection()[0] < (self.part_list.size() - 1):
-				self.attack_data[part_name][3] += -1
-				self.main_part_index =  self.part_list.curselection()[0] + 1 
-			else:
-				self.main_part_index = self.part_list.size()
-		else: 
-			self.main_part_index = 0
-		
-		if self.sec_part_list.curselection() is not ():
-			if self.sec_part_list.curselection()[0] < (self.sec_part_list.size() - 1):
-				sec_part_index =  self.sec_part_list.curselection()[0] + 1
-			else:
-				self.sec_part_index = 1	
-		else:
-			self.sec_part_index = 0
-
-		self.get_attack_data()
-		self.part_get()
-		# print("DOWN AFTER main_part_index : {}, sec: {}".format(self.main_part_index, self.sec_part_index))
-		
-	
-	def left_button(self):
-		if self.part_list.curselection() is not ():
-			pass
+		self.part_idx = self.part_box.curselection()
+		if self.part_idx is not None:
+			for pos in self.part_idx: 
+				if pos == len(self.part_list)-1:
+					continue
+				text = self.part_box.get(pos)
+				self.part_box.delete(pos)
+				self.part_box.insert(pos+1, text)
+				self.part_list.pop(pos)
+				self.part_list.insert(pos+1, text)
+				self.part_box.selection_set(pos+1)
 		else: 
 			pass
-
-		if self.sec_part_list.curselection() is not ():
-			self.sec_part_index = 0
-			self.main_part_index = self.part_list.size() + 1	
-		else:
-			pass
-		self.get_attack_data()
-		self.part_get()	
-	
-	def right_button(self):
-		if self.part_list.curselection() is not ():
-			self.main_part_index = 0
-			self.sec_part_index = self.sec_part_list.size() + 1
-		else: 
-			pass
-		
-		if self.sec_part_list.curselection() is not ():
-			pass	
-		else:
-			pass
-		self.get_attack_data()
-		self.part_get()	
+		self.update()
 
 
 	def get_server_data(self):
@@ -482,17 +416,10 @@ class ServerConf:
 
 	def get_attack_data(self):
 		# Get the windows data from the attack part
-
-		# if self.part_list.curselection() is not ():
-		# 	main_part_index =  self.part_list.curselection()[0] + 1
-		# else: 
-		# 	main_part_index = 0
-		# if self.sec_part_list.curselection() is not ():
-		# 	sec_part_index =  self.sec_part_list.curselection()[0] + 1
-		# else:
-		# 	sec_part_index = 0		
-		self.attack_data[self.nom.get()] = [self.ascii.get(), self.dialogue.get("0.0", "end"), self.code.get("0.0", "end"), self.main_part_index, self.sec_part_index]
-		self.reset_data()
+		name = self.nom.get()
+		if name:
+			self.attack_data[name] = [self.ascii.get(), self.dialogue.get("0.0", "end"), self.code.get("0.0", "end"), self.part_list.index(name)]
+			self.reset_data()
 
 	def save(self):		
 		if self.var_active.get() == 1:
@@ -513,7 +440,7 @@ class ServerConf:
 		if self.filename is not None:
 			self.read_data(self.filename)
 		self.load_server_data()
-		self.load_attack_data()	
+		self.load_attack_data(self.part_box.get(0))	
 
 		
 	def read_data(self, file):
@@ -572,28 +499,32 @@ class ServerConf:
 			if idx:
 				part_name = str(sender.get(idx))
 			else:
-				if self.part_list.curselection():
-					part_name = str(self.part_list.get(self.part_list.curselection()))
-				elif self.sec_part_list.curselection():	
-					part_name = str(self.sec_part_list.get(self.sec_part_list.curselection()))
+				if self.part_box.curselection():
+					part_name = str(self.part_box.get(self.part_box.curselection()))
 		else:
-			if self.part_list.curselection():
-				part_name = str(self.part_list.get(self.part_list.curselection()))
-			elif self.sec_part_list.curselection():	
-				part_name = str(self.sec_part_list.get(self.sec_part_list.curselection()))
+			if self.part_box.curselection():
+				part_name = str(self.part_box.get(self.part_box.curselection()))
 		if part_name:
 			return part_name
 
 
 	def load_attack_data(self, part_name=None):
 		### ATTACK DATA LOAD
+		self.reset_data()
 		self.nom.insert(0, part_name)
 		self.ascii.insert(0, self.attack_data[part_name][0])
 		self.dialogue.insert("0.0", self.attack_data[part_name][1])
 		self.code.insert("0.0", self.attack_data[part_name][2])
-		self.main_part_index = self.attack_data[part_name][3]
-		self.sec_part_index = self.attack_data[part_name][4]
 		
+
+	def reset_index(self):
+		i = 0
+		for keys in self.attack_data:
+			self.attack_data[keys][3] = i
+			self.attack_data[keys][4] = 0
+			print(keys, self.attack_data[keys][3], self.attack_data[keys][4])	
+			i += 1 
+		#self.update()
 
 #afficher
 server = ServerConf()
