@@ -23,6 +23,9 @@ dafbass.add()
 faim = FileSynthDef("faim")
 faim.add()
 
+glitcher = FileSynthDef("glitcher")
+glitcher.add()
+
 mpluck = FileSynthDef("mpluck")
 mpluck.add()
 

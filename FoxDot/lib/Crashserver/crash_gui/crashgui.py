@@ -342,6 +342,7 @@ class ServerConf:
 			if part in self.attack_data.keys():
 				self.attack_data[part][3] = i
 		self.part_get()		
+		self.reset_data()
 
 	def new_button(self):
 		self.reset_data()

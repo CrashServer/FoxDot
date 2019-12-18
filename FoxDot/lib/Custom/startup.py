@@ -126,16 +126,16 @@ def init_voice():
 	if sys.platform.startswith("win"):
 		voix = Voice(lang=lang, rate=0.45, amp=1.0)
 		voix.initi(lieu)
-		Clock.future(tmps, lambda: voix.intro())
+		#Clock.future(tmps, lambda: voix.intro())
 	elif sys.platform.startswith("linux"):
 		serv = init_server(lang, lieu)
 		txt_init = serv.initi()
-		crash_txt = serv.crash_txt()
+		#crash_txt = serv.crash_txt()
 		Voice(txt_init, rate=rate_voice, amp=1, lang=lang, voice=voice)
-		def txt_intro():
-			Voice(crash_txt, rate=rate_voice, amp=1, lang=lang, voice=voice)
+		#def txt_intro():
+		#	Voice(crash_txt, rate=rate_voice, amp=1, lang=lang, voice=voice)
 			
-		Clock.future(tmps, lambda: txt_intro())	
+		#Clock.future(tmps, lambda: txt_intro())	
 	else:
 		print("Sorry, we crash only from windows or linux")
 
