@@ -181,8 +181,8 @@ def attack(part="default"):
 	elif part == "default":    
 		part = choice([i for i in code.keys() if i not in main_part])
 	
-	blase = attack_data[part][0]
-	voice_txt = attack_data[part][1]
+	blase = attack_data[part][0].strip()
+	voice_txt = attack_data[part][1].strip()
 	code_txt = attack_data[part][2].strip()
 
 	### Define prompt
