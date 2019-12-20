@@ -183,7 +183,7 @@ def attack(part="default"):
 	
 	blase = attack_data[part][0]
 	voice_txt = attack_data[part][1]
-	code_txt = attack_data[part][2]
+	code_txt = attack_data[part][2].strip()
 
 	### Define prompt
 	exten = ''.join(choice(string.ascii_lowercase) for x in range(3))
@@ -206,9 +206,10 @@ def attack(part="default"):
 	
 	### Generate Voice
 	if voice_txt is not None:   ### Voice generator
-		voice_lpf(400)
-		Voice(voice_txt, rate=rate_voice, lang=lang, voice=randint(1,5))		
-		Clock.future(calc_dur_voice(voice_txt), lambda: voice_lpf(0))
+		if voice_txt is not "":
+			voice_lpf(400)
+			Voice(voice_txt, rate=rate_voice, lang=lang, voice=randint(1,5))		
+			Clock.future(calc_dur_voice(voice_txt), lambda: voice_lpf(0))
 
 ################# END #################################################
 crash_function = ["lost", "binary", "desynchro", "PTime", "PTimebin" "lininf", "PDrum", "darker", "lighter", "human", "unison", "ascii_gen", "attack", "PCircle"]

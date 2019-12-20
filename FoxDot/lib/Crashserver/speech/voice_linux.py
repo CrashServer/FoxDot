@@ -66,10 +66,10 @@ class init_server():
 
 	def initi(self):
 		if self.lang == "french":
-			self.text_init = "Le Serveur {} est initialisé à {} heures, \
+			self.text_init = "Hello world ? Le Serveur {} est initialisé à {} heures, \
 				{} minutes, et {} secondes.".format(self.lieu, str(time.strftime("%H")), str(time.strftime("%M")), str(time.strftime("%S")))
 		if self.lang == "english":
-			self.text_init = "The Server {} is initialized at {} hours, \
+			self.text_init = "Hello world ? The Server {} is initialized at {} hours, \
 				{} minutes, and {} seconds".format(self.lieu, str(time.strftime("%H")), str(time.strftime("%M")), str(time.strftime("%S")))
 		return self.text_init
 
