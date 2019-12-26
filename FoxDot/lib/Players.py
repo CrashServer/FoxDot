@@ -1036,7 +1036,7 @@ class Player(Repeatable):
             self.pshift=0
         return self
 
-    # Crash mod
+    # CRASH MOD
     def unison(self, unison=2, detune=0.125, analog=40):
         """ Like spread(), but can specify number of voices(unison)  
         Sets pan to (-1,-0.5,..,0.5,1) and pshift to (-0.125,-0.0625,...,0.0625,0.125)
@@ -1066,6 +1066,7 @@ class Player(Repeatable):
 
     def human(self, velocity=20, humanize=5, swing=0):
         """ Humanize the velocity, delay and add swing in % (less to more)"""
+        humanize += 0.1
         if velocity!=0:
             self.delay=[0,PWhite((-1*humanize/100)*self.dur, (humanize/100)*self.dur) + (self.dur*swing/100)]
             self.amplify=[1,PWhite((100-velocity)/100,1)]
@@ -1074,6 +1075,26 @@ class Player(Repeatable):
             self.amplify=1
         return self
     
+    def fill(self, on=1):
+        """ add fill to a drum player
+        0 = off
+        1 = dur + amplify
+        2 = dur  //  amplify =1
+        3 = amplify // dur=1/2
+        """
+        if on==1:
+            self.dur = PwRand([1/4,1/2,3/4],[45,45,10])
+            self.amplify = var([0,1],[[PRand([3,7,15]),PRand([6,2,14])],[1,2]])*[1,PWhite(0.2,1)]
+        elif on==2:
+            self.dur = PRand([1/4,1/2,3/4])
+            amplify = 1
+        elif on==3:
+            self.dur=1/2
+            self.amplify = var([0,1],[[3,6,7,2,15,2,3,14],[1,2]])*PWhite(0,1)
+        else:
+            self.dur = 1/2
+            self.amplify = 1
+    # END OF CRASHMOD
     
     def seconds(self):
         """ Sets the player bpm to 60 so duration will be measured in seconds """
