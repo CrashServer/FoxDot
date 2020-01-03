@@ -4,6 +4,7 @@
 import os
 import sys
 import pickle
+import time
 from .Settings import FOXDOT_ROOT
 # copy / paste code
 import pyperclip as clip
@@ -162,7 +163,7 @@ def ascii_gen(text=""):
 main_part = ["init", "connect", "aspiration", "attention", "corrosion", "absolution", "annihilation"]
 
 def connect(video=video):
-	print(attack_data["connect"][1])
+	print(attack_data["connect"][1].strip())
 	Clock.bpm = bpm_intro
 	Scale.default = scale_intro
 	Root.default = root_intro
@@ -192,6 +193,7 @@ def attack(part="default"):
 	### Init server
 	if part == "init":    
 		init_voice()
+		time_init = time.time()
 		clip.copy(figlet_format(blase) + "\n" + prompt + define_virus()+ "\n" + code_txt)
 	
 	### Random code generator
@@ -212,7 +214,7 @@ def attack(part="default"):
 			Clock.future(calc_dur_voice(voice_txt), lambda: voice_lpf(0))
 
 ################# END #################################################
-crash_function = ["lost", "binary", "desynchro", "PTime", "PTimebin" "lininf", "PDrum", "darker", "lighter", "human", "unison", "ascii_gen", "attack", "PCircle"]
+crash_function = ["lost", "binary", "desynchro", "PTime", "PTimebin" "lininf", "PDrum", "darker", "lighter", "human", "unison", "ascii_gen", "attack", "PChords", "fourths", "thirds", "seconds", "duree"]
 
 
 def lost(mainpart=1):
@@ -225,6 +227,10 @@ def binary(number):
     # return a list converted to binary from a number 
     binlist = [int(i) for i in str(bin(number)[2:])]
     return binlist
+
+def duree():
+	duree = time.time()-time_init
+    print("Durée de la tentative de Crash :", time.strftime('%H:%M:%S', time.gmtime(duree)))
 
 def desynchro():
 	clip.copy(random_bpm())    	
