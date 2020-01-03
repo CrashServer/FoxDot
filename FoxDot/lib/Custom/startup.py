@@ -174,7 +174,7 @@ def connect(video=video):
 	clip.copy(figlet_format(attack_data["connect"][0]) + "\n" + attack_data["connect"][2])
 
 
-def attack(part="default"):
+def attack(part="default", active_voice=1):
 	if type(part) is not str:  ### so we can type attack(42) or attack(43)
 		part = str(part)
 
@@ -191,8 +191,10 @@ def attack(part="default"):
 	prompt = "### attack@{}.{}:~$ ".format(part, exten)
 	
 	### Init server
-	if part == "init":    
-		init_voice()
+	if part == "init":
+		if active_voice == 1:    
+			init_voice()
+		global time_init
 		time_init = time.time()
 		clip.copy(figlet_format(blase) + "\n" + prompt + define_virus()+ "\n" + code_txt)
 	
@@ -208,7 +210,7 @@ def attack(part="default"):
 	
 	### Generate Voice
 	if voice_txt is not None:   ### Voice generator
-		if voice_txt is not "":
+		if voice_txt is not "" and active_voice==1:
 			voice_lpf(400)
 			Voice(voice_txt, rate=rate_voice, lang=lang, voice=randint(1,5))		
 			Clock.future(calc_dur_voice(voice_txt), lambda: voice_lpf(0))
@@ -229,8 +231,10 @@ def binary(number):
     return binlist
 
 def duree():
-	duree = time.time()-time_init
-    print("Durée de la tentative de Crash :", time.strftime('%H:%M:%S', time.gmtime(duree)))
+	global time_init
+	duree = time.time()- time_init
+	print("Durée de la tentative de Crash :", time.strftime('%H:%M:%S', time.gmtime(duree)))
+
 
 def desynchro():
 	clip.copy(random_bpm())    	
