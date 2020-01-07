@@ -38,7 +38,8 @@ import socket
 
 # Code execution
 from ..Code import execute
-from ..Settings import FONT, FOXDOT_ICON, FOXDOT_HELLO, SC3_PLUGINS, FOXDOT_CONFIG_FILE, ALPHA_VALUE, USE_ALPHA, MENU_ON_STARTUP, TRANSPARENT_ON_STARTUP, RECOVER_WORK
+from ..Settings import FONT, FOXDOT_ICON, FOXDOT_HELLO, SC3_PLUGINS, FOXDOT_CONFIG_FILE, ALPHA_VALUE, USE_ALPHA
+from ..Settings import MENU_ON_STARTUP, TRANSPARENT_ON_STARTUP, RECOVER_WORK, CHECK_FOR_UPDATE
 from ..Settings import PY_VERSION
 from ..ServerManager import TempoServer
 
@@ -53,7 +54,7 @@ class workspace:
 
         # Configure FoxDot's namespace to include the editor
 
-        CodeClass.namespace['FoxDot'] = self
+        CodeClass.namespace['GUI'] = self
         CodeClass.namespace['Player'].widget = self
 
         self.version = this_version = CodeClass.namespace['__version__']
@@ -352,6 +353,8 @@ class workspace:
 
         # Ask after widget loaded
 
+        self.linenumbers.redraw() # TODO: move to generic redraw functions
+
         self.root.after(50, hello)
 
         # Check temporary file
@@ -384,7 +387,9 @@ class workspace:
 
         # Check online if a new version if available
 
-        self.root.after(90, check_versions)
+        if CHECK_FOR_UPDATE:
+
+            self.root.after(90, check_versions)
 
         # Ask after widget loaded
         if RECOVER_WORK:
@@ -413,9 +418,7 @@ class workspace:
             except (KeyboardInterrupt, SystemExit):
 
                 # Clean exit
-                
-                execute("Clock.stop()")
-                execute("Server.quit()")
+                self.terminate()
                 
                 break
 
@@ -819,7 +822,7 @@ class workspace:
                 else:
                     self.root.wm_attributes("-transparent", False)
             else:
-                    self.root.wm_attributes("-alpha", 1)
+                self.root.wm_attributes("-alpha", 1)
         except TclError as e:
             print(e)
         return
@@ -1191,7 +1194,8 @@ class workspace:
 
     def killall(self, event=None):
         """ Stops all player objects """
-        execute("Clock.clear()")
+        execute("_Clock.clear()", verbose=False)
+        print("Clearing the scheduling clock.")
         return "break"
 
     # Zoom in: Ctrl+=
@@ -1678,7 +1682,7 @@ class workspace:
 
     def terminate(self):
         """ Called on window close. Ends Clock thread process """
-        execute("Clock.stop()")
+        execute("_Clock.stop()")
         execute("Server.quit()")
         return
 
@@ -1788,12 +1792,11 @@ class workspace:
 
     def allow_connections(self, **kwargs):
         """ Starts a new instance of ServerManager.TempoServer and connects it with the clock """
+        Clock = self.namespace["_Clock"]
         if self.listening_for_connections.get() == True:
-            Clock = self.namespace["Clock"]
             Clock.start_tempo_server(TempoServer, **kwargs)
             print("Listening for connections on {}".format(Clock.tempo_server))
         else:
-            Clock = self.namespace["Clock"]
             Clock.kill_tempo_server()
             print("Closed connections")
         return
