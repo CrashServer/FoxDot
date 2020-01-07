@@ -216,8 +216,74 @@ def attack(part="default", active_voice=1):
 			Clock.future(calc_dur_voice(voice_txt), lambda: voice_lpf(0))
 
 ################# END #################################################
-crash_function = ["lost", "binary", "desynchro", "PTime", "PTimebin" "lininf", "PDrum", "darker", "lighter", "human", "unison", "ascii_gen", "attack", "PChords", "fourths", "thirds", "seconds", "duree"]
+crash_function = ["lost", "binary", "desynchro", "PTime", "PTimebin" "lininf", "PDrum", "darker", "lighter", \
+"human", "unison", "ascii_gen", "attack", "PChords", "fourths", "thirds", "seconds", "duree", "print_synth"]
 
+### PLAYERS METHODS
+
+@player_method
+def unison(self, unison=2, detune=0.125, analog=40):
+    """ Like spread(), but can specify number of voices(unison)  
+    Sets pan to (-1,-0.5,..,0.5,1) and pshift to (-0.125,-0.0625,...,0.0625,0.125)
+    If unison is odd, an unchanged voice is added in the center
+    Eg : p1.unison(4, 0.5) => pshift=(-0.5,-0.25,0.25,0.5), pan=(-1.0,-0.5,0.5,1.0)
+         p1.unison(5, 0.8) => pshift=(-0.8,-0.4,0,0.4,0.8), pan=(-1.0,-0.5,0,0.5,1.0)
+    """
+    if unison != 0:
+        pan=[]
+        pshift=[]
+        uni = int(unison if unison%2==0 else unison-1)
+        for i in range(1,int(uni/2)+1):
+            pan.append(2*i/uni)
+            pan.insert(0, -2*i/uni)
+        for i in range(1, int(uni/2)+1):
+            pshift.append(detune*(i/(uni/2))+PWhite(0,detune*(analog/100)))
+            pshift.insert(0,detune*-(i/(uni/2))+PWhite(0,-1*detune*(analog/100)))
+        if unison%2!=0 and unison > 1:
+            pan.insert(int(len(pan)/2), 0)
+            pshift.insert(int(len(pan)/2), 0)              
+        self.pan = tuple(pan)
+        self.pshift = tuple(pshift)
+    else:
+        self.pan=0
+        self.pshift=0
+    return self
+
+@player_method
+def human(self, velocity=20, humanize=5, swing=0):
+    """ Humanize the velocity, delay and add swing in % (less to more)"""
+    humanize += 0.1
+    if velocity!=0:
+        self.delay=[0,PWhite((-1*humanize/100)*self.dur, (humanize/100)*self.dur) + (self.dur*swing/100)]
+        self.amplify=[1,PWhite((100-velocity)/100,1)]
+    else:
+        self.delay=0
+        self.amplify=1
+    return self
+
+@player_method
+def fill(self, on=1):
+    """ add fill to a drum player
+    0 = off
+    1 = dur + amplify
+    2 = dur  //  amplify =1
+    3 = amplify // dur=1/2
+    """
+    if on==1:
+        self.dur = PwRand([1/4,1/2,3/4],[45,45,10])
+        self.amplify = var([0,1],[[PRand([3,7,15]),PRand([6,2,14])],[1,2]])*[1,PWhite(0.2,1)]
+    elif on==2:
+        self.dur = PRand([1/4,1/2,3/4])
+        amplify = 1
+    elif on==3:
+        self.dur=1/2
+        self.amplify = var([0,1],[[3,6,7,2,15,2,3,14],[1,2]])*PWhite(0,1)
+    else:
+        self.dur = 1/2
+        self.amplify = 1
+
+
+# END OF PLAYERS METHODS
 
 def lost(mainpart=1):
 	if mainpart==0:
@@ -226,9 +292,9 @@ def lost(mainpart=1):
 		print([i for i in attack_data.keys()])
 
 def binary(number):
-    # return a list converted to binary from a number 
-    binlist = [int(i) for i in str(bin(number)[2:])]
-    return binlist
+	# return a list converted to binary from a number 
+	binlist = [int(i) for i in str(bin(number)[2:])]
+	return binlist
 
 def duree():
 	global time_init
@@ -240,15 +306,15 @@ def desynchro():
 	clip.copy(random_bpm())    	
 
 def PTime():
-    ### Generate a pattern from the local machine time
-    return [int(t) for t in str(Clock.get_time_at_beat(int(Clock.now()))) if t is not '.']
+	### Generate a pattern from the local machine time
+	return [int(t) for t in str(Clock.get_time_at_beat(int(Clock.now()))) if t is not '.']
 
 def PTimebin():
 	### Generate a pattern of actual time converted to binary
 	return binary(int(Clock.get_time_at_beat(int(Clock.now()))))
 
 def lininf(start=0, finish=1, time=32):
-    return linvar([start,finish],[time,inf], start=now)
+	return linvar([start,finish],[time,inf], start=now)
 
 def PDrum(style=None):
 	# Generate a drum pattern style
@@ -260,74 +326,96 @@ def PDrum(style=None):
 gamme = ["locrianMajor", "locrian", "phrygian", "minor", "dorian", "mixolydian", "major", "lydian", "lydianAug"]
 
 def darker():
-    ### Change Scale to a darkest one
-    if Scale.default.name not in gamme:
-        Scale.default = "major"
-    if Scale.default.name == gamme[0]:
-        print("Darkest scale reach !")
-    else:
-        actual = Scale.default.name        
-        Scale.default = gamme[gamme.index(actual) - 1]
+	### Change Scale to a darkest one
+	if Scale.default.name not in gamme:
+		Scale.default = "major"
+	if Scale.default.name == gamme[0]:
+		print("Darkest scale reach !")
+	else:
+		actual = Scale.default.name        
+		Scale.default = gamme[gamme.index(actual) - 1]
 
 def lighter():
 	### Change Scale to a lightest one
-    if Scale.default.name not in gamme:
-        Scale.default = "major"
-    if Scale.default.name == gamme[-1]:
-        print("Lightest scale reach !")
-    else:
-        actual = Scale.default.name        
-        Scale.default = gamme[gamme.index(actual) + 1]
+	if Scale.default.name not in gamme:
+		Scale.default = "major"
+	if Scale.default.name == gamme[-1]:
+		print("Lightest scale reach !")
+	else:
+		actual = Scale.default.name        
+		Scale.default = gamme[gamme.index(actual) + 1]
 
 class PChords(GeneratorPattern):
-    def __init__(self, chord=None, **kwargs):
-        GeneratorPattern.__init__(self, **kwargs)
-        self.list_chords = {"I": I, "II": II, "III": III, "IV": IV, "V": V, "VI": VI, "VII":VII}
-        self.last_value = None
-        self.chord = None
-        self.list_of_choice = []
-    def func(self, index, list_of_choice=[]):
-        self.list_of_choice = []
-        if self.chord is None:
-            self.chord = tuple(self.list_chords[choice(list(self.list_chords))])
-        for keys, values in self.list_chords.items():
-            for note in values:
-                if note in list(self.chord):
-                    if values not in self.list_of_choice:
-                        self.list_of_choice.append(values)
-        self.list_of_choice.remove(self.chord)
-        self.last_value = choice(self.list_of_choice)
-        self.chord = self.last_value
-        return self.last_value
+	def __init__(self, chord=None, **kwargs):
+		GeneratorPattern.__init__(self, **kwargs)
+		self.list_chords = {"I": I, "II": II, "III": III, "IV": IV, "V": V, "VI": VI, "VII":VII}
+		self.last_value = None
+		self.chord = None
+		self.list_of_choice = []
+	def func(self, index, list_of_choice=[]):
+		self.list_of_choice = []
+		if self.chord is None:
+			self.chord = tuple(self.list_chords[choice(list(self.list_chords))])
+		for keys, values in self.list_chords.items():
+			for note in values:
+				if note in list(self.chord):
+					if values not in self.list_of_choice:
+						self.list_of_choice.append(values)
+		self.list_of_choice.remove(self.chord)
+		self.last_value = choice(self.list_of_choice)
+		self.chord = self.last_value
+		return self.last_value
+
+
+def print_synth(synth=""):
+	### Show the name and the args of a custom synth
+	path = os.path.realpath(FOXDOT_ROOT + "/osc/scsyndef/")
+	if synth == "":    
+		dir_list = os.listdir(path)
+		synth_list = []
+		for p in dir_list:
+			files,sep,ext = p.partition('.')
+			synth_list.append(files)
+		print(sorted(synth_list))
+	else:
+		path = os.path.realpath(FOXDOT_ROOT + "/osc/scsyndef/" + synth + ".scd")
+		with open(str(path), "r") as synth:
+			synth = synth.readlines()
+		synth_txt = [line.strip() for line in synth if line is not "\n"]
+		txt = str(''.join(synth_txt))
+		synthname = re.findall('SynthDef[.new]*[(\\\]*(.+?),',txt)
+		synthargs = re.findall('\{\|(.*)\|', txt)    
+		print(str(synthname[0]), " : ", str(synthargs[0]))
+
 
 
 ### Chord progression, Root mouvement by fourths, thirds, seconds
 fourths = PChain({
-    I: [IV, V],
-    II: [V, VI],
-    III: [VI, VII],
-    IV: [VII, I],
-    V: [I, II],
-    VI: [II, III],
-    VII: [III, IV]   
+	I: [IV, V],
+	II: [V, VI],
+	III: [VI, VII],
+	IV: [VII, I],
+	V: [I, II],
+	VI: [II, III],
+	VII: [III, IV]   
 })
 
 thirds = PChain({
-    I: [III, VI],
-    II: [IV, VII],
-    III: [I, V],
-    IV: [II, VI],
-    V: [III, VII],
-    VI: [I, IV],
-    VII: [II, V]   
+	I: [III, VI],
+	II: [IV, VII],
+	III: [I, V],
+	IV: [II, VI],
+	V: [III, VII],
+	VI: [I, IV],
+	VII: [II, V]   
 })
 
 seconds = PChain({
-    I: [II, VII],
-    II: [I, III],
-    III: [II, IV],
-    IV: [III, V],
-    V: [IV, VI],
-    VI: [V, VII],
-    VII: [VI, I]   
+	I: [II, VII],
+	II: [I, III],
+	III: [II, IV],
+	IV: [III, V],
+	V: [IV, VI],
+	VI: [V, VII],
+	VII: [VI, I]   
 })
