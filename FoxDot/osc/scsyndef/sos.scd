@@ -1,6 +1,6 @@
 (
-SynthDef(\sos, {
-	arg amp=1, gate=1, rel=1,dur=8, bus=0, freq=200, freqs=240,pan=0, fmod=0, sus=1, vib=0;
+SynthDef(\sos,
+	{|amp=1, gate=1, rel=1,dur=8, bus=0, freq=200, freqs=240,pan=0, fmod=0, sus=1, vib=0|
 
     var sig1, env, sig,sig2;
 

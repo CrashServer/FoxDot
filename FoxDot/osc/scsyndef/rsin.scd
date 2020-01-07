@@ -1,5 +1,5 @@
-SynthDef(\rsin, {
-	arg amp=1, gate=1, sus=1, pan=0, freq=0, vib=0, fmod=0, rate=0, bus=0, blur=1, beat_dur=1, atk=0.01, decay=0.01, rel=0.01, peak=1, level=0.8, para1=70, rsing=0;
+SynthDef(\rsin,
+	{|amp=1, gate=1, sus=1, pan=0, freq=0, vib=0, fmod=0, rate=0, bus=0, blur=1, beat_dur=1, atk=0.01, decay=0.01, rel=0.01, peak=1, level=0.8, para1=70, rsing=0|
 	var sig1, env, sig,sig2;
 
 	freq = In.kr(bus, 1);

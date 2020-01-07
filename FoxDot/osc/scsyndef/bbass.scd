@@ -1,4 +1,5 @@
-SynthDef(\bbass, { arg bus=0, freq = 440, amp = 0.5, gate = 1, pan=0, sus=1, blur=1, fmod=0;
+SynthDef(\bbass,
+	{|bus=0, freq = 440, amp = 0.5, gate = 1, pan=0, sus=1, blur=1, fmod=0|
 	var snd, env, oscfreq, output, osc, envout;
 	var lfo;
 	sus = sus * blur;

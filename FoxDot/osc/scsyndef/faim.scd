@@ -1,5 +1,6 @@
 (
-SynthDef(\faim, { arg bus=0, amp=0.1, atk=0.001, decay=0.01, sus=1,rel=0.01, level=0.8, peak=1, gate=1, pan=0, freq=0, fmod=0, vib=0, rate=1, blur=1, beat_dur=1, vibr=0;
+SynthDef(\faim,
+	{|bus=0, amp=0.1, atk=0.001, decay=0.01, sus=1,rel=0.01, level=0.8, peak=1, gate=1, pan=0, freq=0, fmod=0, vib=0, rate=1, blur=1, beat_dur=1, vibr=0|
 	var sig;
 	var sig1, sig2, sig3, sig4, sig5, sig6, sig7, sig8;
 	var env1, env2, env3, env4, env5, env6, env7, env8;

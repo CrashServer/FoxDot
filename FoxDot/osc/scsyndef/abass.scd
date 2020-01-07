@@ -1,4 +1,5 @@
-SynthDef(\abass, { arg bus=0, amp=1, gate=1, pan=0, spread=0.8, freq=440, atk=0.001, decay=0.01, sus=1,rel=0.01, level=0.8, peak=1, fmod=0, blur=1;
+SynthDef.new(\abass,
+	{|bus=0, amp=1, gate=1, pan=0, spread=0.8, freq=440, atk=0.001, decay=0.01, sus=1,rel=0.01, level=0.8, peak=1, fmod=0, blur=1|
 	var sig, sig1, sig2, sig3, osc, env;
 
 	sus = sus * blur;

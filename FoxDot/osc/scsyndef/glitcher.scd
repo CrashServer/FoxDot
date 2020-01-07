@@ -1,6 +1,6 @@
 (
-SynthDef(\glitcher, {
-	arg bus=0, pan=0,amp=1, fmod=0, len = 10, sus=1,  henA = 2, rate=1,henB = 0.4, t = 1, gate = 1;
+SynthDef(\glitcher,
+	{|bus=0, pan=0, amp=1, fmod=0, len =10, sus=1, henA=2, rate=1, henB=0.4, t=1, gate = 1|
 	var osc, env,  mainEnv, speed, freq, pulse, a, bass, tone1, tone2, tone3, noise, impulse;
 	freq = In.kr(bus, 1);
 	freq = [freq, freq+fmod];

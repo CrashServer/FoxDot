@@ -1,7 +1,6 @@
-
 //  based on a tweet I can't find anymore :(
-SynthDef(\cluster, {
-	arg para1=4, bus=0, mult=4, gate=1, amp=1, pan=0, freq=440, sus=1, blur=1, fmod=0;
+SynthDef(\cluster,
+	{|para1=4, bus=0, mult=4, gate=1, amp=1, pan=0, freq=440, sus=1, blur=1, fmod=0|
 	var env, snd;
 
 
