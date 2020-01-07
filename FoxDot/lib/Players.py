@@ -1036,7 +1036,7 @@ class Player(Repeatable):
             self.pshift=0
         return self
 
-    def unison(self, unison=2, detune=0.125, analog=40):
+    def unison(self, unison=2, detune=0.125):
         """ Like spread(), but can specify number of voices(unison)  
         Sets pan to (-1,-0.5,..,0.5,1) and pshift to (-0.125,-0.0625,...,0.0625,0.125)
         If unison is odd, an unchanged voice is added in the center
@@ -1051,8 +1051,8 @@ class Player(Repeatable):
                 pan.append(2*i/uni)
                 pan.insert(0, -2*i/uni)
             for i in range(1, int(uni/2)+1):
-                pshift.append(detune*(i/(uni/2))+PWhite(0,detune*(analog/100)))
-                pshift.insert(0,detune*-(i/(uni/2))+PWhite(0,-1*detune*(analog/100)))
+                pshift.append(detune*(i/(uni/2)))
+                pshift.insert(0,detune*-(i/(uni/2)))
             if unison%2!=0 and unison > 1:
                 pan.insert(int(len(pan)/2), 0)
                 pshift.insert(int(len(pan)/2), 0)              
