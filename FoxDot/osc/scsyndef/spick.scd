@@ -3,7 +3,7 @@ SynthDef.new(\spick,
 var osc, env;
 freq = freq + fmod;
 freq = Line.ar(freq * slidefrom, freq * (1 + slide), sus);
-freq = Vibrato.kr(freq, rate: vib);
+freq = Vibrato.ar(freq, rate: vib);
 amp=(amp / 4);
 sus=(sus * 1.25);
 osc=(LFPulse.ar(freq).distort + Impulse.ar((freq + 1)).tan);
