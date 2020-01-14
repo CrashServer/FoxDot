@@ -5,11 +5,17 @@ from ..SCLang.SynthDef import FileSynthDef
 abass = FileSynthDef("abass")
 abass.add()
 
+alva = FileSynthDef("alva")
+alva.add()
+
 bbass = FileSynthDef("bbass")
 bbass.add()
 
 bounce = FileSynthDef("bounce")
 bounce.add()
+
+bnoise = FileSynthDef("bnoise")
+bnoise.add()
 
 click = FileSynthDef("click")
 click.add()
@@ -26,8 +32,14 @@ faim.add()
 glitcher = FileSynthDef("glitcher")
 glitcher.add()
 
+hnoise = FileSynthDef("hnoise")
+hnoise.add()
+
 mpluck = FileSynthDef("mpluck")
 mpluck.add()
+
+organ = FileSynthDef("organ")
+organ.add()
 
 pianovel = FileSynthDef("pianovel")
 pianovel.add()
@@ -35,8 +47,14 @@ pianovel.add()
 prof = FileSynthDef("prof")
 prof.add()
 
+radio = FileSynthDef("radio")
+radio.add()
+
 rsin = FileSynthDef("rsin")
 rsin.add()
+
+rhodes = FileSynthDef("rhodes")
+rhodes.add()
 
 sine = FileSynthDef("sine")
 sine.add()
@@ -47,11 +65,20 @@ sos.add()
 square = FileSynthDef("square")
 square.add()
 
+total = FileSynthDef("total")
+total.add()
+
 supersaw = FileSynthDef("supersaw")
 supersaw.add()
 
+tb303 = FileSynthDef("tb303")
+tb303.add()
+
 varicelle = FileSynthDef("varicelle")
 varicelle.add()
+
+waves = FileSynthDef("waves")
+waves.add()
 
 video = FileSynthDef("video")
 video.add()
