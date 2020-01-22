@@ -152,6 +152,14 @@ fx.add("osc = SelectX.ar(octer, [osc, octer*oct1, DC.ar(0)])")
 fx.add("osc = osc + (octersub * oct2 * sub) + (octersubsub * oct3 * sub)")
 fx.save()
 
+fx = FxList.new("feed", "feeddelay", {"feed":0.7, "feedtime": 0.25}, order=2)
+fx.add_var("out")
+fx.add("out = osc + Fb({\
+		arg feedback;\
+		osc = CombN.ar(feedback*feed + osc, 0.5, 0.25).tanh;\
+	},0.5,0.125)")
+fx.save()
+
 
 ###########
 
