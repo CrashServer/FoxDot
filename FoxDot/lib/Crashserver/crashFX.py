@@ -29,6 +29,12 @@ fx.doc("MoogFF filter")
 fx.add('osc = MoogFF.ar(osc, mpf, mpr,0,1)')
 fx.save()
 
+# DFM1 LPF
+fx = FxList.new('dfm','DFM1', {'dfm': 1000, 'dfmr': 0.1, 'dfmd': 1}, order=2)
+fx.doc("DFM1 filter")
+fx.add('osc = DFM1.ar(osc, dfm, dfmr, dfmd,0.0)')
+fx.save()
+
 if SC3_PLUGINS:
     #Dist mod
     fx = FxList.new('disto', 'disto_mod', {'disto': 0, 'smooth': 0.3, 'distomix': 1}, order=1)
@@ -152,11 +158,11 @@ fx.add("osc = SelectX.ar(octer, [osc, octer*oct1, DC.ar(0)])")
 fx.add("osc = osc + (octersub * oct2 * sub) + (octersubsub * oct3 * sub)")
 fx.save()
 
-fx = FxList.new("feed", "feeddelay", {"feed":0.7, "feedtime": 0.25}, order=2)
+fx = FxList.new("feed", "feeddelay", {"feed":0.7, "feedfreq": 50}, order=2)
 fx.add_var("out")
 fx.add("out = osc + Fb({\
 		arg feedback;\
-		osc = CombN.ar(feedback*feed + osc, 0.5, 0.25).tanh;\
+		osc = CombN.ar(HPF.ar(feedback*feed, feedfreq) + osc, 0.5, 0.25).tanh;\
 	},0.5,0.125)")
 fx.save()
 
