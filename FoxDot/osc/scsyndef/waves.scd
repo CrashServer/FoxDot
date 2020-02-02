@@ -1,6 +1,6 @@
 (
 SynthDef(\waves,
-	{| amp=0.5, pan=0, bus=0, freq=220, carPartial=2, vib=4, gate=1,rel=8, sus=1, fmod=0, blur=1|
+	{| amp=0.5, pan=0, bus=0, freq=220, vib=4, gate=1, sus=1, fmod=0, blur=1|
 	var env, sig, sig2, osc;
 	sus = sus * blur;
 	freq = In.kr(bus, 1);
@@ -14,7 +14,7 @@ SynthDef(\waves,
 	sig = Mix.arFill(4, { CombN.ar(sig, 0.1, LFNoise1.ar(Rand(0, 0.1), 0.04, 0.05), 15) });
 	sig = AllpassN.ar(sig, 0.050, [Rand(0, 0.05), Rand(0,0.05)], 1)!4;
 	sig = FreqShift.ar(sig, (freq/2)*(-1));
-	sig = LPF.ar(sig, 1200);
+	//sig = LPF.ar(sig, 4200);
 	sig = HPF.ar(HPF.ar(sig, 50));
 	sig = FreeVerb.ar(sig);
 	sig = Limiter.ar(sig).tanh;
