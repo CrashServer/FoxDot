@@ -42,6 +42,16 @@ video = int(server_data["video"])
 adresse = str(server_data["adresse"])
 
 rate_voice = 100
+### Path Snd
+crash_path = os.path.realpath(FOXDOT_ROOT + "/lib/Crashserver/crash_snd/")
+
+main_part = ["init", "connect", "aspiration", "attention", "corrosion", "absolution", "annihilation"]
+gamme = ["locrianMajor", "locrian", "phrygian", "minor", "dorian", "mixolydian", "major", "lydian", "lydianAug"]
+crash_function = ["lost", "binary", "desynchro", "PTime", "PTimebin" "lininf", "PDrum", "darker", "lighter", \
+"human", "unison", "ascii_gen", "attack", "PChords", "fourths", "thirds", "seconds", "duree", "print_synth", "PChain2"]
+
+
+
 # ### Lieu du Server
 # lieu = str("de euh meille zine")
 # ### Longueur mesure d'intro
@@ -96,8 +106,6 @@ try:
 except:
 	print("Error in generating weapons code")
 
-### Path Snd
-crash_path = os.path.realpath(FOXDOT_ROOT + "/lib/Crashserver/crash_snd/")
 
 try: 
 	FOXDOT_SND   = crash_path
@@ -160,7 +168,6 @@ def ascii_gen(text=""):
 		clip.copy(figlet_format(text))
 
 ##############   BEGIN ##############################################
-main_part = ["init", "connect", "aspiration", "attention", "corrosion", "absolution", "annihilation"]
 
 def connect(video=video):
 	print(attack_data["connect"][1].strip())
@@ -216,74 +223,99 @@ def attack(part="default", active_voice=1):
 			Clock.future(calc_dur_voice(voice_txt), lambda: voice_lpf(0))
 
 ################# END #################################################
-crash_function = ["lost", "binary", "desynchro", "PTime", "PTimebin" "lininf", "PDrum", "darker", "lighter", \
-"human", "unison", "ascii_gen", "attack", "PChords", "fourths", "thirds", "seconds", "duree", "print_synth"]
 
 ### PLAYERS METHODS
+import random
 
 @player_method
 def unison(self, unison=2, detune=0.125, analog=40):
-    """ Like spread(), but can specify number of voices(unison)  
-    Sets pan to (-1,-0.5,..,0.5,1) and pshift to (-0.125,-0.0625,...,0.0625,0.125)
-    If unison is odd, an unchanged voice is added in the center
-    Eg : p1.unison(4, 0.5) => pshift=(-0.5,-0.25,0.25,0.5), pan=(-1.0,-0.5,0.5,1.0)
-         p1.unison(5, 0.8) => pshift=(-0.8,-0.4,0,0.4,0.8), pan=(-1.0,-0.5,0,0.5,1.0)
-    """
-    if unison != 0:
-        pan=[]
-        pshift=[]
-        uni = int(unison if unison%2==0 else unison-1)
-        for i in range(1,int(uni/2)+1):
-            pan.append(2*i/uni)
-            pan.insert(0, -2*i/uni)
-        for i in range(1, int(uni/2)+1):
-            pshift.append(detune*(i/(uni/2))+PWhite(0,detune*(analog/100)))
-            pshift.insert(0,detune*-(i/(uni/2))+PWhite(0,-1*detune*(analog/100)))
-        if unison%2!=0 and unison > 1:
-            pan.insert(int(len(pan)/2), 0)
-            pshift.insert(int(len(pan)/2), 0)              
-        self.pan = tuple(pan)
-        self.pshift = tuple(pshift)
-    else:
-        self.pan=0
-        self.pshift=0
-    return self
+	""" Like spread(), but can specify number of voices(unison)  
+	Sets pan to (-1,-0.5,..,0.5,1) and pshift to (-0.125,-0.0625,...,0.0625,0.125)
+	If unison is odd, an unchanged voice is added in the center
+	Eg : p1.unison(4, 0.5) => pshift=(-0.5,-0.25,0.25,0.5), pan=(-1.0,-0.5,0.5,1.0)
+		 p1.unison(5, 0.8) => pshift=(-0.8,-0.4,0,0.4,0.8), pan=(-1.0,-0.5,0,0.5,1.0)
+	"""
+	if unison != 0:
+		pan=[]
+		pshift=[]
+		uni = int(unison if unison%2==0 else unison-1)
+		for i in range(1,int(uni/2)+1):
+			pan.append(2*i/uni)
+			pan.insert(0, -2*i/uni)
+		for i in range(1, int(uni/2)+1):
+			pshift.append(detune*(i/(uni/2))+PWhite(0,detune*(analog/100)))
+			pshift.insert(0,detune*-(i/(uni/2))+PWhite(0,-1*detune*(analog/100)))
+		if unison%2!=0 and unison > 1:
+			pan.insert(int(len(pan)/2), 0)
+			pshift.insert(int(len(pan)/2), 0)              
+		self.pan = tuple(pan)
+		self.pshift = tuple(pshift)
+	else:
+		self.pan=0
+		self.pshift=0
+	return self
 
 @player_method
 def human(self, velocity=20, humanize=5, swing=0):
-    """ Humanize the velocity, delay and add swing in % (less to more)"""
-    humanize += 0.1
-    if velocity!=0:
-        self.delay=[0,PWhite((-1*humanize/100)*self.dur, (humanize/100)*self.dur) + (self.dur*swing/100)]
-        self.amplify=[1,PWhite((100-velocity)/100,1)]
-    else:
-        self.delay=0
-        self.amplify=1
-    return self
+	""" Humanize the velocity, delay and add swing in % (less to more)"""
+	humanize += 0.1
+	if velocity!=0:
+		self.delay=[0,PWhite((-1*humanize/100)*self.dur, (humanize/100)*self.dur) + (self.dur*swing/100)]
+		self.amplify=[1,PWhite((100-velocity)/100,1)]
+	else:
+		self.delay=0
+		self.amplify=1
+	return self
 
 @player_method
 def fill(self, on=1):
-    """ add fill to a drum player
-    0 = off
-    1 = dur + amplify
-    2 = dur  //  amplify =1
-    3 = amplify // dur=1/2
-    """
-    if on==1:
-        self.dur = PwRand([1/4,1/2,3/4],[45,45,10])
-        self.amplify = var([0,1],[[PRand([3,7,15]),PRand([6,2,14])],[1,2]])*[1,PWhite(0.2,1)]
-    elif on==2:
-        self.dur = PRand([1/4,1/2,3/4])
-        amplify = 1
-    elif on==3:
-        self.dur=1/2
-        self.amplify = var([0,1],[[3,6,7,2,15,2,3,14],[1,2]])*PWhite(0,1)
-    else:
-        self.dur = 1/2
-        self.amplify = 1
+	""" add fill to a drum player
+	0 = off
+	1 = dur + amplify
+	2 = dur  //  amplify =1
+	3 = amplify // dur=1/2
+	"""
+	if on==1:
+		self.dur = PwRand([1/4,1/2,3/4],[45,45,10])
+		self.amplify = var([0,1],[[PRand([3,7,15]),PRand([6,2,14])],[1,2]])*[1,PWhite(0.2,1)]
+	elif on==2:
+		self.dur = PRand([1/4,1/2,3/4])
+		amplify = 1
+	elif on==3:
+		self.dur=1/2
+		self.amplify = var([0,1],[[3,6,7,2,15,2,3,14],[1,2]])*PWhite(0,1)
+	else:
+		self.dur = 1/2
+		self.amplify = 1
+
+@player_method
+class PChain2(RandomGenerator):
+	""" An example of a Markov Chain generator pattern. The mapping argument 
+		should be a dictionary of keys whose values are a list/pattern of possible
+		destinations.  """
+	def __init__(self, mapping, **kwargs):
+		assert isinstance(mapping, dict)
+		RandomGenerator.__init__(self, **kwargs)
+		self.args = (mapping)
+		self.last_value = 0
+		self.mapping = {}
+		i = 0
+		for key, value in mapping.items():
+			self.mapping[key] = [asStream(value[0]), asStream(value[1])]
+			if i == 0:
+				self.last_value = key
+				i += 1
+		self.init_random(**kwargs)
+	def func(self, index):
+		key = list(self.mapping[self.last_value][0])
+		prob = list(self.mapping[self.last_value][1])
+		#print(random.choices(key, prob))
+		self.last_value = random.choices(key, prob)[0]
+		return self.last_value
+
+# END OF PLAYERS METHODS        
 
 
-# END OF PLAYERS METHODS
 
 def lost(mainpart=1):
 	if mainpart==0:
@@ -323,7 +355,6 @@ def PDrum(style=None):
 	else:	
 		clip.copy(DrumsPattern[style])
 
-gamme = ["locrianMajor", "locrian", "phrygian", "minor", "dorian", "mixolydian", "major", "lydian", "lydianAug"]
 
 def darker():
 	### Change Scale to a darkest one
@@ -419,3 +450,26 @@ seconds = PChain({
 	VI: [V, VII],
 	VII: [VI, I]   
 })
+
+def melody(scale_melody=Scale.default.name):
+	melody_dict = {
+		0: [[0,1,2,3,4,5,6,7,8,9,10,11], [27,0,22,0,19,1,0,12,0,6,1,13]],
+		1: [[0,1,2,3,4,5,6,7,8,9,10,11], [9,0,77,0,14,0,0,0,0,0,0,0]],
+		2: [[0,1,2,3,4,5,6,7,8,9,10,11], [32,0,22,0,26,6,0,8,0,2,0,3]],
+		3: [[0,1,2,3,4,5,6,7,8,9,10,11], [10,0,38,16,0,29,0,7,0,0,0,0]],
+		4: [[0,1,2,3,4,5,6,7,8,9,10,11], [11,0,30,0,22,16,0,19,0,2,0,0]],
+		5: [[0,1,2,3,4,5,6,7,8,9,10,11], [0,0,13,0,43,17,0,18,0,6,0,1]],
+		6: [[0,1,2,3,4,5,6,7,8,9,10,11], [1,0,4,0,7,1,12,67,0,8,0,0]],
+		7: [[0,1,2,3,4,5,6,7,8,9,10,11], [16,0,3,0,17,22,1,30,0,10,0,1]],
+		8: [[0,1,2,3,4,5,6,7,8,9,10,11], [0,0,0,0,0,27,0,55,0,18,0,0]],
+		9: [[0,1,2,3,4,5,6,7,8,9,10,11], [4,0,2,0,1,5,0,60,0,19,1,8]],
+		10: [[0,1,2,3,4,5,6,7,8,9,10,11], [17,0,2,1,12,2,0,22,1,18,24,2]],
+		11: [[0,1,2,3,4,5,6,7,8,9,10,11], [45,0,12,0,0,1,0,7,0,26,0,9]]                     
+		}
+
+	scale_melody_dict = {key: melody_dict[key] for key in melody_dict.keys() if key in Scale[scale_melody]}
+	for keys, values in scale_melody_dict.items():
+		note, prob = values
+		fnote, fprob = zip(*((key, pro) for key, pro in zip(note, prob) if key in Scale[scale_melody]))
+		scale_melody_dict[keys] = [list(fnote), list(fprob)]                  
+	return scale_melody_dict
