@@ -461,6 +461,7 @@ class GranularSynthDef(SampleSynthDef):
         self.gdur = self.new_attr_instance("gdur")
         self.defaults['pos']   = 0
         self.defaults['sample']   = 0
+        self.defaults['gdur'] = 1
         self.base.append("osc = TGrains.ar(2, trigger:1, bufnum:buf, rate: rate, centerPos: pos, dur: gdur);")
         self.base.append("osc = osc * EnvGen.ar(Env([0,1,1,0],[0.05, sus-0.05, 0.05]));")
         self.osc = self.osc * self.amp
