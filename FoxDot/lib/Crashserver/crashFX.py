@@ -75,7 +75,7 @@ fx.add("osc = LinXFade2.ar((osc * (drive * 50)).clip(0,0.2).fold2(2), osc, 1-dri
 fx.save()
 
 fx = FxList.new("tanh", "tanhDisto", {"tanh":0}, order=2)
-fx.add("osc = (osc*tanh+3).tanh*0.4")
+fx.add("osc = osc + (osc*tanh).tanh.sqrt()")
 fx.save()
 
 #based on Derek Kwan chorus

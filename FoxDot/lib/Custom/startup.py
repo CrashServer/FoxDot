@@ -472,4 +472,23 @@ def melody(scale_melody=Scale.default.name):
 		note, prob = values
 		fnote, fprob = zip(*((key, pro) for key, pro in zip(note, prob) if key in Scale[scale_melody]))
 		scale_melody_dict[keys] = [list(fnote), list(fprob)]                  
-	return scale_melody_dict
+	return PChain2(scale_melody_dict)
+
+
+chords = {
+    I: [[I, II, III, IV, V, VI], [2,2,2,39,20,35]],
+    II: [[I, II, III, IV, V, VI], [3,2,1,4,86,4]],
+    III: [[I, II, III, IV, V, VI], [0,5,0,85,2,8]],
+    IV: [[I, II, III, IV, V, VI], [20,1,1,1,76,1]],
+    V: [[I, II, III, IV, V, VI], [70,1,2,13,1,14]],
+    VI: [[I, II, III, IV, V, VI], [5,5,1,49,39,1]], 
+    }
+
+krhytm = {
+    0.25: [0.25,0.25,0.25,0.5],
+    0.5:  [0.25,0.5,0.125,0.125,0.125,0.125],
+    0.125: [0.375,0.125],
+    0.375: [0.375,0.375,1],
+    1: [0.75,0.25],
+    0.75: [0.25,1,0.125,0.125]
+    }	
