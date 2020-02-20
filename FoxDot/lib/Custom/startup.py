@@ -89,7 +89,7 @@ except:
 	print("Error importing Speech Extension")
 
 ### Foxdot tools
-try:	
+try:    
 	from .Crashserver.arpy import *
 	from .Crashserver.sdur import *
 	from .Crashserver.drumspattern import *
@@ -142,9 +142,9 @@ def init_voice():
 		#crash_txt = serv.crash_txt()
 		Voice(txt_init, rate=rate_voice, amp=1, lang=lang, voice=voice)
 		#def txt_intro():
-		#	Voice(crash_txt, rate=rate_voice, amp=1, lang=lang, voice=voice)
+		#   Voice(crash_txt, rate=rate_voice, amp=1, lang=lang, voice=voice)
 			
-		#Clock.future(tmps, lambda: txt_intro())	
+		#Clock.future(tmps, lambda: txt_intro())    
 	else:
 		print("Sorry, we crash only from windows or linux")
 
@@ -176,7 +176,7 @@ def connect(video=video):
 	Root.default = root_intro
 	if video==1:
 		OSCClient(adresse)
-		vi >> video(vid=0, speed=1, vfx1=0, vfx2=0)		
+		vi >> video(vid=0, speed=1, vfx1=0, vfx2=0)     
 	i3 >> sos(dur=8, lpf=linvar([60,4800],[tmps*1.5, tmps*3], start=now), hpf=expvar([0,500],[tmps*6, tmps*2]))
 	clip.copy(figlet_format(attack_data["connect"][0]) + "\n" + attack_data["connect"][2])
 
@@ -219,7 +219,7 @@ def attack(part="default", active_voice=1):
 	if voice_txt is not None:   ### Voice generator
 		if voice_txt is not "" and active_voice==1:
 			voice_lpf(400)
-			Voice(voice_txt, rate=rate_voice, lang=lang, voice=randint(1,5))		
+			Voice(voice_txt, rate=rate_voice, lang=lang, voice=randint(1,5))        
 			Clock.future(calc_dur_voice(voice_txt), lambda: voice_lpf(0))
 
 ################# END #################################################
@@ -335,7 +335,7 @@ def duree():
 
 
 def desynchro():
-	clip.copy(random_bpm())    	
+	clip.copy(random_bpm())     
 
 def PTime():
 	### Generate a pattern from the local machine time
@@ -352,7 +352,7 @@ def PDrum(style=None):
 	# Generate a drum pattern style
 	if style == None:
 		print(DrumsPattern.keys())
-	else:	
+	else:   
 		clip.copy(DrumsPattern[style])
 
 
@@ -476,19 +476,130 @@ def melody(scale_melody=Scale.default.name):
 
 
 chords = {
-    I: [[I, II, III, IV, V, VI], [2,2,2,39,20,35]],
-    II: [[I, II, III, IV, V, VI], [3,2,1,4,86,4]],
-    III: [[I, II, III, IV, V, VI], [0,5,0,85,2,8]],
-    IV: [[I, II, III, IV, V, VI], [20,1,1,1,76,1]],
-    V: [[I, II, III, IV, V, VI], [70,1,2,13,1,14]],
-    VI: [[I, II, III, IV, V, VI], [5,5,1,49,39,1]], 
-    }
+	I: [[I, II, III, IV, V, VI], [2,2,2,39,20,35]],
+	II: [[I, II, III, IV, V, VI], [3,2,1,4,86,4]],
+	III: [[I, II, III, IV, V, VI], [0,5,0,85,2,8]],
+	IV: [[I, II, III, IV, V, VI], [20,1,1,1,76,1]],
+	V: [[I, II, III, IV, V, VI], [70,1,2,13,1,14]],
+	VI: [[I, II, III, IV, V, VI], [5,5,1,49,39,1]], 
+	}
 
 krhytm = {
-    0.25: [0.25,0.25,0.25,0.5],
-    0.5:  [0.25,0.5,0.125,0.125,0.125,0.125],
-    0.125: [0.375,0.125],
-    0.375: [0.375,0.375,1],
-    1: [0.75,0.25],
-    0.75: [0.25,1,0.125,0.125]
-    }	
+	0.25: [0.25,0.25,0.25,0.5],
+	0.5:  [0.25,0.5,0.125,0.125,0.125,0.125],
+	0.125: [0.375,0.125],
+	0.375: [0.375,0.375,1],
+	1: [0.75,0.25],
+	0.75: [0.25,1,0.125,0.125]
+	}   
+
+from .Crashserver.Markov.chords_dict import *
+
+@player_method
+class PMarkov(RandomGenerator):
+	""" An example of a Markov Chain generator pattern. The mapping argument 
+		should be a dictionary of keys whose values are a list/pattern of possible
+		destinations.  """
+	def __init__(self, init_value="", **kwargs):
+		RandomGenerator.__init__(self, **kwargs)
+		self.init_value = init_value
+		self.active_value = 0
+		self.first_value = 0
+		self.second_value = 0
+		self.third_value = 0
+		self.mapping = {}
+		self.init_random(**kwargs)
+		self.turn = 0
+	def stream_value(self, active_dict):
+		""" Return mapping dict with a list of keys and probability""" 
+		for key, value in active_dict.items():
+			self.mapping[key] = [asStream(value[0]), asStream(value[1])]
+			#self.last_value = key
+	def key_prob(self, active_dict):
+		"""return the key and prob of previous value from active dictionnary"""
+		self.stream_value(active_dict)
+		key = list(self.mapping[self.active_value][0])
+		prob = list(self.mapping[self.active_value][1])
+		return key, prob
+	def value_choice(self, active_dict):
+		""" Return a key from probabilty of active dictionnary """
+		key, prob = self.key_prob(active_dict)
+		return random.choices(key, prob)[0]
+	def func(self, index):
+		if self.turn == 0:
+			if self.init_value is "":
+				self.init_value = random.choice(list(cho1.keys()))
+			self.active_value = self.init_value
+			#print("Turn : {}, chord : {}".format(self.turn, self.active_value))
+			self.turn += 1
+			return self.active_value
+		else:
+			if self.turn == 1:
+				self.first_value = self.value_choice(cho1)
+				self.active_value = self.first_value
+				#print("Turn : {}, chord : {}".format(self.turn, self.active_value))
+
+			elif self.turn == 2:
+				self.second_value = self.value_choice(cho2[self.init_value])
+				self.active_value= self.second_value
+				#print("Turn : {}, chord : {}".format(self.turn, self.active_value))
+
+			elif self.turn == 3:
+				try:
+					self.third_value = self.value_choice(cho3[self.init_value][self.first_value])
+					self.active_value = self.third_value
+				except:
+					list_cho = list(cho1.keys())
+					list_cho.remove(self.init_value)
+					self.third_value = random.choice(list_cho)
+					self.active_value = self.third_value
+				#print("Turn : {}, chord : {}".format(self.turn, self.active_value))
+
+			self.turn += 1
+			if self.turn > 3:
+				self.turn = 0
+			return self.active_value
+
+
+
+@player_method
+def switch(self, other, key, bypass=1):
+    """ Switch the attr of a player
+    	eg: b1 >> dbass(P[0:4], amp=1)
+		    b2 >> blip(-2, amp=1).switch(b1, "degree")"""
+	if bypass != 0:
+        self_temp = self.attr[key]
+        other_temp = other.attr[key]
+        other.attr[key] = self_temp
+        self.attr[key] = other_temp
+        return self
+
+
+def drop(duree=32, nbr=0, end=4):
+	""" Create a drop effect (var bpm), 
+		duree = durée totale de la partie, 
+		nbr = nombre de division du drop,
+		end = duree du drop en partant de la fin
+		pour retablir le tempo simplement drop(92)
+		""" 
+    if nbr == 0:
+        Clock.bpm = duree
+    else:
+        init_bpm = Clock.bpm
+        actual_bpm = Clock.bpm
+        divi = 1
+        bpm_list = []
+        duree_list = []    
+        for i in range(nbr):
+            actual_bpm /= divi 
+            if actual_bpm < 10:
+                actual_bpm = 10
+            bpm_list.append(int(actual_bpm))
+            if i == 0:
+                duree_list.append(duree-end)
+            else:
+                duree_list.append(end/(2**i))    
+            divi = 2
+        duree_list[-1] = end-sum(duree_list[1:-1])
+        Clock.bpm = var([bpm_list], [duree_list], start=Clock.mod(8))
+        print('var({}, {})'.format([bpm_list], [duree_list]))        
