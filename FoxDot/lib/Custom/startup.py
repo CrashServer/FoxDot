@@ -564,15 +564,15 @@ class PMarkov(RandomGenerator):
 
 @player_method
 def switch(self, other, key, bypass=1):
-    """ Switch the attr of a player
-    	eg: b1 >> dbass(P[0:4], amp=1)
-		    b2 >> blip(-2, amp=1).switch(b1, "degree")"""
+	""" Switch the attr of a player
+		eg: b1 >> dbass(P[0:4], amp=1)
+			b2 >> blip(-2, amp=1).switch(b1, "degree")"""
 	if bypass != 0:
-        self_temp = self.attr[key]
-        other_temp = other.attr[key]
-        other.attr[key] = self_temp
-        self.attr[key] = other_temp
-        return self
+		self_temp = self.attr[key]
+		other_temp = other.attr[key]
+		other.attr[key] = self_temp
+		self.attr[key] = other_temp
+		return self
 
 
 def drop(duree=32, nbr=0, end=4):
@@ -582,24 +582,24 @@ def drop(duree=32, nbr=0, end=4):
 		end = duree du drop en partant de la fin
 		pour retablir le tempo simplement drop(92)
 		""" 
-    if nbr == 0:
-        Clock.bpm = duree
-    else:
-        init_bpm = Clock.bpm
-        actual_bpm = Clock.bpm
-        divi = 1
-        bpm_list = []
-        duree_list = []    
-        for i in range(nbr):
-            actual_bpm /= divi 
-            if actual_bpm < 10:
-                actual_bpm = 10
-            bpm_list.append(int(actual_bpm))
-            if i == 0:
-                duree_list.append(duree-end)
-            else:
-                duree_list.append(end/(2**i))    
-            divi = 2
-        duree_list[-1] = end-sum(duree_list[1:-1])
-        Clock.bpm = var([bpm_list], [duree_list], start=Clock.mod(8))
-        print('var({}, {})'.format([bpm_list], [duree_list]))        
+	if nbr == 0:
+		Clock.bpm = duree
+	else:
+		init_bpm = Clock.bpm
+		actual_bpm = Clock.bpm
+		divi = 1
+		bpm_list = []
+		duree_list = []    
+		for i in range(nbr):
+			actual_bpm /= divi 
+			if actual_bpm < 10:
+				actual_bpm = 10
+			bpm_list.append(int(actual_bpm))
+			if i == 0:
+				duree_list.append(duree-end)
+			else:
+				duree_list.append(end/(2**i))    
+			divi = 2
+		duree_list[-1] = end-sum(duree_list[1:-1])
+		Clock.bpm = var([bpm_list], [duree_list], start=Clock.mod(8))
+		print('var({}, {})'.format([bpm_list], [duree_list]))        
