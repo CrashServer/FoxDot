@@ -603,3 +603,30 @@ def drop(duree=32, nbr=0, end=4):
 		duree_list[-1] = end-sum(duree_list[1:-1])
 		Clock.bpm = var([bpm_list], [duree_list], start=Clock.mod(8))
 		print('var({}, {})'.format([bpm_list], [duree_list]))        
+
+
+def PMorse(text, point=1/4, tiret=3/4):
+	MORSE_DICT = { 'A':'.-', 'B':'-...', 
+					'C':'-.-.', 'D':'-..', 'E':'.', 
+					'F':'..-.', 'G':'--.', 'H':'....', 
+					'I':'..', 'J':'.---', 'K':'-.-', 
+					'L':'.-..', 'M':'--', 'N':'-.', 
+					'O':'---', 'P':'.--.', 'Q':'--.-', 
+					'R':'.-.', 'S':'...', 'T':'-', 
+					'U':'..-', 'V':'...-', 'W':'.--', 
+					'X':'-..-', 'Y':'-.--', 'Z':'--..', 
+					'1':'.----', '2':'..---', '3':'...--', 
+					'4':'....-', '5':'.....', '6':'-....', 
+					'7':'--...', '8':'---..', '9':'----.', 
+					'0':'-----', ', ':'--..--', '.':'.-.-.-', 
+					'?':'..--..', '/':'-..-.', '-':'-....-', 
+					'(':'-.--.', ')':'-.--.-'} 
+	morse = []
+	for l in text.split(" "):
+		for w in l:
+			for i in MORSE_DICT[w.upper()]:
+				if i == ".":
+					morse.append(point)
+				elif i == "-":
+					morse.append(tiret)
+	return morse
