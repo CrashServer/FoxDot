@@ -47,6 +47,9 @@ pianovel.add()
 prof = FileSynthDef("prof")
 prof.add()
 
+pbass = FileSynthDef("pbass")
+pbass.add()
+
 radio = FileSynthDef("radio")
 radio.add()
 
