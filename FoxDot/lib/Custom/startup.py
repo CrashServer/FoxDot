@@ -26,6 +26,7 @@ with open(lostfile, "rb") as lost:
 	lost_depickler = pickle.Unpickler(lost)
 	lost_list = lost_depickler.load()
 
+lost_played = lost_list[:]
 server_data = code_server["server_data"]
 attack_data = code_server["attack_data"]
 
@@ -50,7 +51,6 @@ rate_voice = 100
 ### Path Snd
 crash_path = os.path.realpath(FOXDOT_ROOT + "/lib/Crashserver/crash_snd/")
 
-main_part = ["init", "connect", "aspiration", "attention", "corrosion", "absolution", "annihilation"]
 gamme = ["locrianMajor", "locrian", "phrygian", "minor", "dorian", "mixolydian", "major", "lydian", "lydianAug"]
 crash_function = ["lost", "binary", "desynchro", "PTime", "PTimebin" "lininf", "PDrum", "darker", "lighter", \
 "human", "unison", "ascii_gen", "attack", "PChords", "fourths", "thirds", "seconds", "duree", "print_synth", "PChain2"]
@@ -176,6 +176,8 @@ def ascii_gen(text=""):
 
 def connect(video=video):
 	print(attack_data["connect"][1].strip())
+	if "connect" in lost_played:
+		lost_played.remove("connect")
 	Clock.bpm = bpm_intro
 	Scale.default = scale_intro
 	Root.default = root_intro
@@ -186,14 +188,17 @@ def connect(video=video):
 	clip.copy(figlet_format(attack_data["connect"][0]) + "\n" + attack_data["connect"][2])
 
 
-def attack(part="default", active_voice=1):
+def attack(part="", active_voice=1):
 	if type(part) is not str:  ### so we can type attack(42) or attack(43)
 		part = str(part)
 
-	### Random choice of Part
-	elif part == "default":    
-		part = choice([i for i in code.keys() if i not in main_part])
+	### next part
+	elif part == "":    
+		part = lost_played[0]
 	
+	if part in lost_played:
+		lost_played.remove(part)
+
 	blase = attack_data[part][0].strip()
 	voice_txt = attack_data[part][1].strip()
 	code_txt = attack_data[part][2].strip()
@@ -320,8 +325,11 @@ class PChain2(RandomGenerator):
 
 # END OF PLAYERS METHODS        
 
-def lost():
-	print(lost_list)
+def lost(total=0):
+	if total==0:
+		print(lost_played)
+	else:
+		print(lost_list)	
 
 def binary(number):
 	# return a list converted to binary from a number 
