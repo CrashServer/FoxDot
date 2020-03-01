@@ -425,6 +425,9 @@ class ServerConf:
 	def save(self):		
 		if self.var_active.get() == 1:
 			file_server = "server_data.cs"
+			with open("lostfile.cs", "wb") as lostfile:
+				lost_pickler = pickle.Pickler(lostfile)
+				lost_pickler.dump(self.part_list)
 		else:
 			file_server = "server_data_" + self.lieu.get() + "_" + date.today().strftime("%d-%m-%y") + ".cs"	
 

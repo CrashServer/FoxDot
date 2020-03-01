@@ -17,9 +17,14 @@ from pyfiglet import figlet_format
 #########################
 
 file = os.path.realpath(FOXDOT_ROOT + "/lib/Crashserver/crash_gui/server_data.cs")
+lostfile = os.path.realpath(FOXDOT_ROOT + "/lib/Crashserver/crash_gui/lostfile.cs")
 with open(file, "rb") as fichier:
 	mon_depickler = pickle.Unpickler(fichier)
 	code_server = mon_depickler.load()
+
+with open(lostfile, "rb") as lost:
+	lost_depickler = pickle.Unpickler(lost)
+	lost_list = lost_depickler.load()
 
 server_data = code_server["server_data"]
 attack_data = code_server["attack_data"]
@@ -315,13 +320,8 @@ class PChain2(RandomGenerator):
 
 # END OF PLAYERS METHODS        
 
-
-
-def lost(mainpart=1):
-	if mainpart==0:
-		print([i for i in attack_data.keys() if int(attack_data[i][3]) > 0])
-	else:
-		print([i for i in attack_data.keys()])
+def lost():
+	print(lost_list)
 
 def binary(number):
 	# return a list converted to binary from a number 
