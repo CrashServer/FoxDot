@@ -184,7 +184,7 @@ def connect(video=video):
 	if video==1:
 		OSCClient(adresse)
 		vi >> video(vid=0, speed=1, vfx1=0, vfx2=0)     
-	i3 >> sos(dur=8, lpf=linvar([60,4800],[tmps*1.5, tmps*3], start=now), hpf=expvar([0,500],[tmps*6, tmps*2]))
+	i3 >> sos(dur=8, lpf=linvar([60,4800],[tmps*1.5, tmps*3], start=now), hpf=expvar([0,500],[tmps*6, tmps*2]), amplify=0.5)
 	clip.copy(figlet_format(attack_data["connect"][0]) + "\n" + attack_data["connect"][2])
 
 
@@ -229,7 +229,7 @@ def attack(part="", active_voice=1):
 	if voice_txt is not None:   ### Voice generator
 		if voice_txt is not "" and active_voice==1:
 			voice_lpf(400)
-			Voice(voice_txt, rate=rate_voice, lang=lang, voice=randint(1,5))        
+			Voice(voice_txt, rate=rate_voice + randint(0,20), lang=lang, voice=randint(1,5))        
 			Clock.future(calc_dur_voice(voice_txt), lambda: voice_lpf(0))
 
 ################# END #################################################
@@ -326,10 +326,16 @@ class PChain2(RandomGenerator):
 # END OF PLAYERS METHODS        
 
 def lost(total=0):
+	global lost_played
+	global lost_list
 	if total==0:
 		print(lost_played)
-	else:
-		print(lost_list)	
+	elif total==1:
+		print(lost_list)
+	elif total==2:
+		print("Reinit lost")
+		lost_played=lost_list[:]
+		print(lost_played)		
 
 def binary(number):
 	# return a list converted to binary from a number 
