@@ -18,19 +18,27 @@ class Voice(Thread):
 		Thread.__init__(self)
 		self.engine = pyttsx3.init()
 		self.text = str(text)
+		if self.text=="":
+			self.text = " "
 		self.rate = rate
 		self.amp = float(amp)
 		self.lang = lang
 		self.voice = voice
-		self.thread = Thread(target=self.say, kwargs={'text': self.text})
-		self.thread.start()
+		if lang=="":
+			self.get_voices()
+		else:	
+			self.thread = Thread(target=self.say, kwargs={'text': self.text})
+			self.thread.start()
 		
 	def main(self):
 		self.engine.setProperty('rate', self.rate)    # Speed percent (can go over 100)
 		self.engine.setProperty('volume', self.amp)   # Volume (0 - 1) 
-		
+	
+
 	def say(self, text):
 		""" Say the text """
+		if self.engine.isBusy():
+			self.engine.stop()
 		#self.engine.stop()
 		self.set_voice(self.lang, self.voice)
 		self.main()		
@@ -38,7 +46,8 @@ class Voice(Thread):
 			self.engine.say(str(text))
 			self.engine.runAndWait()
 		else:
-			self.stop()
+			self.engine.say(str("empty"))
+			self.engine.runAndWait()	
 
 	def stop(self):
 		self.engine.stop()
