@@ -175,6 +175,7 @@ def ascii_gen(text=""):
 ##############   BEGIN ##############################################
 
 def connect(video=video):
+	lost(2)
 	print(attack_data["connect"][1].strip())
 	if "connect" in lost_played:
 		lost_played.remove("connect")
