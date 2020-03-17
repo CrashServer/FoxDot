@@ -82,8 +82,8 @@ class init_server():
 		if self.lang == "french":
 			self.text_init = "Hello world ? Le Serveur {} est initialisé à {} heures, \
 				{} minutes, et {} secondes.".format(self.lieu, str(time.strftime("%H")), str(time.strftime("%M")), str(time.strftime("%S")))
-		if self.lang == "english":
-			self.text_init = "Hello world ? The Server {} is initialized at {} hours, \
+		if self.lang.startswith("english"):
+			self.text_init = "Initialisation. {} Server. At {} hours, \
 				{} minutes, and {} seconds".format(self.lieu, str(time.strftime("%H")), str(time.strftime("%M")), str(time.strftime("%S")))
 		return self.text_init
 

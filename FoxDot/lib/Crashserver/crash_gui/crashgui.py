@@ -129,7 +129,7 @@ class ServerConf:
 		frame_lang.pack(fill=X)
 		label_lang = Label(frame_lang, text="Langue du server : ", width=20)
 		label_lang.pack(side=LEFT, padx=5, pady=5)
-		var_lang = ["french", "english"]
+		var_lang = ["french", "english", "english1"]
 		self.lang = ttk.Combobox(frame_lang, values=var_lang)
 		self.lang.pack(side=LEFT, padx=5, expand=True)
 

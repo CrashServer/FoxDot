@@ -36,6 +36,8 @@ lieu = str(server_data["lieu"])
 tmps = int(server_data["tmps"])
 ### Language
 lang = str(server_data["lang"])
+if sys.platform.startswith("win") and lang.startswith("english"):
+	lang = "english"
 voice = int(server_data["voice"])
 ### BPM intro
 bpm_intro = int(server_data["bpm_intro"])
@@ -47,7 +49,7 @@ root_intro = str(server_data["root_intro"])
 video_player = int(server_data["video"])
 adresse = str(server_data["adresse"])
 
-rate_voice = 100
+rate_voice = 110
 ### Path Snd
 crash_path = os.path.realpath(FOXDOT_ROOT + "/lib/Crashserver/crash_snd/")
 
@@ -649,38 +651,3 @@ def PMorse(text, point=1/4, tiret=3/4):
 			morse.append(rest(5*point))
 	morse[-1] += rest(2*point) 			
 	return morse
-
-
-# class PMorse(GeneratorPattern):
-# 	def __init__(self, text, point=1/4, tiret=3/4):
-# 		GeneratorPattern.__init__(self)
-# 		self.text = text
-# 		self.point  = point
-# 		self.tiret  = tiret
-# 		self.Morse_dict = { 'A':'.-', 'B':'-...', 
-# 					'C':'-.-.', 'D':'-..', 'E':'.', 
-# 					'F':'..-.', 'G':'--.', 'H':'....', 
-# 					'I':'..', 'J':'.---', 'K':'-.-', 
-# 					'L':'.-..', 'M':'--', 'N':'-.', 
-# 					'O':'---', 'P':'.--.', 'Q':'--.-', 
-# 					'R':'.-.', 'S':'...', 'T':'-', 
-# 					'U':'..-', 'V':'...-', 'W':'.--', 
-# 					'X':'-..-', 'Y':'-.--', 'Z':'--..', 
-# 					'1':'.----', '2':'..---', '3':'...--', 
-# 					'4':'....-', '5':'.....', '6':'-....', 
-# 					'7':'--...', '8':'---..', '9':'----.', 
-# 					'0':'-----', ', ':'--..--', '.':'.-.-.-', 
-# 					'?':'..--..', '/':'-..-.', '-':'-....-', 
-# 					'(':'-.--.', ')':'-.--.-'}
-# 	def func(self, index):  
-# 		morse = []
-# 		for l in self.text.split(" "):
-# 			for w in l:
-# 				for i in self.Morse_dict[w.upper()]:
-# 					if i == ".":
-# 						morse.append(self.point)
-# 					elif i == "-":
-# 						morse.append(self.tiret)
-# 			morse.append(rest(5*self.point))
-# 		morse[-1] += rest(2*self.point) 			
-# 		return morse
