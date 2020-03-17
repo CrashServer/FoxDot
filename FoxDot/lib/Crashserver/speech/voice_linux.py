@@ -62,10 +62,15 @@ class Voice(Thread):
 		return voices_list
 
 	def set_voice(self, lang="", voice=1):
-		"""Get the names of all the voices"""
+		"""set the voices"""
 		if self.voice < 1 or self.voice > 4:
 			self.voice = 1
-		langvoice = str((str(self.lang) + "+f" + str(self.voice))) 
+		if self.lang.startswith("mb"):
+			langvoice = str(self.lang) + str(self.voice)
+			#print("mb " + langvoice)
+		else:		
+			langvoice = str((str(self.lang) + "+f" + str(self.voice))) 
+			#print("espeak " + langvoice)
 		self.engine.setProperty('voice', langvoice)
 
 class init_server():

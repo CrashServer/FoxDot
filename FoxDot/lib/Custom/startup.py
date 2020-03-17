@@ -44,7 +44,7 @@ scale_intro = str(server_data["scale_intro"])
 ### Root intro
 root_intro = str(server_data["root_intro"])
 ### Video  
-video = int(server_data["video"])
+video_player = int(server_data["video"])
 adresse = str(server_data["adresse"])
 
 rate_voice = 100
@@ -123,7 +123,7 @@ except:
 
 ### OSC VIDEO Filtered FORWARD
 try:
-	if video == 1:
+	if video_player == 1:
 		class FilterOSCClient(OSCClient):
 				def send(self, message, *args):
 						if "video" in str(message.message):
@@ -182,11 +182,13 @@ def connect(video=video):
 	Clock.bpm = bpm_intro
 	Scale.default = scale_intro
 	Root.default = root_intro
-	if video==1:
-		OSCClient(adresse)
-		vi >> video(vid=0, speed=1, vfx1=0, vfx2=0)     
+	video_line = ""
+	if video_player == 1:
+		OSCVideo(adresse)
+		vi >> video(vid=0, speed=1, vfx1=0, vfx2=0)
+		video_line = "vi >> video(vid1=0, vid1n=0, vid1ctrl1=0.8, vid1ctrl2=0, vid1glitch=0, vid1hue=0, midinote=0, vid2=0, vid2n=PRand(20), vid2ctrl1=0, vid2ctrl2=0, vid2glitch=0, vid2hue=0, vidmix=0, vidblend=0, vidcode=0, dur=16)"
 	i3 >> sos(dur=8, lpf=linvar([60,4800],[tmps*1.5, tmps*3], start=now), hpf=expvar([0,500],[tmps*6, tmps*2]), amplify=0.5)
-	clip.copy(figlet_format(attack_data["connect"][0]) + "\n" + attack_data["connect"][2])
+	clip.copy(figlet_format(attack_data["connect"][0].strip()) + "\n" + attack_data["connect"][2].strip() + "\n" + video_line)
 
 
 def attack(part="", active_voice=1):
@@ -644,4 +646,41 @@ def PMorse(text, point=1/4, tiret=3/4):
 					morse.append(point)
 				elif i == "-":
 					morse.append(tiret)
+			morse.append(rest(5*point))
+	morse[-1] += rest(2*point) 			
 	return morse
+
+
+# class PMorse(GeneratorPattern):
+# 	def __init__(self, text, point=1/4, tiret=3/4):
+# 		GeneratorPattern.__init__(self)
+# 		self.text = text
+# 		self.point  = point
+# 		self.tiret  = tiret
+# 		self.Morse_dict = { 'A':'.-', 'B':'-...', 
+# 					'C':'-.-.', 'D':'-..', 'E':'.', 
+# 					'F':'..-.', 'G':'--.', 'H':'....', 
+# 					'I':'..', 'J':'.---', 'K':'-.-', 
+# 					'L':'.-..', 'M':'--', 'N':'-.', 
+# 					'O':'---', 'P':'.--.', 'Q':'--.-', 
+# 					'R':'.-.', 'S':'...', 'T':'-', 
+# 					'U':'..-', 'V':'...-', 'W':'.--', 
+# 					'X':'-..-', 'Y':'-.--', 'Z':'--..', 
+# 					'1':'.----', '2':'..---', '3':'...--', 
+# 					'4':'....-', '5':'.....', '6':'-....', 
+# 					'7':'--...', '8':'---..', '9':'----.', 
+# 					'0':'-----', ', ':'--..--', '.':'.-.-.-', 
+# 					'?':'..--..', '/':'-..-.', '-':'-....-', 
+# 					'(':'-.--.', ')':'-.--.-'}
+# 	def func(self, index):  
+# 		morse = []
+# 		for l in self.text.split(" "):
+# 			for w in l:
+# 				for i in self.Morse_dict[w.upper()]:
+# 					if i == ".":
+# 						morse.append(self.point)
+# 					elif i == "-":
+# 						morse.append(self.tiret)
+# 			morse.append(rest(5*self.point))
+# 		morse[-1] += rest(2*self.point) 			
+# 		return morse

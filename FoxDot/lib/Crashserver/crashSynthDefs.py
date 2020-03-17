@@ -26,8 +26,14 @@ cluster.add()
 dafbass = FileSynthDef("dafbass")
 dafbass.add()
 
+eiir = FileSynthDef("eiir")
+eiir.add()
+
 faim = FileSynthDef("faim")
 faim.add()
+
+four = FileSynthDef("four")
+four.add()
 
 glitcher = FileSynthDef("glitcher")
 glitcher.add()
