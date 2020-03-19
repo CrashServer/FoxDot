@@ -177,6 +177,7 @@ def ascii_gen(text=""):
 ##############   BEGIN ##############################################
 
 def connect(video=video):
+	Master().reset()
 	lost(2)
 	print(attack_data["connect"][1].strip())
 	if "connect" in lost_played:
@@ -187,8 +188,8 @@ def connect(video=video):
 	video_line = ""
 	if video_player == 1:
 		OSCVideo(adresse)
-		vi >> video(vid=0, speed=1, vfx1=0, vfx2=0)
-		video_line = "vi >> video(vid1=0, vid1n=0, vid1ctrl1=0.8, vid1ctrl2=0, vid1glitch=0, vid1hue=0, midinote=0, vid2=0, vid2n=PRand(20), vid2ctrl1=0, vid2ctrl2=0, vid2glitch=0, vid2hue=0, vidmix=0, vidblend=0, vidcode=0, dur=16)"
+		v1 >> video(vid1=7, vid2=[12, 2], vid1rate=1, vid2rate=1, vid1kal=0, vid2kal=0, vid1glitch=0, vid2glitch=0, vidblend=0, vidmix=0, vid1index=[0, 0.5], vid2index=0)
+		video_line = "v1 >> video(vid1=0, vid2=0, vid1rate=1, vid2rate=1, vid1kal=0, vid2kal=0, vid1glitch=0, vid2glitch=0, vidblend=0, vidmix=0, vid1index=0, vid2index=0)"
 	i3 >> sos(dur=8, lpf=linvar([60,4800],[tmps*1.5, tmps*3], start=now), hpf=expvar([0,500],[tmps*6, tmps*2]), amplify=0.5)
 	clip.copy(figlet_format(attack_data["connect"][0].strip()) + "\n" + attack_data["connect"][2].strip() + "\n" + video_line)
 
