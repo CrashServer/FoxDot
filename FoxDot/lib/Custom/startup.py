@@ -420,6 +420,8 @@ class PChords(GeneratorPattern):
 		self.chord = self.last_value
 		return self.last_value
 
+def print_video():
+	clip.copy("v1 >> video(vid1=0, vid2=0, vid1rate=1, vid2rate=1, vid1kal=0, vid2kal=0, vid1glitch=0, vid2glitch=0, vidblend=0, vidmix=0, vid1index=0, vid2index=0)")
 
 def print_synth(synth=""):
 	### Show the name and the args of a custom synth
@@ -441,7 +443,25 @@ def print_synth(synth=""):
 		synthargs = re.findall('\{\|(.*)\|', txt)    
 		print(str(synthname[0]), " : ", str(synthargs[0]))
 
-
+def print_fx(fx=""):
+	### Show the name and the args of a custom synth
+	path = os.path.realpath(FOXDOT_ROOT + "/osc/sceffects/")
+	if fx == "":    
+		dir_list = os.listdir(path)
+		fx_list = []
+		for p in dir_list:
+			files,sep,ext = p.partition('.')
+			fx_list.append(files)
+		print(sorted(fx_list))
+	else:
+		path = os.path.realpath(FOXDOT_ROOT + "/osc/sceffects/" + fx + ".scd")
+		with open(str(path), "r") as fx:
+			fx = fx.readlines()
+		fx_txt = [line.strip() for line in fx if line is not "\n"]
+		txt = str(''.join(fx_txt))
+		fxname = re.findall('SynthDef[.new]*[(\\\]*(.+?),',txt)
+		fxargs = re.findall('\{\|(.*)\|', txt)    
+		print(str(fxname[0]), " : ", str(fxargs[0]))
 
 ### Chord progression, Root mouvement by fourths, thirds, seconds
 fourths = PChain({
