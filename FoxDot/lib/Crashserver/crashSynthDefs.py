@@ -26,8 +26,8 @@ cluster.add()
 dafbass = FileSynthDef("dafbass")
 dafbass.add()
 
-eiir = FileSynthDef("eiir")
-eiir.add()
+eeri = FileSynthDef("eeri")
+eeri.add()
 
 faim = FileSynthDef("faim")
 faim.add()

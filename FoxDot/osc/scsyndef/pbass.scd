@@ -44,7 +44,7 @@ SynthDef.new(\pbass,
   sig = (sig / 2.3).tanh;
 
   // Another resonant LPF
-  sig = MoogFF.ar(sig, 10000, 0.1);
+  sig = MoogFF.ar(sig, 10000, 0.1, mul:amp);
   osc = Mix(sig) * 0.5;
   osc = Pan2.ar(osc, pan);
 	ReplaceOut.ar(bus, osc)}).add;
