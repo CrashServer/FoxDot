@@ -169,6 +169,12 @@ fx.add("out = osc + Fb({\
 	},0.5,0.125)")
 fx.save()
 
+fx = FxList.new("sample_atk", "sample_atk", {"sample_atk":0, "sample_sus":1}, order=2)
+fx.add_var("env")
+fx.add("env = EnvGen.ar(Env.new(levels: [0,1,0], times:[sample_atk, sample_sus], curve: 'lin'))")
+fx.add("osc = osc*env")
+fx.save()
+
 
 ###########
 
