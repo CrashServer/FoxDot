@@ -41,6 +41,9 @@ glitcher.add()
 hnoise = FileSynthDef("hnoise")
 hnoise.add()
 
+lapin = FileSynthDef("lapin")
+lapin.add()
+
 mpluck = FileSynthDef("mpluck")
 mpluck.add()
 

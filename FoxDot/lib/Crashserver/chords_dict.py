@@ -1,4 +1,4 @@
-from ...Chords import I, II, III, IV, V, VI, VII
+from ..Chords import I, II, III, IV, V, VI, VII
 
 cho1 = {
     I: [[V, IV, VI, II, III, VII], [0.252, 0.182, 0.1, 0.06, 0.038, 0.003]], 

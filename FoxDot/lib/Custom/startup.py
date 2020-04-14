@@ -6,6 +6,7 @@ import sys
 import pickle
 import time
 from .Settings import FOXDOT_ROOT
+from .Buffers import alpha, nonalpha
 # copy / paste code
 import pyperclip as clip
 # ASCII GENERATOR
@@ -52,12 +53,13 @@ adresse = str(server_data["adresse"])
 rate_voice = 110
 ### Path Snd
 crash_path = os.path.realpath(FOXDOT_ROOT + "/lib/Crashserver/crash_snd/")
-
+sample_description_path = os.path.join(crash_path, "description.cs")
+if os.path.isfile(sample_description_path):
+	with open(sample_description_path, "rb") as file:
+		sample_description = pickle.load(file)
 gamme = ["locrianMajor", "locrian", "phrygian", "minor", "dorian", "mixolydian", "major", "lydian", "lydianAug"]
 crash_function = ["lost", "binary", "desynchro", "PTime", "PTimebin" "lininf", "PDrum", "darker", "lighter", \
-"human", "unison", "ascii_gen", "attack", "PChords", "fourths", "thirds", "seconds", "duree", "print_synth", "PChain2"]
-
-
+"human", "unison", "ascii_gen", "attack", "PChords", "fourths", "thirds", "seconds", "duree", "print_synth", "print_sample", "print_fx", "PChain2"]
 
 # ### Lieu du Server
 # lieu = str("de euh meille zine")
@@ -372,7 +374,7 @@ def lininf(start=0, finish=1, time=32):
 	return linvar([start,finish],[time,inf], start=now)
 
 def PDrum(style=None):
-	# Generate a drum pattern style
+	''' Generate a drum pattern style '''
 	if style == None:
 		print(DrumsPattern.keys())
 	else:   
@@ -380,7 +382,7 @@ def PDrum(style=None):
 
 
 def darker():
-	### Change Scale to a darkest one
+	''' Change Scale to a darkest one '''
 	if Scale.default.name not in gamme:
 		Scale.default = "major"
 	if Scale.default.name == gamme[0]:
@@ -390,7 +392,7 @@ def darker():
 		Scale.default = gamme[gamme.index(actual) - 1]
 
 def lighter():
-	### Change Scale to a lightest one
+	''' Change Scale to a lightest one '''
 	if Scale.default.name not in gamme:
 		Scale.default = "major"
 	if Scale.default.name == gamme[-1]:
@@ -400,6 +402,7 @@ def lighter():
 		Scale.default = gamme[gamme.index(actual) + 1]
 
 class PChords(GeneratorPattern):
+	''' Chords generator '''
 	def __init__(self, chord=None, **kwargs):
 		GeneratorPattern.__init__(self, **kwargs)
 		self.list_chords = {"I": I, "II": II, "III": III, "IV": IV, "V": V, "VI": VI, "VII":VII}
@@ -462,6 +465,22 @@ def print_fx(fx=""):
 		fxname = re.findall('SynthDef[.new]*[(\\\]*(.+?),',txt)
 		fxargs = re.findall('\{\|(.*)\|', txt)    
 		print(str(fxname[0]), " : ", str(fxargs[0]))
+
+def print_sample(sample=""):
+	# print description of samples or find the corresponding letter
+	if sample=="":
+		print("")
+		for k, v in sorted(sample_description.items(), key= lambda x: x[0].casefold()):
+			print(k.ljust(2, " ") + ': ' + v.ljust(40), end="")
+		print("")	
+	else:
+		if sample in alpha or sample in nonalpha:
+			print(f'{sample}: {sample_description[sample]}')
+		else:
+			for key, value in sample_description.items():
+				if sample.lower() in value.lower():
+					print(f'{key}: {value}')
+
 
 ### Chord progression, Root mouvement by fourths, thirds, seconds
 fourths = PChain({
@@ -536,7 +555,7 @@ krhytm = {
 	0.75: [0.25,1,0.125,0.125]
 	}   
 
-from .Crashserver.Markov.chords_dict import *
+from .Crashserver.chords_dict import *
 
 @player_method
 class PMarkov(RandomGenerator):
