@@ -180,6 +180,7 @@ def ascii_gen(text=""):
 
 def connect(video=video):
 	Master().reset()
+	Clock.set_time(0)
 	lost(2)
 	print(attack_data["connect"][1].strip())
 	if "connect" in lost_played:

@@ -5,6 +5,9 @@ from ..SCLang.SynthDef import FileSynthDef
 abass = FileSynthDef("abass")
 abass.add()
 
+angst = FileSynthDef("angst")
+angst.add()
+
 alva = FileSynthDef("alva")
 alva.add()
 
@@ -37,6 +40,9 @@ four.add()
 
 glitcher = FileSynthDef("glitcher")
 glitcher.add()
+
+glitchbass = FileSynthDef("glitchbass")
+glitchbass.add()
 
 hnoise = FileSynthDef("hnoise")
 hnoise.add()
@@ -79,6 +85,9 @@ square.add()
 
 total = FileSynthDef("total")
 total.add()
+
+tritri = FileSynthDef("tritri")
+tritri.add()
 
 supersaw = FileSynthDef("supersaw")
 supersaw.add()
