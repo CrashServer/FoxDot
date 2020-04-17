@@ -175,6 +175,9 @@ fx.add("env = EnvGen.ar(Env.new(levels: [0,1,0], times:[sample_atk, sample_sus],
 fx.add("osc = osc*env")
 fx.save()
 
+fx = FxList.new("position", "trimPos", {"position": 0, "sus": 1}, order=2)
+fx.add("osc = osc * EnvGen.ar(Env(levels: [0,0,1], curve: 'step', times: [sus * position, 0]))")
+fx.save()
 
 ###########
 
