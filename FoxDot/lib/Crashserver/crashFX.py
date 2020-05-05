@@ -179,6 +179,16 @@ fx = FxList.new("position", "trimPos", {"position": 0, "sus": 1}, order=2)
 fx.add("osc = osc * EnvGen.ar(Env(levels: [0,0,1], curve: 'step', times: [sus * position, 0]))")
 fx.save()
 
+fx = FxList.new("ring", "ring_modulation", {"ring":0, "ringl":500, "ringh":1500}, order=0)
+fx.add_var("mod")
+fx.add("mod = ring * SinOsc.ar(Clip.kr(XLine.kr(ringl, ringl + ringh), 20, 20000))")
+fx.add("osc = ring1(osc, mod)")
+fx.save()
+
+fx = FxList.new("shift", "pitchshifter", {"shift":0}, order=1)
+fx.add("osc = PitchShift.ar(osc, 0.1, shift, 0.02, 0.01)")	
+fx.save()
+
 ###########
 
 Effect.server.setFx(FxList)
