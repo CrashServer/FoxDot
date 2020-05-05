@@ -53,6 +53,10 @@ lapin.add()
 mpluck = FileSynthDef("mpluck")
 mpluck.add()
 
+moogpluck = FileSynthDef("moogpluck")
+moogpluck.add()
+
+
 organ = FileSynthDef("organ")
 organ.add()
 
