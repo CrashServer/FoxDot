@@ -302,7 +302,8 @@ def fill(self, mute_player=0, on=1):
     if on==1:
         self.dur = PwRand([1/4,1/2,3/4],[45,45,10])
         self.amplify = var([0,1],[[PRand([3,7,15]),PRand([6,2,14])],[1,2]])*[1,PWhite(0.2,1)]
-        mute_player.amplify = self.amplify.map({0:1, 1:0})
+        if mute_player != 0:
+            mute_player.amplify = self.amplify.map({0:1, 1:0})
     elif on==2:
         self.dur = PRand([1/4,1/2,3/4])
     elif on==3:
