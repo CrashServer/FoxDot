@@ -722,3 +722,15 @@ class voice_count():
             nextBar(Clock.future(8, lambda: self.start()))
 
 voicecount = voice_count()
+
+
+def convert(note, scale=Scale.default):
+    ''' Convert note to chromatic scale'''
+    def create_dict_map(scale):
+        scale_cpy = copy(scale)
+        scale_dict = {}
+        for i in range(0,50):
+            scale_dict[i] = scale_cpy[i:i+1][0] + Root.default
+        return scale_dict    
+    create_dict_map(scale)    
+    return note.submap(create_dict_map(scale))
