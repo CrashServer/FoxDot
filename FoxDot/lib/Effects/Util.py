@@ -377,7 +377,7 @@ fx.add('osc = osc * [FSinOsc.ar(spin / 2, iphase: 1, mul: 0.5, add: 0.5), FSinOs
 fx.save()
 
 fx = FxList.new("cut", "trimLength", {"cut": 0, "sus": 1}, order=2)
-fx.add("osc = osc * EnvGen.ar(Env(levels: [1,1,0.01], curve: 'step', times: [sus * cut, 0.01]))")
+fx.add("osc = osc * EnvGen.ar(Env(levels: [1,1,0.01], curve: 'linear', times: [sus * cut, 0.01]))")
 fx.save()
 
 fx = FxList.new('room', 'reverb', {'room': 0, 'mix': 0.1}, order=2)
