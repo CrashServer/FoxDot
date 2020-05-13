@@ -189,8 +189,8 @@ fx = FxList.new("shift", "pitchshifter", {"shift":0, "shiftsize": 0.1}, order=1)
 fx.add("osc = PitchShift.ar(osc, shiftsize, shift, 0.02, 0.01)")	
 fx.save()
 
-fx = FxList.new("comp", "comp", {"comp": 0, "comp_down": 1, "comp_up": 0.8, "atk_time": 0.01, "rel_time": 0.01,  "amp" : 1}, order=2)
-fx.add("osc = Compander.ar(osc, osc, thresh: comp, slopeAbove: comp_down, slopeBelow: comp_up, clampTime: atk_time, relaxTime: rel_time, mul: amp)")
+fx = FxList.new("comp", "comp", {"comp": 0, "comp_down": 1, "comp_up": 0.8}, order=2)
+fx.add("osc = Compander.ar(osc, osc, thresh: comp, slopeAbove: comp_down, slopeBelow: comp_up, clampTime: 0.01, relaxTime: 0.01, mul: 1)")
 fx.save()
 
 
