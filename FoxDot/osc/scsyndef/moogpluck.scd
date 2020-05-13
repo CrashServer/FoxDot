@@ -1,5 +1,5 @@
 SynthDef.new(\moogpluck,
-{|amp=1, sus=1, pan=0, freq=0, vib=0, fmod=0, rate=0, bus=0, blur=1, beat_dur=1, atk=0.001, decay=0.01, rel=0.01, peak=1, level=0.8, pluck_filter=3,pluck_coef=0.5, pluck_mix=0|
+{|amp=1, sus=1, pan=0, freq=0, vib=0, fmod=0, rate=0, bus=0, blur=1, beat_dur=1, atk=0.001, decay=0.01, rel=0.01, peak=1, level=0.8, pluck_filter=4,pluck_coef=0.8, pluck_mix=0.8|
 var pluck, moog, osc, env;
 sus = sus * blur;
 freq = In.kr(bus, 1);
