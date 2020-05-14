@@ -11,7 +11,14 @@ from .Buffers import alpha, nonalpha
 try:
     import pyperclip as clip
     # ASCII GENERATOR
-    from pyfiglet import figlet_format
+    from pyfiglet import figlet_format, FigletFont
+    fig_font = FigletFont()
+    fig_fonts_list = fig_font.getFonts()
+    fig_skip = ['fbr12___', 'mshebrew210', 'term', 'runic', 'pyramid', 'eftifont', 'DANC4', 'dietcola']
+    fig_skip += ['emboss', 'emboss2', 'future', 'letter', 'pagga',
+                      'smblock', 'smbraille', 'wideterm']
+    fig_skip += ['dosrebel', 'konto', 'kontoslant']
+    font_list = [x for x in fig_fonts_list if x not in fig_skip]
 except:
     print("Please install pyperclip & pyfiglet")
 
@@ -177,9 +184,11 @@ def calc_dur_voice(phrase=""):
         return 8
 
 ### Generate ASCII from text into the clipboard
-def ascii_gen(text=""):
+def ascii_gen(text="", font="standard"):
+    if type(font) != str:
+        font = fig_fonts_list[int(font)]
     if text != None:
-        clip.copy(figlet_format(text))
+        clip.copy(figlet_format(text, font=font))
 
 ##############   BEGIN ##############################################
 
