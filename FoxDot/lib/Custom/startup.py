@@ -7,6 +7,8 @@ import pickle
 import time
 from .Settings import FOXDOT_ROOT
 from .Buffers import alpha, nonalpha
+from .Crashserver.crash_conf import *
+
 # copy / paste code
 try:
     import pyperclip as clip
@@ -63,7 +65,7 @@ rate_voice = 110
 
 ### Path Snd
 #crash_path = os.path.realpath(FOXDOT_ROOT + "/lib/Crashserver/crash_snd/")
-crash_path = "/home/zbdm/crashserver/ultimate_crash_sample/"
+
 sample_description_path = os.path.join(crash_path, "description.cs")
 if os.path.isfile(sample_description_path):
     with open(sample_description_path, "rb") as file:
@@ -73,22 +75,6 @@ gamme = ["locrianMajor", "locrian", "phrygian", "minor", "dorian", "mixolydian",
 crash_function = ["lost", "binary", "desynchro", "PTime", "PTimebin" "lininf", "PDrum", "darker", "lighter", \
 "human", "unison", "ascii_gen", "attack", "PChords", "fourths", "thirds", "seconds", "duree", "print_synth", "print_sample", "print_fx", "PChain2"]
 
-# ### Lieu du Server
-# lieu = str("de euh meille zine")
-# ### Longueur mesure d'intro
-# tmps = 16
-# ### Language
-# lang = "french"
-# voice = 0
-# ### BPM intro
-# bpm_intro = 48
-# ### Scale intro
-# scale_intro = "minor"
-# ### Root intro
-# root_intro = "E"
-# ### Video
-# video = 0
-# adresse = "192.168.0.22"
 
 ### LOAD CUSTOM SYNTHDEFS #####
 try:
@@ -113,11 +99,8 @@ except:
 try:
     from .Crashserver.arpy import *
     from .Crashserver.sdur import *
-    from .Crashserver.drumspattern import *
+    from .Crashserver.drumspattern2 import *
     from .Chords import *
-    #from .Crashserver.coolfunction import *
-    # from .Extensions.timer.hack import * ### Crash Server Timer
-    #from .Extensions.Video.video2 import *    ### Video player
 except:
     print("Error importing Extensions : ", sys.exc_info())
 
@@ -388,12 +371,34 @@ def PTimebin():
 def lininf(start=0, finish=1, time=32):
     return linvar([start,finish],[time,inf], start=now)
 
-def PDrum(style=None):
+def PDrum2(style=None, pat=''):
     ''' Generate a drum pattern style '''
+    ppat = ""
     if style == None:
-        print(DrumsPattern.keys())
+        print(DrumsPattern2.keys())
     else:
-        clip.copy(DrumsPattern[style])
+        patlist = [key for key in DrumsPattern2[style].keys()]
+        if pat == "":
+            print(DrumsPattern2[style].keys())
+        elif type(pat) == int:
+            #print(DrumsPattern2[style][patlist[pat]])
+            for i in DrumsPattern2[style][patlist[pat]]:
+                ppat += i 
+                ppat += "\n" 
+            clip.copy(ppat)
+        else:
+            for i in DrumsPattern2[style][pat]:
+                ppat += i 
+                ppat += "\n" 
+            clip.copy(ppat)
+
+
+# def PDrum(style=None):
+#     ''' Generate a drum pattern style '''
+#     if style == None:
+#         print(DrumsPattern.keys())
+#     else:
+#         clip.copy(DrumsPattern[style])
 
 
 def darker():
@@ -733,7 +738,7 @@ class voice_count():
 
 voicecount = voice_count()
 
-
+#### Convert sample 
 def convert(note, scale=Scale.default):
     ''' Convert note to chromatic scale'''
     def create_dict_map(scale):
@@ -744,3 +749,4 @@ def convert(note, scale=Scale.default):
         return scale_dict    
     create_dict_map(scale)    
     return note.submap(create_dict_map(scale))
+
