@@ -388,24 +388,21 @@ def PDrum(style=None, pat='', listen=False, khsor='', duree=1/2, spl = 0):
                 ply, pat, rst = i.split('"')
                 if khsor != '':
                     for idx, char in enumerate(sample):
-                        pat.replace("x", khsor[idx])
-                ppat = f'd{player_idx+1} >> play("{pat}", dur={duree}, sample={spl})'    
-                print(ppat)
+                        try:
+                            pat = pat.replace(char, khsor[idx])
+                        except:
+                            pass    
+                ppat += f'd{player_idx+1} >> play("{pat}", dur={duree}, sample={spl})'    
                 player_idx += 1
-                ppat += i 
                 ppat += "\n"
                 if listen:
-                    dplayers[player_idx].reset() >> play(pat, dur=duree, sus=duree, sample=spl, start=Clock.mod(4)) 
+                    dplayers[player_idx].reset() >> play(pat, dur=duree, sus=duree, sample=spl) 
             clip.copy(ppat)
         else:
             for i in DrumsPattern2[style][pat]:
                 ppat += i 
                 ppat += "\n" 
             clip.copy(ppat)
-
-
-
-
 
 
 def PDrum2(style=None, pat=''):
