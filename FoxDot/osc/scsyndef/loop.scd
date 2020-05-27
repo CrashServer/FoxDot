@@ -7,6 +7,9 @@ rate = (rate * (1-(beat_stretch>0))) + ((BufDur.kr(buf) / sus) * (beat_stretch>0
 osc = PlayBuf.ar(2, buf, BufRateScale.kr(buf) * rate, startPos: BufSampleRate.kr(buf) * pos, loop: 1.0);
 osc = osc * EnvGen.ar(Env([0,1,1,0],[0.05, sus-0.05, 0.05]));
 osc=(osc * amp);
-osc = Mix(osc) * 0.5;
-osc = Pan2.ar(osc, pan);
+
+		osc = Splay.ar(osc*0.75, level=1,spread:1-abs(pan), center:pan, levelComp: true);
+
+//osc = Mix(osc) * 0.5;
+//osc = Pan2.ar(osc, pan);
 	ReplaceOut.ar(bus, osc)}).add;
