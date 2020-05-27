@@ -371,6 +371,43 @@ def PTimebin():
 def lininf(start=0, finish=1, time=32):
     return linvar([start,finish],[time,inf], start=now)
 
+def PDrum(style=None, pat='', listen=False, khsor='', duree=1/2, spl = 0):
+    ''' Generate a drum pattern style '''
+    ppat = ""
+    dplayers = [d1,d2,d3,d4,d5,d6,d7,d8]
+    sample = "x-u=~"
+    player_idx = 0
+    if style == None:
+        print(DrumsPattern2.keys())
+    else:
+        patlist = [key for key in DrumsPattern2[style].keys()]
+        if pat == "":
+            print(DrumsPattern2[style].keys())
+        elif type(pat) == int:
+            for i in DrumsPattern2[style][patlist[pat]]:
+                ply, pat, rst = i.split('"')
+                if khsor != '':
+                    for idx, char in enumerate(sample):
+                        pat.replace("x", khsor[idx])
+                ppat = f'd{player_idx+1} >> play("{pat}", dur={duree}, sample={spl})'    
+                print(ppat)
+                player_idx += 1
+                ppat += i 
+                ppat += "\n"
+                if listen:
+                    dplayers[player_idx].reset() >> play(pat, dur=duree, sus=duree, sample=spl, start=Clock.mod(4)) 
+            clip.copy(ppat)
+        else:
+            for i in DrumsPattern2[style][pat]:
+                ppat += i 
+                ppat += "\n" 
+            clip.copy(ppat)
+
+
+
+
+
+
 def PDrum2(style=None, pat=''):
     ''' Generate a drum pattern style '''
     ppat = ""
