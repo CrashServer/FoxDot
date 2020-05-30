@@ -86,7 +86,8 @@ class SynthDefBaseClass(object):
                             "decay"     : 0.01,
                             "rel"       : 0.01,
                             "peak"      : 1,
-                            "level"     : 0.8 }
+                            "level"     : 0.8, 
+                            "wide"      : 0.0}
 
         # The amp is multiplied by this before being sent to SC
         self.balance = 1
@@ -116,7 +117,7 @@ class SynthDefBaseClass(object):
         Def += "{}".format(self.get_custom_behaviour())
         stereo_synth = ["play2", "loop"]
         if self.name in stereo_synth:
-            Def += "osc = Splay.ar(osc*0.75, level=1,spread:1-abs(pan), center:pan, levelComp: true);\n"     
+            Def += "osc = Splay.ar(osc*0.75, level=1,spread:wide, center:pan, levelComp: true);\n"     
         else:
             Def += "osc = Mix(osc) * 0.5;\n"
             Def += "osc = Pan2.ar(osc, pan);\n"
@@ -322,6 +323,7 @@ class SampleSynthDef(SynthDefBaseClass):
         self.defaults['pos']   = 0
         self.defaults['room']  = 0.1
         self.defaults['rate']  = 1.0
+        self.defaults['wide']  = 0.0
         self.base.append("rate = In.kr(bus, 1);")
 
 
