@@ -371,12 +371,12 @@ def PTimebin():
 def lininf(start=0, finish=1, time=32):
     return linvar([start,finish],[time,inf], start=now)
 
-def PDrum(style=None, pat='', listen=False, khsor='', duree=1/2, spl = 0):
+def PDrum(style=None, pat='', listen=False, khsor='', duree=1/2, spl = 0, charPlayer="d") :
     ''' Generate a drum pattern style '''
     ppat = ""
-    dplayers = [d1,d2,d3,d4,d5,d6,d7,d8]
-    sample = "x-u=~"
-    player_idx = 0
+    dplayers = {"d1":d1,"d2":d2,"d3":d3,"d4":d4,"d5":d5,"d6":d6,"d7":d7,"d8":d8,"d9":d9,"d0":d0}
+    stopList = [p for p in dplayers.keys()]
+    sample = "x-u=~r+"
     if style == None:
         print(DrumsPattern2.keys())
     else:
@@ -384,6 +384,11 @@ def PDrum(style=None, pat='', listen=False, khsor='', duree=1/2, spl = 0):
         if pat == "":
             print(DrumsPattern2[style].keys())
         elif type(pat) == int:
+            if pat > len(DrumsPattern2[style])-1:
+                pat = 0
+                print("no more patterns...")
+            player_idx = 0
+            ppat = ""    
             for i in DrumsPattern2[style][patlist[pat]]:
                 ply, pat, rst = i.split('"')
                 if khsor != '':
@@ -392,17 +397,62 @@ def PDrum(style=None, pat='', listen=False, khsor='', duree=1/2, spl = 0):
                             pat = pat.replace(char, khsor[idx])
                         except:
                             pass    
-                ppat += f'd{player_idx+1} >> play("{pat}", dur={duree}, sample={spl})'    
                 player_idx += 1
+                ppat += f'{charPlayer}{player_idx} >> play("{pat}", dur={duree}, sample={spl})'    
                 ppat += "\n"
+                stopList.remove(f'd{player_idx}')
                 if listen:
-                    dplayers[player_idx].reset() >> play(pat, dur=duree, sus=duree, sample=spl) 
+                    dplayers[f"d{player_idx}"] >> play(pat, dur=duree, sus=duree, sample=spl)     
             clip.copy(ppat)
+            if listen:
+                for p in stopList:
+                    dplayers[p].stop()
+            else:
+                print(ppat)
         else:
             for i in DrumsPattern2[style][pat]:
                 ppat += i 
                 ppat += "\n" 
             clip.copy(ppat)
+
+
+# def PDrum(style=None, pat='', listen=False, khsor='', duree=1/2, spl = 0):
+#     ''' Generate a drum pattern style '''
+#     ppat = ""
+#     dplayers = [d1,d2,d3,d4,d5,d6,d7,d8,d9,d0]
+#     sample = "x-u=~"
+#     player_idx = 0
+#     if style == None:
+#         print(DrumsPattern2.keys())
+#     else:
+#         patlist = [key for key in DrumsPattern2[style].keys()]
+#         if pat == "":
+#             print(DrumsPattern2[style].keys())
+#         elif type(pat) == int:
+#             for playerPlaying in Clock.playing:
+#                 if playerPlaying in dplayers:
+#                     print(f'reset {playerPlaying.name}')
+#                     playerPlaying.name.reset()
+#                     player_idx = int(playerPlaying.name[1]) + 1
+#             for i in DrumsPattern2[style][patlist[pat]]:
+#                 ply, pat, rst = i.split('"')
+#                 if khsor != '':
+#                     for idx, char in enumerate(sample):
+#                         try:
+#                             pat = pat.replace(char, khsor[idx])
+#                         except:
+#                             pass    
+#                 ppat += f'd{player_idx+1} >> play("{pat}", dur={duree}, sample={spl})'    
+#                 player_idx += 1
+#                 ppat += "\n"
+#                 if listen:
+#                     dplayers[player_idx].reset() >> play(pat, dur=duree, sus=duree, sample=spl) 
+#             clip.copy(ppat)
+#         else:
+#             for i in DrumsPattern2[style][pat]:
+#                 ppat += i 
+#                 ppat += "\n" 
+#             clip.copy(ppat)
 
 
 def PDrum2(style=None, pat=''):
