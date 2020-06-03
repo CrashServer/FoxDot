@@ -747,6 +747,10 @@ def switch(self, other, key, bypass=1):
         self.attr[key] = other_temp
         return self
 
+@player_method
+def clone(self, player):
+    self.attr = player.attr
+    return self
 
 def drop(duree=32, nbr=0, end=4):
     """ Create a drop effect (var bpm),
