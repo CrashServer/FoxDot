@@ -286,6 +286,7 @@ def human(self, velocity=20, humanize=5, swing=0):
 @player_method
 def fill(self, mute_player=0, on=1):
     """ add fill to a drum player
+    you can mute other players with .fill(Group(p1,d2,d3))
     0 = off
     1 = dur + amplify
     2 = dur  //  amplify =1
@@ -298,8 +299,10 @@ def fill(self, mute_player=0, on=1):
             mute_player.amplify = self.amplify.map({0:1, 1:0})
     elif on==2:
         self.dur = PRand([1/4,1/2,3/4])
+        self.amplify=1
     elif on==3:
         self.amplify = var([0,1],[[3,6,7,2,15,2,3,14],[1,2]])*PWhite(0,1)
+        self.dur = 1/2
     else:
         self.dur = 1/2
         self.amplify = 1
@@ -343,11 +346,8 @@ def lost(total=0):
         lost_played=lost_list[:]
         print(lost_played)
 
-def print_video():
-    clip.copy("vi >> video(vid1=0, vid2=0, vid1rate=1, vid2rate=1, vid1kal=0, vid2kal=0, vid1glitch=0, vid2glitch=0, vidblend=0, vidmix=0, vid1index=0, vid2index=0)")
-
 def binary(number):
-    # return a list converted to binary from a number
+    """return a list converted to binary from a number"""
     binlist = [int(i) for i in str(bin(number)[2:])]
     return binlist
 
@@ -356,16 +356,15 @@ def duree():
     duree = time.time()- time_init
     print("Durée de la tentative de Crash :", time.strftime('%H:%M:%S', time.gmtime(duree)))
 
-
 def desynchro():
     clip.copy(random_bpm())
 
 def PTime():
-    ### Generate a pattern from the local machine time
+    """Generate a pattern from the local machine time"""
     return [int(t) for t in str(Clock.get_time_at_beat(int(Clock.now()))) if t != '.']
 
 def PTimebin():
-    ### Generate a pattern of actual time converted to binary
+    """Generate a pattern of actual time converted to binary"""
     return binary(int(Clock.get_time_at_beat(int(Clock.now()))))
 
 def lininf(start=0, finish=1, time=32):
@@ -414,76 +413,6 @@ def PDrum(style=None, pat='', listen=False, khsor='', duree=1/2, spl = 0, charPl
                 ppat += i 
                 ppat += "\n" 
             clip.copy(ppat)
-
-
-# def PDrum(style=None, pat='', listen=False, khsor='', duree=1/2, spl = 0):
-#     ''' Generate a drum pattern style '''
-#     ppat = ""
-#     dplayers = [d1,d2,d3,d4,d5,d6,d7,d8,d9,d0]
-#     sample = "x-u=~"
-#     player_idx = 0
-#     if style == None:
-#         print(DrumsPattern2.keys())
-#     else:
-#         patlist = [key for key in DrumsPattern2[style].keys()]
-#         if pat == "":
-#             print(DrumsPattern2[style].keys())
-#         elif type(pat) == int:
-#             for playerPlaying in Clock.playing:
-#                 if playerPlaying in dplayers:
-#                     print(f'reset {playerPlaying.name}')
-#                     playerPlaying.name.reset()
-#                     player_idx = int(playerPlaying.name[1]) + 1
-#             for i in DrumsPattern2[style][patlist[pat]]:
-#                 ply, pat, rst = i.split('"')
-#                 if khsor != '':
-#                     for idx, char in enumerate(sample):
-#                         try:
-#                             pat = pat.replace(char, khsor[idx])
-#                         except:
-#                             pass    
-#                 ppat += f'd{player_idx+1} >> play("{pat}", dur={duree}, sample={spl})'    
-#                 player_idx += 1
-#                 ppat += "\n"
-#                 if listen:
-#                     dplayers[player_idx].reset() >> play(pat, dur=duree, sus=duree, sample=spl) 
-#             clip.copy(ppat)
-#         else:
-#             for i in DrumsPattern2[style][pat]:
-#                 ppat += i 
-#                 ppat += "\n" 
-#             clip.copy(ppat)
-
-
-def PDrum2(style=None, pat=''):
-    ''' Generate a drum pattern style '''
-    ppat = ""
-    if style == None:
-        print(DrumsPattern2.keys())
-    else:
-        patlist = [key for key in DrumsPattern2[style].keys()]
-        if pat == "":
-            print(DrumsPattern2[style].keys())
-        elif type(pat) == int:
-            #print(DrumsPattern2[style][patlist[pat]])
-            for i in DrumsPattern2[style][patlist[pat]]:
-                ppat += i 
-                ppat += "\n" 
-            clip.copy(ppat)
-        else:
-            for i in DrumsPattern2[style][pat]:
-                ppat += i 
-                ppat += "\n" 
-            clip.copy(ppat)
-
-
-# def PDrum(style=None):
-#     ''' Generate a drum pattern style '''
-#     if style == None:
-#         print(DrumsPattern.keys())
-#     else:
-#         clip.copy(DrumsPattern[style])
-
 
 def darker():
     ''' Change Scale to a darkest one '''
@@ -593,6 +522,194 @@ def print_loops(loop=""):
         listloops = sorted([fn.rsplit(".",1)[0] for fn in os.listdir(os.path.join(FOXDOT_LOOP, loop))])
         print(listloops)
 
+
+
+from .Crashserver.chords_dict import *
+
+@player_method
+class PMarkov(RandomGenerator):
+    """ An example of a Markov Chain generator pattern. The mapping argument
+        should be a dictionary of keys whose values are a list/pattern of possible
+        destinations.  Mod to add probability"""
+    def __init__(self, init_value="", **kwargs):
+        RandomGenerator.__init__(self, **kwargs)
+        self.init_value = init_value
+        self.active_value = 0
+        self.first_value = 0
+        self.second_value = 0
+        self.third_value = 0
+        self.mapping = {}
+        self.init_random(**kwargs)
+        self.turn = 0
+    def stream_value(self, active_dict):
+        """ Return mapping dict with a list of keys and probability"""
+        for key, value in active_dict.items():
+            self.mapping[key] = [asStream(value[0]), asStream(value[1])]
+            #self.last_value = key
+    def key_prob(self, active_dict):
+        """return the key and prob of previous value from active dictionnary"""
+        self.stream_value(active_dict)
+        key = list(self.mapping[self.active_value][0])
+        prob = list(self.mapping[self.active_value][1])
+        return key, prob
+    def value_choice(self, active_dict):
+        """ Return a key from probabilty of active dictionnary """
+        key, prob = self.key_prob(active_dict)
+        return random.choices(key, prob)[0]
+    def func(self, index):
+        if self.turn == 0:
+            if self.init_value == "":
+                self.init_value = random.choice(list(cho1.keys()))
+            self.active_value = self.init_value
+            #print("Turn : {}, chord : {}".format(self.turn, self.active_value))
+            self.turn += 1
+            return self.active_value
+        else:
+            if self.turn == 1:
+                self.first_value = self.value_choice(cho1)
+                self.active_value = self.first_value
+                #print("Turn : {}, chord : {}".format(self.turn, self.active_value))
+
+            elif self.turn == 2:
+                self.second_value = self.value_choice(cho2[self.init_value])
+                self.active_value= self.second_value
+                #print("Turn : {}, chord : {}".format(self.turn, self.active_value))
+
+            elif self.turn == 3:
+                try:
+                    self.third_value = self.value_choice(cho3[self.init_value][self.first_value])
+                    self.active_value = self.third_value
+                except:
+                    list_cho = list(cho1.keys())
+                    list_cho.remove(self.init_value)
+                    self.third_value = random.choice(list_cho)
+                    self.active_value = self.third_value
+                #print("Turn : {}, chord : {}".format(self.turn, self.active_value))
+
+            self.turn += 1
+            if self.turn > 3:
+                self.turn = 0
+            return self.active_value
+
+@player_method
+def switch(self, other, key, bypass=1):
+    """ Switch the attr of a player
+        eg: b1 >> dbass(P[0:4], amp=1)
+            b2 >> blip(-2, amp=1).switch(b1, "degree")"""
+    if bypass != 0:
+        self_temp = self.attr[key]
+        other_temp = other.attr[key]
+        other.attr[key] = self_temp
+        self.attr[key] = other_temp
+        return self
+
+@player_method
+def clone(self, player):
+    """ Clone a player, eg: a2 >> saw().clone(a1)"""
+    self.attr = player.attr
+    return self
+
+def drop(playTime=15, dropTime=1, reset=0):
+    """ Drop the amplify to 0 for random players.
+        ex : drop(6,2) => amplify=0 for random playing players at the 2 last beats of 8
+    """
+    totalTime = playTime + dropTime
+    clkPly = [p for p in Clock.playing]
+    for p in clkPly:
+        p.amplify=1
+    if reset==0:    
+        rndPlayerIndex = random.sample(range(0,len(clkPly)), random.randint(1,len(clkPly)))
+        if rndPlayerIndex:
+            for i in rndPlayerIndex:   
+                clkPly[i].amplify = var([1,0],[playTime, dropTime])
+
+def drop_bpm(duree=32, nbr=0, end=4):
+    """ Create a drop bpm effect (var bpm),
+        duree = durée totale de la partie,
+        nbr = nombre de division du drop,
+        end = duree du drop en partant de la fin
+        pour retablir le tempo simplement drop(92)
+        """
+    if nbr == 0:
+        Clock.bpm = duree
+    else:
+        init_bpm = Clock.bpm
+        actual_bpm = Clock.bpm
+        divi = 1
+        bpm_list = []
+        duree_list = []
+        for i in range(nbr):
+            actual_bpm /= divi
+            if actual_bpm < 10:
+                actual_bpm = 10
+            bpm_list.append(int(actual_bpm))
+            if i == 0:
+                duree_list.append(duree-end)
+            else:
+                duree_list.append(end/(2**i))
+            divi = 2
+        duree_list[-1] = end-sum(duree_list[1:-1])
+        Clock.bpm = var([bpm_list], [duree_list], start=Clock.mod(8))
+        print('var({}, {})'.format([bpm_list], [duree_list]))
+
+
+def PMorse(text, point=1/4, tiret=3/4):
+    """ Convert a string to the value of point & tiret """
+    MORSE_DICT = { 'A':'.-', 'B':'-...',
+                    'C':'-.-.', 'D':'-..', 'E':'.',
+                    'F':'..-.', 'G':'--.', 'H':'....',
+                    'I':'..', 'J':'.---', 'K':'-.-',
+                    'L':'.-..', 'M':'--', 'N':'-.',
+                    'O':'---', 'P':'.--.', 'Q':'--.-',
+                    'R':'.-.', 'S':'...', 'T':'-',
+                    'U':'..-', 'V':'...-', 'W':'.--',
+                    'X':'-..-', 'Y':'-.--', 'Z':'--..',
+                    '1':'.----', '2':'..---', '3':'...--',
+                    '4':'....-', '5':'.....', '6':'-....',
+                    '7':'--...', '8':'---..', '9':'----.',
+                    '0':'-----', ', ':'--..--', '.':'.-.-.-',
+                    '?':'..--..', '/':'-..-.', '-':'-....-',
+                    '(':'-.--.', ')':'-.--.-'}
+    morse = []
+    for l in text.split(" "):
+        for w in l:
+            for i in MORSE_DICT[w.upper()]:
+                if i == ".":
+                    morse.append(point)
+                elif i == "-":
+                    morse.append(tiret)
+            morse.append(rest(5*point))
+    morse[-1] += rest(2*point)
+    return morse
+
+
+class voice_count():
+    def __init__(self):
+        self.loop = True
+    def stop(self):
+        if self.loop:
+            self.loop = False
+        else:
+            self.loop = True
+    def start(self):
+        Voice(str(random.randint(0,1000)), voice=2)
+        if self.loop:
+            nextBar(Clock.future(8, lambda: self.start()))
+
+voicecount = voice_count()
+
+#### Convert sample 
+def convert(note, scale=Scale.default):
+    ''' Convert note to chromatic scale'''
+    def create_dict_map(scale):
+        scale_cpy = copy(scale)
+        scale_dict = {}
+        for i in range(0,50):
+            scale_dict[i] = scale_cpy[i:i+1][0] + Root.default
+        return scale_dict    
+    create_dict_map(scale)    
+    return note.submap(create_dict_map(scale))
+
 ### Chord progression, Root mouvement by fourths, thirds, seconds
 fourths = PChain({
     I: [IV, V],
@@ -665,176 +782,4 @@ krhytm = {
     1: [0.75,0.25],
     0.75: [0.25,1,0.125,0.125]
     }
-
-from .Crashserver.chords_dict import *
-
-@player_method
-class PMarkov(RandomGenerator):
-    """ An example of a Markov Chain generator pattern. The mapping argument
-        should be a dictionary of keys whose values are a list/pattern of possible
-        destinations.  """
-    def __init__(self, init_value="", **kwargs):
-        RandomGenerator.__init__(self, **kwargs)
-        self.init_value = init_value
-        self.active_value = 0
-        self.first_value = 0
-        self.second_value = 0
-        self.third_value = 0
-        self.mapping = {}
-        self.init_random(**kwargs)
-        self.turn = 0
-    def stream_value(self, active_dict):
-        """ Return mapping dict with a list of keys and probability"""
-        for key, value in active_dict.items():
-            self.mapping[key] = [asStream(value[0]), asStream(value[1])]
-            #self.last_value = key
-    def key_prob(self, active_dict):
-        """return the key and prob of previous value from active dictionnary"""
-        self.stream_value(active_dict)
-        key = list(self.mapping[self.active_value][0])
-        prob = list(self.mapping[self.active_value][1])
-        return key, prob
-    def value_choice(self, active_dict):
-        """ Return a key from probabilty of active dictionnary """
-        key, prob = self.key_prob(active_dict)
-        return random.choices(key, prob)[0]
-    def func(self, index):
-        if self.turn == 0:
-            if self.init_value == "":
-                self.init_value = random.choice(list(cho1.keys()))
-            self.active_value = self.init_value
-            #print("Turn : {}, chord : {}".format(self.turn, self.active_value))
-            self.turn += 1
-            return self.active_value
-        else:
-            if self.turn == 1:
-                self.first_value = self.value_choice(cho1)
-                self.active_value = self.first_value
-                #print("Turn : {}, chord : {}".format(self.turn, self.active_value))
-
-            elif self.turn == 2:
-                self.second_value = self.value_choice(cho2[self.init_value])
-                self.active_value= self.second_value
-                #print("Turn : {}, chord : {}".format(self.turn, self.active_value))
-
-            elif self.turn == 3:
-                try:
-                    self.third_value = self.value_choice(cho3[self.init_value][self.first_value])
-                    self.active_value = self.third_value
-                except:
-                    list_cho = list(cho1.keys())
-                    list_cho.remove(self.init_value)
-                    self.third_value = random.choice(list_cho)
-                    self.active_value = self.third_value
-                #print("Turn : {}, chord : {}".format(self.turn, self.active_value))
-
-            self.turn += 1
-            if self.turn > 3:
-                self.turn = 0
-            return self.active_value
-
-
-
-@player_method
-def switch(self, other, key, bypass=1):
-    """ Switch the attr of a player
-        eg: b1 >> dbass(P[0:4], amp=1)
-            b2 >> blip(-2, amp=1).switch(b1, "degree")"""
-    if bypass != 0:
-        self_temp = self.attr[key]
-        other_temp = other.attr[key]
-        other.attr[key] = self_temp
-        self.attr[key] = other_temp
-        return self
-
-@player_method
-def clone(self, player):
-    self.attr = player.attr
-    return self
-
-def drop(duree=32, nbr=0, end=4):
-    """ Create a drop effect (var bpm),
-        duree = durée totale de la partie,
-        nbr = nombre de division du drop,
-        end = duree du drop en partant de la fin
-        pour retablir le tempo simplement drop(92)
-        """
-    if nbr == 0:
-        Clock.bpm = duree
-    else:
-        init_bpm = Clock.bpm
-        actual_bpm = Clock.bpm
-        divi = 1
-        bpm_list = []
-        duree_list = []
-        for i in range(nbr):
-            actual_bpm /= divi
-            if actual_bpm < 10:
-                actual_bpm = 10
-            bpm_list.append(int(actual_bpm))
-            if i == 0:
-                duree_list.append(duree-end)
-            else:
-                duree_list.append(end/(2**i))
-            divi = 2
-        duree_list[-1] = end-sum(duree_list[1:-1])
-        Clock.bpm = var([bpm_list], [duree_list], start=Clock.mod(8))
-        print('var({}, {})'.format([bpm_list], [duree_list]))
-
-
-def PMorse(text, point=1/4, tiret=3/4):
-    MORSE_DICT = { 'A':'.-', 'B':'-...',
-                    'C':'-.-.', 'D':'-..', 'E':'.',
-                    'F':'..-.', 'G':'--.', 'H':'....',
-                    'I':'..', 'J':'.---', 'K':'-.-',
-                    'L':'.-..', 'M':'--', 'N':'-.',
-                    'O':'---', 'P':'.--.', 'Q':'--.-',
-                    'R':'.-.', 'S':'...', 'T':'-',
-                    'U':'..-', 'V':'...-', 'W':'.--',
-                    'X':'-..-', 'Y':'-.--', 'Z':'--..',
-                    '1':'.----', '2':'..---', '3':'...--',
-                    '4':'....-', '5':'.....', '6':'-....',
-                    '7':'--...', '8':'---..', '9':'----.',
-                    '0':'-----', ', ':'--..--', '.':'.-.-.-',
-                    '?':'..--..', '/':'-..-.', '-':'-....-',
-                    '(':'-.--.', ')':'-.--.-'}
-    morse = []
-    for l in text.split(" "):
-        for w in l:
-            for i in MORSE_DICT[w.upper()]:
-                if i == ".":
-                    morse.append(point)
-                elif i == "-":
-                    morse.append(tiret)
-            morse.append(rest(5*point))
-    morse[-1] += rest(2*point)
-    return morse
-
-
-class voice_count():
-    def __init__(self):
-        self.loop = True
-    def stop(self):
-        if self.loop:
-            self.loop = False
-        else:
-            self.loop = True
-    def start(self):
-        Voice(str(random.randint(0,1000)), voice=2)
-        if self.loop:
-            nextBar(Clock.future(8, lambda: self.start()))
-
-voicecount = voice_count()
-
-#### Convert sample 
-def convert(note, scale=Scale.default):
-    ''' Convert note to chromatic scale'''
-    def create_dict_map(scale):
-        scale_cpy = copy(scale)
-        scale_dict = {}
-        for i in range(0,50):
-            scale_dict[i] = scale_cpy[i:i+1][0] + Root.default
-        return scale_dict    
-    create_dict_map(scale)    
-    return note.submap(create_dict_map(scale))
 
