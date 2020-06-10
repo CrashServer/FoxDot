@@ -611,7 +611,7 @@ def clone(self, player):
 
 ### Drop ###
 
-def drop_pattern(playTime=15, dropTime=1, reset=0):
+def drop_pattern(playTime=15, dropTime=1, reset=1):
     """ Drop the amplify to 0 for random players.
         ex : drop(6,2) => amplify=0 for random playing players at the 2 last beats of 8
     """
@@ -619,7 +619,7 @@ def drop_pattern(playTime=15, dropTime=1, reset=0):
     clkPly = [p for p in Clock.playing]
     for p in clkPly:
         p.amplify=1
-    if reset==0:    
+    if reset!=0:    
         rndPlayerIndex = random.sample(range(0,len(clkPly)), random.randint(1,len(clkPly)))
         if rndPlayerIndex:
             for i in rndPlayerIndex:   
@@ -634,7 +634,7 @@ class Drop_pattern():
         self.low = low 
     def stop(self):
         if self.loop:
-            drop_pattern(reset=True)
+            drop_pattern(reset=0)
             self.loop = False
         else:
             self.loop = True
