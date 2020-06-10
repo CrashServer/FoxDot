@@ -609,7 +609,9 @@ def clone(self, player):
     self.attr = player.attr
     return self
 
-def drop(playTime=15, dropTime=1, reset=0):
+### Drop ###
+
+def drop_pattern(playTime=15, dropTime=1, reset=0):
     """ Drop the amplify to 0 for random players.
         ex : drop(6,2) => amplify=0 for random playing players at the 2 last beats of 8
     """
@@ -622,6 +624,28 @@ def drop(playTime=15, dropTime=1, reset=0):
         if rndPlayerIndex:
             for i in rndPlayerIndex:   
                 clkPly[i].amplify = var([1,0],[playTime, dropTime])
+                #print(f"{clkPly[i].name}.amplify = var([1,0],[{playTime}, {dropTime}])")
+            #print("***".center(32, "-"))    
+
+class Drop_pattern():
+    def __init__(self, high, low):
+        self.loop = True
+        self.high= high
+        self.low = low 
+    def stop(self):
+        if self.loop:
+            drop_pattern(reset=True)
+            self.loop = False
+        else:
+            self.loop = True
+    def start(self, high=15, low=1, reset=0):
+        drop_pattern(high, low)
+        if self.loop:
+            nextBar(Clock.future((high+low), lambda: self.start(high, low)))
+
+drop = Drop_pattern(15,1)                
+
+
 
 def drop_bpm(duree=32, nbr=0, end=4):
     """ Create a drop bpm effect (var bpm),
