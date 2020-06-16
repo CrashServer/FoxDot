@@ -606,7 +606,7 @@ def switch(self, other, key, bypass=1):
 @player_method
 def clone(self, player):
     """ Clone a player, eg: a2 >> saw().clone(a1)"""
-    self.attr = player.attr
+    self.attr = copy(player.attr)
     return self
 
 ### Drop ###
