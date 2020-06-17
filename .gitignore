@@ -13,6 +13,10 @@ FoxDot/lib/Custom/*
 FoxDot/lib/GhostCoder/*
 FoxDot/lib/Settings/conf.txt
 FoxDot/lib/Workspace/tmp/tempfile.txt
+FoxDot/lib/Crashserver/A copier dans osc_scsyndef/*
+FoxDot/lib/Crashserver/EXPERIMENTAL SynthDefs/*
+FoxDot/lib/Crashserver/crash_gui/sav/*
+FoxDot/lib/Crashserver/drum_gen_pocket/*
 changed_files.txt
 
 # To-do list
