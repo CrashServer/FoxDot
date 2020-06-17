@@ -75,6 +75,8 @@ gamme = ["locrianMajor", "locrian", "phrygian", "minor", "dorian", "mixolydian",
 crash_function = ["lost", "binary", "desynchro", "PTime", "PTimebin" "lininf", "PDrum", "darker", "lighter", \
 "human", "unison", "ascii_gen", "attack", "PChords", "fourths", "thirds", "seconds", "duree", "print_synth", "print_sample", "print_fx", "PChain2"]
 
+join_path = ''.join
+push_path = os.path.realpath(FOXDOT_ROOT + "/lib/Crashserver/" + "code_storage/" + "archiveCode.txt")
 
 ### LOAD CUSTOM SYNTHDEFS #####
 try:
@@ -291,7 +293,7 @@ def fill(self, mute_player=0, on=1):
     1 = dur + amplify
     2 = dur  //  amplify =1
     3 = amplify // dur=1/2
-    """ 
+    """
     if on==1:
         self.dur = PwRand([1/4,1/2,3/4],[45,45,10])
         self.amplify = var([0,1],[[PRand([3,7,15]),PRand([6,2,14])],[1,2]])*[1,PWhite(0.2,1)]
@@ -387,7 +389,7 @@ def PDrum(style=None, pat='', listen=False, khsor='', duree=1/2, spl = 0, charPl
                 pat = 0
                 print("no more patterns...")
             player_idx = 0
-            ppat = ""    
+            ppat = ""
             for i in DrumsPattern2[style][patlist[pat]]:
                 ply, pat, rst = i.split('"')
                 if khsor != '':
@@ -395,13 +397,13 @@ def PDrum(style=None, pat='', listen=False, khsor='', duree=1/2, spl = 0, charPl
                         try:
                             pat = pat.replace(char, khsor[idx])
                         except:
-                            pass    
+                            pass
                 player_idx += 1
-                ppat += f'{charPlayer}{player_idx} >> play("{pat}", dur={duree}, sample={spl})'    
+                ppat += f'{charPlayer}{player_idx} >> play("{pat}", dur={duree}, sample={spl})'
                 ppat += "\n"
                 stopList.remove(f'd{player_idx}')
                 if listen:
-                    dplayers[f"d{player_idx}"] >> play(pat, dur=duree, sus=duree, sample=spl)     
+                    dplayers[f"d{player_idx}"] >> play(pat, dur=duree, sus=duree, sample=spl)
             clip.copy(ppat)
             if listen:
                 for p in stopList:
@@ -410,8 +412,8 @@ def PDrum(style=None, pat='', listen=False, khsor='', duree=1/2, spl = 0, charPl
                 print(ppat)
         else:
             for i in DrumsPattern2[style][pat]:
-                ppat += i 
-                ppat += "\n" 
+                ppat += i
+                ppat += "\n"
             clip.copy(ppat)
 
 def darker():
@@ -619,22 +621,22 @@ def drop_pattern(playTime=15, dropTime=1, reset=1):
     clkPly = [p for p in Clock.playing]
     for p in clkPly:
         p.amplify=1
-    if reset!=0:    
+    if reset!=0:
         rndPlayerIndex = random.sample(range(0,len(clkPly)), random.randint(1,len(clkPly)))
         if rndPlayerIndex:
-            for i in rndPlayerIndex:   
+            for i in rndPlayerIndex:
                 clkPly[i].amplify = var([1,0],[playTime, dropTime])
                 #print(f"{clkPly[i].name}.amplify = var([1,0],[{playTime}, {dropTime}])")
-            #print("***".center(32, "-"))    
+            #print("***".center(32, "-"))
 
 class Drop_pattern():
     def __init__(self, high, low):
         self.loop = True
         self.high= high
-        self.low = low 
+        self.low = low
     def stop(self):
         if self.loop:
-            drop_pattern(reset=0)
+            Master().amplify=1
             self.loop = False
         else:
             self.loop = True
@@ -643,7 +645,7 @@ class Drop_pattern():
         if self.loop:
             nextBar(Clock.future((high+low), lambda: self.start(high, low)))
 
-drop = Drop_pattern(15,1)                
+drop = Drop_pattern(15,1)
 
 
 
@@ -722,7 +724,7 @@ class voice_count():
 
 voicecount = voice_count()
 
-#### Convert sample 
+#### Convert sample
 def convert(note, scale=Scale.default):
     ''' Convert note to chromatic scale'''
     def create_dict_map(scale):
@@ -730,9 +732,30 @@ def convert(note, scale=Scale.default):
         scale_dict = {}
         for i in range(0,50):
             scale_dict[i] = scale_cpy[i:i+1][0] + Root.default
-        return scale_dict    
-    create_dict_map(scale)    
+        return scale_dict
+    create_dict_map(scale)
     return note.submap(create_dict_map(scale))
+
+### push/pull function
+push_dict = {}
+
+def save_to_dict(line):
+    with open(push_path, "a") as file:
+        file.write(f"{line}")
+
+def push(text="", name=""):
+    push_dict[name] = text
+    save_to_dict(f"{name} : {text}")
+
+def pull(name=""):
+    if name == "all":
+        with open(push_path, 'r') as file:
+            print(file.read())
+    elif name == "":
+        print(push_dict.keys())
+    else:
+        print(push_dict[name])
+        clip.copy(push_dict[name])
 
 ### Chord progression, Root mouvement by fourths, thirds, seconds
 fourths = PChain({
@@ -806,4 +829,3 @@ krhytm = {
     1: [0.75,0.25],
     0.75: [0.25,1,0.125,0.125]
     }
-
