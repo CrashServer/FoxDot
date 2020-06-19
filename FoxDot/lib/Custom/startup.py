@@ -336,6 +336,16 @@ class PChain2(RandomGenerator):
 
 # END OF PLAYERS METHODS
 
+@PatternMethod
+def renv(self, nbr=1):
+    """ Chord Inversion """
+    sorted_chord = sorted(self)
+    if nbr > 0:
+        for i in range(0,nbr+1):
+            sorted_chord[0] += 7
+            sorted_chord = sorted(sorted_chord)
+    return PGroup(sorted_chord)
+
 def lost(total=0):
     global lost_played
     global lost_list
