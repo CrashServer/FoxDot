@@ -1,5 +1,7 @@
 from .Patterns import Pattern, PGroup, asStream
 
+list_chords = ["6", "7", "9", "add9", "13", "sus2", "sus4"]
+
 I   = PGroup(0, 2, 4)
 II  = PGroup(1, 3, 5)
 III = PGroup(2, 4,-1)
@@ -8,6 +10,14 @@ V   = PGroup(4,-1, 1)
 VI  = PGroup(5, 0, 2)
 VII = PGroup(-1,1, 3)
 
+I6   = PGroup(I).concat(5)
+II6  = PGroup(II).concat(6)
+III6 = PGroup(III).concat(7)
+IV6  = PGroup(IV).concat(8)
+V6   = PGroup(V).concat(9)
+VI6  = PGroup(VI).concat(10)
+VII6 = PGroup(VII).concat(11)
+
 I7   = PGroup(I).concat(6)
 II7  = PGroup(II).concat(7)
 III7 = PGroup(III).concat(8)
@@ -15,6 +25,30 @@ IV7  = PGroup(IV).concat(9)
 V7   = PGroup(V).concat(10)
 VI7  = PGroup(VI).concat(11)
 VII7 = PGroup(VII).concat(12)
+
+I9   = PGroup(I7).concat(8)
+II9  = PGroup(II7).concat(9)
+III9 = PGroup(III7).concat(10)
+IV9  = PGroup(IV7).concat(11)
+V9   = PGroup(V7).concat(12)
+VI9  = PGroup(VI7).concat(13)
+VII9 = PGroup(VII7).concat(14)
+
+Iadd9   = PGroup(I).concat(8)
+IIadd9  = PGroup(II).concat(9)
+IIIadd9 = PGroup(III).concat(10)
+IVadd9  = PGroup(IV).concat(11)
+Vadd9   = PGroup(V).concat(12)
+VIadd9  = PGroup(VI).concat(13)
+VIIadd9 = PGroup(VII).concat(14)
+
+I13   = PGroup(I9).concat(10).concat(12)
+II13  = PGroup(II9).concat(11).concat(13)
+III13 = PGroup(III9).concat(12).concat(14)
+IV13  = PGroup(IV9).concat(13).concat(15)
+V13   = PGroup(V9).concat(14).concat(16)
+VI13  = PGroup(VI9).concat(15).concat(17)
+VII13 = PGroup(VII9).concat(16).concat(18)
 
 Isus2 = PGroup(I) - (0,1,0)
 IIsus2 = PGroup(II) - (0,1,0)
