@@ -242,6 +242,7 @@ class workspace:
 
         self.text.bind("<{}-period>".format(ctrl),          self.killall)
         self.text.bind("<Alt-period>".format(ctrl),         self.releaseNodes)
+        self.text.bind("<{}-k>".format(ctrl),               self.masterOfReset)
 
         self.text.bind("<{}-c>".format(ctrl),               self.edit_copy)
         self.text.bind("<{}-x>".format(ctrl),               self.edit_cut)
@@ -1209,6 +1210,16 @@ class workspace:
         execute("_Clock.clear()", verbose=False)
         print("Clock.clear()")
         return "break"
+
+    # Kill all: Ctrl+.
+    #-----------------
+
+    def masterOfReset(self, event=None):
+        """ Reset all player objects """
+        execute("Master.reset()", verbose=False)
+        print("Master.ofReset()")
+        return "break"
+
 
     # Zoom in: Ctrl+=
     #----------------
