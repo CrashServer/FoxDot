@@ -76,7 +76,7 @@ crash_function = ["lost", "binary", "desynchro", "PTime", "PTimebin" "lininf", "
 "human", "unison", "ascii_gen", "attack", "PChords", "fourths", "thirds", "seconds", "duree", "print_synth", "print_sample", "print_fx", "PChain2"]
 
 join_path = ''.join
-push_path = os.path.realpath(FOXDOT_ROOT + "/lib/Crashserver/" + "code_storage/" + "archiveCode.txt")
+push_path = os.path.realpath(FOXDOT_ROOT + "/lib/Crashserver/" + "code_storage/" + "archiveCode.cs")
 
 ### LOAD CUSTOM SYNTHDEFS #####
 try:
@@ -621,43 +621,33 @@ def clone(self, player):
     self.attr = copy(player.attr)
     return self
 
-### Drop ###
+## Drop ###
 
-def drop_pattern(playTime=15, dropTime=1, on=1):
+def drop(playTime=15, dropTime=1, nbloop=8):
     """ Drop the amplify to 0 for random players.
         ex : drop(6,2) => amplify=0 for random playing players at the 2 last beats of 8
         bypass with on = 0
     """
-    totalTime = playTime + dropTime
-    clkPly = [p for p in Clock.playing]
-    for p in clkPly:
-        p.amplify=1
-    if on != 0:
-        rndPlayerIndex = random.sample(range(0,len(clkPly)), random.randint(1,len(clkPly)))
-        if rndPlayerIndex:
-            for i in rndPlayerIndex:
-                clkPly[i].amplify = var([1,0],[playTime, dropTime])
-                #print(f"{clkPly[i].name}.amplify = var([1,0],[{playTime}, {dropTime}])")
-            #print("***".center(32, "-"))
-
-class Drop_pattern():
-    def __init__(self, high, low):
-        self.loop = True
-        self.high= high
-        self.low = low
-    def stop(self):
-        if self.loop:
-            Master().amplify=1
-            self.loop = False
-        else:
-            self.loop = True
-    def start(self, high=15, low=1, reset=0):
-        drop_pattern(high, low)
-        if self.loop:
-            nextBar(Clock.future((high+low), lambda: self.start(high, low)))
-
-drop = Drop_pattern(15,1)
-
+    if nbloop > 0:
+        totalTime = playTime + dropTime
+        clkPly = [p for p in Clock.playing]
+        if clkPly:
+            for p in clkPly:
+                p.amplify=1
+        if on != 0 and clkPly:
+            rndPlayerIndex = random.sample(range(0,len(clkPly)), random.randint(1,len(clkPly)))
+            if rndPlayerIndex:
+                for i in rndPlayerIndex:
+                    clkPly[i].amplify = var([1,0],[playTime, dropTime])
+                    #print(f"{clkPly[i].name}.amplify = var([1,0],[{playTime}, {dropTime}])")
+                #print("***".center(32, "-"))
+        nbloop -= 1
+        print(f"Drop loop left : {nbloop}")
+        Clock.future(totalTime, drop, args=(playTime, dropTime, nbloop))
+    else:
+        for p in Clock.playing:
+            p.amplify = 1
+        return
 
 
 def drop_bpm(duree=32, nbr=0, end=4):
@@ -752,7 +742,7 @@ push_dict = {}
 
 def save_to_dict(line):
     with open(push_path, "a") as file:
-        file.write(f"{line}")
+        file.write(f"{line}\n")
 
 def push(text="", name=""):
     push_dict[name] = text
