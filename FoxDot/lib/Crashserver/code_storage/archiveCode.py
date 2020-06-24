@@ -1,0 +1,5 @@
+lapin8 : d4 >> play("<x.><{-[--][---]..}><..C>", sample=0, amp=2, lpf=0)
+a2 >> saw(Pvar(([Isus2, IVsus2, Vsus4]),8), sample_atk=PWhite(0.2,0.4), sample_sus=4, dur=4, lpf=sinvar([400,800],24)).unison(3)
+lapin2 : a3 >> square(oct=PStep(4,3,4), drive=[0,0.1], lpf=0).slider(on=[0,0,0,1]) + (0,2)
+a4 >> rsin(a2.degree[0], dur=1/2, sus=1, oct=sinvar([3,5],24), lpf=PRand(4800), pan=-1, para1=180, rsing=0)
+a5 >> rsin(a2.degree[0], dur=1/2, sus=1, oct=sinvar([2,6],36), lpf=PRand(1800), pan=1, para1=2280, rsing=0)

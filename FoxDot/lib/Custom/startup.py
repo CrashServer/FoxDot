@@ -76,7 +76,7 @@ crash_function = ["lost", "binary", "desynchro", "PTime", "PTimebin" "lininf", "
 "human", "unison", "ascii_gen", "attack", "PChords", "fourths", "thirds", "seconds", "duree", "print_synth", "print_sample", "print_fx", "PChain2"]
 
 join_path = ''.join
-push_path = os.path.realpath(FOXDOT_ROOT + "/lib/Crashserver/" + "code_storage/" + "archiveCode.cs")
+push_path = os.path.realpath(FOXDOT_ROOT + "/lib/Crashserver/" + "code_storage/" + "archiveCode.py")
 
 ### LOAD CUSTOM SYNTHDEFS #####
 try:
