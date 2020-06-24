@@ -626,7 +626,7 @@ def clone(self, player):
 def drop(playTime=15, dropTime=1, nbloop=8):
     """ Drop the amplify to 0 for random players.
         ex : drop(6,2) => amplify=0 for random playing players at the 2 last beats of 8
-        bypass with on = 0
+        bypass with on  = 0
     """
     if nbloop > 0:
         totalTime = playTime + dropTime

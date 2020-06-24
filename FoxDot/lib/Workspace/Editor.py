@@ -98,9 +98,9 @@ class workspace:
 
         self.true_fullscreen_toggled = BooleanVar()
         self.true_fullscreen_toggled.set(False)
-        
+
         # Boolean for beat counter
-        
+
         self.show_counter = BooleanVar()
         self.show_counter.set(False)
 
@@ -1211,7 +1211,7 @@ class workspace:
         print("Clock.clear()")
         return "break"
 
-    # Kill all: Ctrl+.
+    # Kill them all: Ctrl+k
     #-----------------
 
     def masterOfReset(self, event=None):
