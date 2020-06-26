@@ -50,12 +50,14 @@ hnoise.add()
 lapin = FileSynthDef("lapin")
 lapin.add()
 
+lfnoise = FileSynthDef("lfnoise")
+lfnoise.add()
+
 mpluck = FileSynthDef("mpluck")
 mpluck.add()
 
 moogpluck = FileSynthDef("moogpluck")
 moogpluck.add()
-
 
 organ = FileSynthDef("organ")
 organ.add()
