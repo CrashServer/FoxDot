@@ -61,6 +61,15 @@ fx = FxList.new('flanger', 'flanger', {'flanger': 0, 'fdecay': 0, 'flangermix':1
 fx.add("osc = LinXFade2.ar(CombC.ar(osc, 0.01, SinOsc.ar(flanger, 0, (0.01 * 0.5) - 0.001, (0.01 * 0.5) + 0.001), fdecay, 1),  osc, 1-flangermix)")
 fx.save()
 
+fx = FxList.new('phaser', 'phaser', {'phaser': 0, 'phaserdepth': 0.5}, order=2)
+fx.add_var("delayedSignal")
+fx.add("delayedSignal = osc")
+fx.add("for(1, 4, {|i| delayedSignal = AllpassL.ar(delayedSignal, 0.01 * 4.reciprocal, LFPar.kr(LinExp.kr(phaser, 0, 1, 0.275, 16), i + 0.5.rand, LinExp.kr(phaserdepth*4.reciprocal, 0, 1, 0.0005, 0.01 * 0.5), LinExp.kr(phaserdepth*4.reciprocal, 0, 1, 0.0005, 0.01 * 0.5)), 0)})")
+fx.add("osc = osc + delayedSignal")
+fx.save()
+
+
+
 fx = FxList.new("formant", "formantFilter", {"formant": 0, 'formantmix': 1}, order=2)
 fx.add("formant = (formant % 8) + 1")
 fx.add("osc = LinXFade2.ar(Formlet.ar(osc, formant * 200, ((formant % 5 + 1)) / 1000, (formant * 1.5) / 600).tanh, osc, 1-formantmix)")
@@ -282,9 +291,12 @@ fx.add("osc = SmoothFoldS.ar((osc + LinLin.kr(symetry, 0, 1, 1, 0)) * LinLin.kr(
 fx.add("osc = LeakDC.ar(osc*ampgain)")
 fx.save()
 
-
-
-
+fx = FxList.new('mid','Equalizer', {'midfreq': 1000, 'mid': 1, 'midq': 1, 'lowfreq': 80, 'low': 1, 'highfreq': 8000, 'high': 1}, order=2)
+fx.doc("Equalizer")
+fx.add('osc = BLowShelf.ar(osc, freq: lowfreq, db: low.ampdb)')
+fx.add('osc = BPeakEQ.ar(osc, freq: midfreq, rq: midq.reciprocal, db: mid.ampdb)')
+fx.add('osc = BHiShelf.ar(osc, freq: highfreq, db: high.ampdb)')
+fx.save()
 
 
 ###########
