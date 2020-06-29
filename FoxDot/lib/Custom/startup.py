@@ -311,9 +311,7 @@ def fill(self, mute_player=0, on=1):
 
 @player_method
 class PChain2(RandomGenerator):
-    """ An example of a Markov Chain generator pattern. The mapping argument
-        should be a dictionary of keys whose values are a list/pattern of possible
-        destinations.  """
+    """ PChain Mod Markov Chain generator pattern with probability."""
     def __init__(self, mapping, **kwargs):
         assert isinstance(mapping, dict)
         RandomGenerator.__init__(self, **kwargs)
@@ -330,7 +328,6 @@ class PChain2(RandomGenerator):
     def func(self, index):
         key = list(self.mapping[self.last_value][0])
         prob = list(self.mapping[self.last_value][1])
-        #print(random.choices(key, prob))
         self.last_value = random.choices(key, prob)[0]
         return self.last_value
 
@@ -468,6 +465,20 @@ class PChords(GeneratorPattern):
         self.chord = self.last_value
         return self.last_value
 
+class PGauss(RandomGenerator):
+    ''' Returns random floating point values using Gaussian distribution '''
+    def __init__(self, mean=0, deviation=1, **kwargs):
+        RandomGenerator.__init__(self, **kwargs)
+        self.args = (mean, deviation)
+        self.mean = mean
+        self.deviation = deviation
+        self.init_random(**kwargs)
+    def func(self, index):
+        if isinstance(self.mean, float): 
+            return random.gauss(self.mean, self.deviation)
+        elif isinstance(self.mean, int):
+            return int(round(random.gauss(self.mean, self.deviation)))    
+    
 def print_video():
     clip.copy("v1 >> video(vid1=0, vid2=0, vid1rate=1, vid2rate=1, vid1kal=0, vid2kal=0, vid1glitch=0, vid2glitch=0, vidblend=0, vidmix=0, vid1index=0, vid2index=0)")
 
@@ -625,8 +636,7 @@ def clone(self, player):
 
 def drop(playTime=15, dropTime=1, nbloop=8):
     """ Drop the amplify to 0 for random players.
-        ex : drop(6,2) => amplify=0 for random playing players at the 2 last beats of 8
-        bypass with on  = 0
+        ex : drop(6,2,4) => amplify=0 for random playing players at the 2 last beats of 8, 4 times
     """
     if nbloop > 0:
         totalTime = playTime + dropTime
@@ -639,8 +649,6 @@ def drop(playTime=15, dropTime=1, nbloop=8):
             if rndPlayerIndex:
                 for i in rndPlayerIndex:
                     clkPly[i].amplify = var([1,0],[playTime, dropTime])
-                    #print(f"{clkPly[i].name}.amplify = var([1,0],[{playTime}, {dropTime}])")
-                #print("***".center(32, "-"))
         nbloop -= 1
         print(f"Drop loop left : {nbloop}")
         Clock.future(totalTime, drop, args=(playTime, dropTime, nbloop))
