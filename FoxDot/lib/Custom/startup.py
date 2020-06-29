@@ -478,7 +478,21 @@ class PGauss(RandomGenerator):
             return random.gauss(self.mean, self.deviation)
         elif isinstance(self.mean, int):
             return int(round(random.gauss(self.mean, self.deviation)))    
-    
+
+class PLog(RandomGenerator):
+    ''' Returns random floating point values using logarithmic distribution '''
+    def __init__(self, mean=0, deviation=1, **kwargs):
+        RandomGenerator.__init__(self, **kwargs)
+        self.args = (mean, deviation)
+        self.mean = mean
+        self.deviation = deviation
+        self.init_random(**kwargs)
+    def func(self, index):
+        if isinstance(self.mean, float): 
+            return random.lognormvariate(self.mean, self.deviation)
+        elif isinstance(self.mean, int):
+            return int(round(random.lognormvariate(self.mean, self.deviation)))
+
 def print_video():
     clip.copy("v1 >> video(vid1=0, vid2=0, vid1rate=1, vid2rate=1, vid1kal=0, vid2kal=0, vid1glitch=0, vid2glitch=0, vidblend=0, vidmix=0, vid1index=0, vid2index=0)")
 
