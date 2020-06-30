@@ -61,15 +61,6 @@ fx = FxList.new('flanger', 'flanger', {'flanger': 0, 'fdecay': 0, 'flangermix':1
 fx.add("osc = LinXFade2.ar(CombC.ar(osc, 0.01, SinOsc.ar(flanger, 0, (0.01 * 0.5) - 0.001, (0.01 * 0.5) + 0.001), fdecay, 1),  osc, 1-flangermix)")
 fx.save()
 
-fx = FxList.new('phaser', 'phaser', {'phaser': 0, 'phaserdepth': 0.5}, order=2)
-fx.add_var("delayedSignal")
-fx.add("delayedSignal = osc")
-fx.add("for(1, 4, {|i| delayedSignal = AllpassL.ar(delayedSignal, 0.01 * 4.reciprocal, LFPar.kr(LinExp.kr(phaser, 0, 1, 0.275, 16), i + 0.5.rand, LinExp.kr(phaserdepth*4.reciprocal, 0, 1, 0.0005, 0.01 * 0.5), LinExp.kr(phaserdepth*4.reciprocal, 0, 1, 0.0005, 0.01 * 0.5)), 0)})")
-fx.add("osc = osc + delayedSignal")
-fx.save()
-
-
-
 fx = FxList.new("formant", "formantFilter", {"formant": 0, 'formantmix': 1}, order=2)
 fx.add("formant = (formant % 8) + 1")
 fx.add("osc = LinXFade2.ar(Formlet.ar(osc, formant * 200, ((formant % 5 + 1)) / 1000, (formant * 1.5) / 600).tanh, osc, 1-formantmix)")
@@ -212,7 +203,7 @@ fx.add("osc = ring1(osc, mod)")
 fx.save()
 
 fx = FxList.new("shift", "pitchshifter", {"shift":0, "shiftsize": 0.1}, order=1)
-fx.add("osc = PitchShift.ar(osc, shiftsize, shift, 0.02, 0.01)")	
+fx.add("osc = PitchShift.ar(osc, shiftsize, shift, 0.02, 0.01)")
 fx.save()
 
 fx = FxList.new("comp", "comp", {"comp": 0, "comp_down": 1, "comp_up": 0.8}, order=2)
@@ -245,7 +236,7 @@ fx.save()
 # fx.add("osc = osc.clip(0,1)")
 # fx.save()
 
-fx = FxList.new("lofi", "lofi", {"lofi": 0, "lofiwow": 0.5, "lofitone":0.5}, order=2)
+fx = FxList.new("lofi", "lofi", {"lofi": 0, "lofiwow": 0.5, "lofiamp":0.5}, order=2)
 fx.add_var("minWowRate")
 fx.add_var("wowRate")
 fx.add_var("maxDepth")
@@ -258,8 +249,8 @@ fx.add_var("ratio")
 fx.add_var("threshold")
 fx.add_var("gain")
 fx.add("osc = HPF.ar(osc, 25)")
-fx.add("ratio = LinExp.kr(lofi, 0, 1, 0.15, 0.01)")
-fx.add("threshold = LinLin.kr(lofi, 0, 1, 0.8, 0.33)")
+fx.add("ratio = LinExp.kr(lofiamp, 0, 1, 0.15, 0.01)")
+fx.add("threshold = LinLin.kr(lofiamp, 0, 1, 0.8, 0.33)")
 fx.add("gain = 1/(((1.0-threshold) * ratio) + threshold)")
 fx.add("osc = Limiter.ar(Compander.ar(osc, osc, threshold, 1.0, ratio, 0.1, 1, gain), dur: 0.0008)")
 fx.add("minWowRate = 0.5")
@@ -272,10 +263,10 @@ fx.add("depth = LFPar.kr(depthLfoAmount * 0.1, mul: depthLfoAmount, add: depth)"
 fx.add("wowMul = ((2 ** (depth * 1200.reciprocal)) - 1)/(4 * wowRate)")
 fx.add("maxDelay = (((2 ** (maxDepth * 1200.reciprocal)) - 1)/(4 * minWowRate)) * 2.5")
 fx.add("osc = DelayC.ar(osc, maxDelay, SinOsc.ar(wowRate, 2, wowMul, wowMul + ControlRate.ir.reciprocal))")
-fx.add("osc = ((osc * LinExp.kr(lofi, 0, 1, 1, 2.5))).tanh")
-fx.add("osc = LPF.ar(osc, LinExp.kr(lofitone, 0, 1, 2500, 10000))")
-fx.add("osc = HPF.ar(osc, LinExp.kr(lofitone, 0, 1, 40, 1690))")
-fx.add("osc = MoogFF.ar(osc, LinExp.kr(lofitone, 0, 1, 1000, 10000), 0)")
+fx.add("osc = ((osc * LinExp.kr(lofiamp, 0, 1, 1, 2.5))).tanh")
+fx.add("osc = LPF.ar(osc, LinExp.kr(lofi, 0, 1, 2500, 10000))")
+fx.add("osc = HPF.ar(osc, LinExp.kr(lofi, 0, 1, 40, 1690))")
+fx.add("osc = MoogFF.ar(osc, LinExp.kr(lofi, 0, 1, 1000, 10000), 0)")
 fx.save()
 
 ### need the miSCellaneous Quark, install in SC
@@ -291,15 +282,30 @@ fx.add("osc = SmoothFoldS.ar((osc + LinLin.kr(symetry, 0, 1, 1, 0)) * LinLin.kr(
 fx.add("osc = LeakDC.ar(osc*ampgain)")
 fx.save()
 
-fx = FxList.new('mid','Equalizer', {'midfreq': 1000, 'mid': 1, 'midq': 1, 'lowfreq': 80, 'low': 1, 'highfreq': 8000, 'high': 1}, order=2)
-fx.doc("Equalizer")
-fx.add('osc = BLowShelf.ar(osc, freq: lowfreq, db: low.ampdb)')
-fx.add('osc = BPeakEQ.ar(osc, freq: midfreq, rq: midq.reciprocal, db: mid.ampdb)')
-fx.add('osc = BHiShelf.ar(osc, freq: highfreq, db: high.ampdb)')
+fx = FxList.new('low','L_Equalizer', { 'low': 1, 'lowfreq': 80}, order=2)
+fx.doc("Low shelf Equalizer")
+fx.add('osc = BLowShelf.ar(osc, freq: lowfreq, db: abs(low).ampdb)')
+fx.save()
+
+fx = FxList.new('mid','M_Equalizer', {'mid': 1, 'midfreq': 1000, 'midq': 1}, order=2)
+fx.doc("Middle boost Equalizer")
+fx.add('osc = BPeakEQ.ar(osc, freq: midfreq, rq: midq.reciprocal, db: abs(mid).ampdb)')
+fx.save()
+
+fx = FxList.new('high','H_Equalizer', {'high': 1, 'highfreq': 8000}, order=2)
+fx.doc("High shelf Equalizer")
+fx.add('osc = BHiShelf.ar(osc, freq: highfreq, db: abs(high).ampdb)')
+fx.save()
+
+
+fx = FxList.new('phaser', 'phaser', {'phaser': 0, 'phaserdepth': 0.5}, order=2)
+fx.add_var("delayedSignal")
+fx.add("delayedSignal = osc")
+fx.add("for(1, 4, {|i| delayedSignal = AllpassL.ar(delayedSignal, 0.01 * 4.reciprocal, LFPar.kr(LinExp.kr(phaser, 0, 1, 0.275, 16), i + 0.5.rand, LinExp.kr(phaserdepth*4.reciprocal, 0, 1, 0.0005, 0.01 * 0.5), LinExp.kr(phaserdepth*4.reciprocal, 0, 1, 0.0005, 0.01 * 0.5)), 0)})")
+fx.add("osc = osc + delayedSignal")
 fx.save()
 
 
 ###########
 
 Effect.server.setFx(FxList)
-
