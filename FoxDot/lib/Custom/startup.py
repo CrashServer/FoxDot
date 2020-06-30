@@ -559,8 +559,6 @@ def print_loops(loop=""):
         listloops = sorted([fn.rsplit(".",1)[0] for fn in os.listdir(os.path.join(FOXDOT_LOOP, loop))])
         print(listloops)
 
-
-
 from .Crashserver.chords_dict import *
 
 @player_method
@@ -646,7 +644,38 @@ def clone(self, player):
     self.attr = copy(player.attr)
     return self
 
-## Drop ###
+##################################
+#### Test synth method ###########
+
+class SynthIterator:
+    def __init__(self):
+        self.notSynth = ["loop", "stretch", "play1", "play2", "audioin", "video", "gsynth", "vrender"]
+        self.synthList = [i for i in sorted(SynthDefs) if i not in self.notSynth]
+        self.idx = 0
+    def __iter__(self):
+        return self
+    def rewind(self):
+        self.idx = 0
+    def __next__(self):
+        try:
+            return self.synthList[self.idx]
+        except IndexError:
+            self.rewind()
+            raise StopIteration
+        finally:
+            self.idx += 1           
+                        
+synthList = SynthIterator()
+
+@PlayerMethod
+def test_synth(self):
+    """ Change synth player, nice for test like a1 >> blip().every(4, "test_synth") """
+    actualSynth = next(synthList)
+    print(actualSynth)
+    self.synthdef = actualSynth
+
+##############################
+########## Drop ##############
 
 def drop(playTime=15, dropTime=1, nbloop=8):
     """ Drop the amplify to 0 for random players.
