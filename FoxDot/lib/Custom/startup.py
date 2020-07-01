@@ -661,6 +661,7 @@ class SynthIterator:
             return self.synthList[self.idx]
         except IndexError:
             self.rewind()
+            return 'stopIter'
             raise StopIteration
         finally:
             self.idx += 1           
@@ -671,8 +672,14 @@ synthList = SynthIterator()
 def test_synth(self):
     """ Change synth player, nice for test like a1 >> blip().every(4, "test_synth") """
     actualSynth = next(synthList)
-    print(actualSynth)
-    self.synthdef = actualSynth
+    if actualSynth == 'stopIter':
+        try:
+            self.never("test_synth")
+        except:
+            pass
+    else:
+        print(actualSynth)
+        self.synthdef = actualSynth
 
 ##############################
 ########## Drop ##############
