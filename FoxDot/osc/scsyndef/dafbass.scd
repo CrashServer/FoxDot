@@ -4,13 +4,13 @@ SynthDef.new(\dafbass,
 		freq = In.kr(bus, 1);
 		freq = [freq, freq] * Line.ar(Rand(0.5,1.5),1,0.02);
 		freq=(freq / 4);
-		amp=(amp * 0.5);
+		amp=(amp * 0.3);
 		harm = [1, 1.01, 2, 2.01];
 		harm = harm ++(harm*fmod);
 		osc = (SinOsc.ar(freq*harm).sum.distort * 2) + LFPulse.ar(freq+harm, 0, [0.5, 0.99]
 		).sum.distort;
 	osc = osc * EnvGen.ar(Env([0, peak, level, level, 0], [atk, decay, max((atk + decay + rel), sus - (atk + decay + rel)), rel], curve:\sin), doneAction: 0);
-		osc = BLowShelf.ar(osc,40,1.0,-24);
+		//osc = BLowShelf.ar(osc,40,1.0,-24);
 		osc = osc * amp;
 		osc = Mix(osc) * 0.5;
 		osc = Pan2.ar(osc, pan);

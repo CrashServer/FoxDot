@@ -4,7 +4,9 @@ SynthDef.new(\space,
 		var osc, env, filter;
 		freq = In.kr(bus, 1);
 		freq = [freq, freq+fmod];
-		amp=(amp * 2);
+		amp=(amp * 3
+
+		);
 
 		freq = freq * [1, 1.01];
 

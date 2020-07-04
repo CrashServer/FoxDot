@@ -4,7 +4,7 @@ var osc, env;
 sus = sus * blur;
 freq = In.kr(bus, 1);
 freq = [freq, freq+fmod];
-amp=(amp * 0.5);
+amp=(amp * 2);
 osc=LFNoise0.ar(((Crackle.kr(1.95) * freq) * 15), mul: amp);
 env=EnvGen.ar(Env.perc(attackTime: 0.01,releaseTime: 0.1,level: (amp / 4),curve: 0), doneAction: 0);
 osc=(osc * env);

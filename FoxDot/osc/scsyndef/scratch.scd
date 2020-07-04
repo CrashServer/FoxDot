@@ -4,7 +4,7 @@ var osc, env;
 sus = sus * blur;
 freq = In.kr(bus, 1);
 freq = [freq, freq+fmod];
-amp=(amp / 4);
+amp=(amp * 0.8);
 freq=(freq * Crackle.ar(1.5));
 osc=SinOsc.ar(Vibrato.kr(freq, 2, 3, rateVariation: rate, depthVariation: depth), mul: amp);
 env=EnvGen.ar(Env(times: [(sus / 2), (sus / 2)],levels: [0, amp, 0],curve: 'lin'), doneAction: 0);

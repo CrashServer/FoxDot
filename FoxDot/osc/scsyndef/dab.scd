@@ -4,6 +4,7 @@ var osc, env;
 sus = sus * blur;
 freq = In.kr(bus, 1);
 freq = [freq, freq+fmod];
+amp=(amp * 0.6);
 osc=(HPF.ar(Saw.ar((freq / 4), mul: (amp / 2)), 2000) + VarSaw.ar((freq / 4), mul: amp, width: EnvGen.ar(Env.perc(attackTime: (sus / 20),releaseTime: (sus / 4),level: 0.5,curve: -5), doneAction: 0)));
 env=EnvGen.ar(Env(times: [(sus * 0.25), (sus * 1)],levels: [0, amp, 0],curve: 'lin'), doneAction: 0);
 osc=(osc * env);

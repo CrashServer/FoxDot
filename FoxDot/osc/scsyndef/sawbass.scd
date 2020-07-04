@@ -1,7 +1,7 @@
 SynthDef(\sawbass,
-	{|amp=1, sus=0.2, pan=0, bus=0, freq=440, cutoff=1000, rq=0.5, fmod=0|
+	{|amp=1, sus=0.2, pan=0, bus=0, freq=440, cutoff=1000, rq=0.5, fmod=0, rate|
 		var osc1, osc2, filter, filter2, env, filterenv, ab;
-		amp = amp * 0.2;
+		amp = amp * 0.25;
 		freq = (In.kr(bus) / 4) + fmod;
 		osc1 = Saw.ar(freq);
 		osc2 = Mix(Saw.ar(freq * [0.25,1,1.5], [0.5,0.4,0.1]));

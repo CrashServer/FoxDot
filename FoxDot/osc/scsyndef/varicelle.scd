@@ -12,6 +12,6 @@ freq = In.kr(bus, 1);
 	osc = SelectX.ar(LFNoise2.kr(2).range(0, 2), [sigA, sigB, sigC]);
 	env = EnvGen.ar(Env([0, peak, level, level, 0], [atk, decay, max((atk + decay + rel), sus - (atk + decay + rel)), rel], curve:\sin), doneAction: 0);
 	osc = osc * amp * env;
-	osc = Mix(osc) * 0.5;
+	osc = Mix(osc) * 0.3;
 	osc = Pan2.ar(osc, pan);
 ReplaceOut.ar(bus, osc)}).add;

@@ -26,7 +26,7 @@ osc = sig0 * amp;
 osc=(osc * env);
 osc = HPF.ar(osc, 40);
 osc = LPF.ar(osc, 8000);
-osc = Mix(osc) * 0.25;
+osc = Mix(osc) * 0.2;
 osc = Pan2.ar(osc, pan);
 	ReplaceOut.ar(bus, osc)}).add;
 )

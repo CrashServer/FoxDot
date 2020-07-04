@@ -1,6 +1,6 @@
 //  based on a tweet I can't find anymore :(
 SynthDef(\cluster,
-	{|para1=4, bus=0, mult=4, gate=1, amp=1, pan=0, freq=440, sus=1, blur=1, fmod=0|
+	{|amp=1, sus=1, pan=0, freq=0, vib=0, fmod=0, rate=4.0, bus=0, blur=1, beat_dur=1, atk=0.01, decay=0.01, rel=0.01, peak=1, level=0.8, wide=0.0, para1=4|
 	var env, snd;
 
 
@@ -9,7 +9,7 @@ SynthDef(\cluster,
 
 	freq = [freq, freq+fmod];
 
-	env = EnvGen.ar(Env.adsr(), gate=1, doneAction:2);
+	env = EnvGen.ar(Env.adsr(atk, decay, sus, rel, peak), gate:1, doneAction:2);
 	snd = Splay.ar(
 
 
@@ -19,10 +19,10 @@ SynthDef(\cluster,
 					Spring.ar(
 						LFPulse.ar(3/4),
 						4/para1,[[0.5e-1, 1.4e-3]]) *
-						LFTri.ar(freq, 0, 2pi, mult * pi),
+						LFTri.ar(freq, 0, 2pi, rate+0.01 * pi),
 						mul: 0.5), 4, 1/4, 2))).tanh;
 
-	snd = Mix(snd) * 0.25;
+	snd = Mix(snd) * 0.4;
 	snd = Pan2.ar(snd, pan);
 	snd = ReplaceOut.ar(bus, snd * amp);
 

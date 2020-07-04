@@ -34,17 +34,17 @@ SynthDef.new(\pbass,
   sig = sig * XLine.kr(1, 0.6, 0.1);
 
   // Tanh distortion / limiting
-  sig = (sig * 1).tanh;
+		sig = (sig * (1+rate)).tanh.clip();
 
   // Another round of signal coloring, using another RLPF
   // and sine components
 		sig = sig + RLPF.ar(sig, XLine.ar(freq * 20, freq * 10, sus).clip(0,20000)) + sin + sub;
 
   // Another round of tanh distortion / limiting
-  sig = (sig / 2.3).tanh;
+		sig = (sig / 2.5).tanh;
 
   // Another resonant LPF
   sig = MoogFF.ar(sig, 10000, 0.1, mul:amp);
-  osc = Mix(sig) * 0.5;
+		osc = Mix(sig) * 0.3;
   osc = Pan2.ar(osc, pan);
 	ReplaceOut.ar(bus, osc)}).add;

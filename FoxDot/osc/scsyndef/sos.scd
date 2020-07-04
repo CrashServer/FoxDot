@@ -23,7 +23,7 @@ SynthDef(\sos,
 
 	// sig = LPF.ar(sig, 5000);
 	sig = BLowShelf.ar(sig, 60);
-	sig = sig * 0.5;
+	sig = sig * 0.4;
 
 	sig = Pan2.ar(sig, pan).tanh;
 	ReplaceOut.ar(bus, (sig * amp));

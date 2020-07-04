@@ -4,7 +4,7 @@ var osc, env;
 sus = sus * blur;
 freq = In.kr(bus, 1);
 freq = [freq, freq+fmod];
-amp=(amp / 4);
+amp=(amp / 1.4);
 freq=(freq + [0, 1]);
 freq=(freq * [1, 0.5]);
 osc=VarSaw.ar(freq, width: SinOsc.ar((rate / ((2 * sus) / 1.25)), add: 0.5, mul: [0.5, 0.5]), mul: [1, 0.5]);

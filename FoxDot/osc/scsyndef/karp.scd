@@ -4,7 +4,6 @@ var osc, env;
 sus = sus * blur;
 freq = In.kr(bus, 1);
 freq = [freq, freq+fmod];
-amp=(amp * 0.75);
 osc=LFNoise0.ar((400 + (400 * rate)), amp);
 osc=(osc * XLine.ar(1, 1e-06, (sus * 0.1)));
 freq=((265 / (freq * 0.666)) * 0.005);

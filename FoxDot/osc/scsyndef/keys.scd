@@ -8,7 +8,7 @@ SynthDef.new(\keys,
 		freq = [freq, freq+fmod];
 		freq = freq * [1, 1.005];
 
-		amp = amp / 4;
+		//amp = amp / 4;
 
 		osc = SinOsc.ar(freq + (rate * 100) * XFade2.ar(LFPar.ar(freq * (1/2)), LFTri.ar(freq * 1)), phase: 0.2, mul: 0.8);
 

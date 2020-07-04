@@ -1,6 +1,6 @@
 (
 SynthDef(\bounce,
-	{|para1=2, bus=0, para2=2.5, gate=1, amp=1, pan=0, freq=440, sus=1, blur=1, fmod=0|
+	{|amp=1, sus=1, pan=0, freq=0, vib=0, fmod=0, rate=0, bus=0, blur=1, beat_dur=1, atk=0.0001, decay=0.01, rel=0.01, peak=1, level=0.8, wide=0.0, para1=2, para2=2.5|
 	var env, snd;
 
 
@@ -11,11 +11,10 @@ SynthDef(\bounce,
 
 	snd = CombN.ar( Decay2.ar(Impulse.ar([[para1, para2], 0.5])) * Blip.ar(freq, 4));
 
-	env = EnvGen.ar(Env.adsr(), gate=1, doneAction:0);
-	snd = Mix(snd) * 0.25;
-	snd = Pan2.ar(snd, pan);
+		env = EnvGen.ar(Env.adsr(atk,decay,sus,rel,peak), gate:1, doneAction:0);
+	snd = Mix(snd*env);
+	snd = Splay.ar(snd, level:1,spread:wide, center:pan, levelComp: true);
+	//snd = Pan2.ar(snd, pan);
 	snd = ReplaceOut.ar(bus, snd * amp);
-
-
 }).add;
 )

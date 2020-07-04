@@ -14,7 +14,7 @@ SynthDef(\hnoise,
 	osc = Mix([osc, osc2 * 1]);
 	osc = LeakDC.ar(CombC.ar(Mix.ar([osc,(osc2*LFNoise1.kr(0.01,0.02).abs)]),1,LFNoise1.kr(0.1).range(0.01,0.6),7,1));
 	osc = LeakDC.ar(CombC.ar(osc,1,SinOsc.kr(TRand.kr(0, 10)).range(0.0001,2),80));
-	osc = Limiter.ar(osc);
+	osc = Limiter.ar(osc*env*0.8);
 	osc = Splay.ar(osc * amp, pan);
 	ReplaceOut.ar(bus, osc)}).add;
 )

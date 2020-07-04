@@ -8,13 +8,13 @@ SynthDef.new(\pasha,
 
 		lfo = LFPar.kr([1,1.04], mul:0.5);
 
-		osc = Pulse.ar(freq, lfo);
+		osc = Pulse.ar(freq, lfo*rate);
 
 		env = EnvGen.ar(Env([0,1,0.5,0.2,0], [0, 0.01, sus / 1.5, sus / 1.5], curve:'cub'), doneAction:3);
 
 		osc = osc * env * amp;
 
-		osc = Mix(osc) * 0.25;
+		osc = Mix(osc) * 0.5;
 
 		osc = Pan2.ar(osc, pan);
 

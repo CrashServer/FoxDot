@@ -4,6 +4,7 @@ var osc, env;
 sus = sus * blur;
 freq = In.kr(bus, 1);
 freq = [freq, freq+fmod];
+amp=(amp * 3);
 freq=(freq * [1, 1.01]);
 osc=(Klank.ar(`[[1, 2, 4, 2], [100, 50, 0, 10], [1, 5, 0, 1]], Impulse.ar(freq).dup, freq) / 5000);
 osc=(osc * LFSaw.ar((freq * (1 + rate))));

@@ -1,5 +1,5 @@
 SynthDef(\bbass,
-	{|bus=0, freq = 440, amp = 0.5, gate = 1, pan=0, sus=1, blur=1, fmod=0|
+	{|bus=0, freq = 440, amp=1, gate=1, pan=0, sus=1, blur=1, fmod=0, wide=0|
 	var snd, env, oscfreq, output, osc, envout;
 	var lfo;
 	sus = sus * blur;
@@ -10,10 +10,9 @@ SynthDef(\bbass,
 	env = Env.adsr(0.07, 1, 0.9, 0.1).kr(doneAction:2, gate: gate);
 	output = LFSaw.ar(oscfreq, mul: lfo.value.range(0,1));
 	output = RLPF.ar(output, (env*freq) + 1*freq * lfo.value.range(10/freq,5/freq), lfo.value.range(0.1,1));
-	output = Splay.ar(output, lfo.value.range(0,1));
+	output = Splay.ar(output, lfo.value.range(0,1)*wide);
 	envout=EnvGen.ar(Env.perc(level: amp,releaseTime: sus,attackTime: 0.02,curve: 'lin'), doneAction: 0);
-	osc=output;
-	osc = Mix(osc) * 0.1; // correct amplitude
-	osc = Pan2.ar(osc * env , pan);
+	osc = Mix(osc); // correct amplitude
+	osc = Pan2.ar(output * envout * 0.6 , pan);
 	ReplaceOut.ar(bus, osc * amp);
 	}).add;

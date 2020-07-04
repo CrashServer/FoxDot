@@ -4,7 +4,7 @@ var osc, env;
 sus = sus * blur;
 freq = In.kr(bus, 1);
 freq = [freq, freq+fmod];
-osc=Gendy1.ar((rate - 1), mul: (amp / 2), minfreq: freq, maxfreq: (freq * 2));
+osc=Gendy1.ar((rate - 1), mul: (amp * 0.7), minfreq: freq, maxfreq: (freq * 2));
 env=EnvGen.ar(Env.perc(attackTime: 0.01,releaseTime: sus,level: amp,curve: 0), doneAction: 0);
 osc=(osc * env);
 osc = Mix(osc) * 0.5;

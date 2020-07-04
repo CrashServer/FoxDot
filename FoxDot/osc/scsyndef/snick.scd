@@ -4,6 +4,7 @@ var osc, env;
 sus = sus * blur;
 freq = In.kr(bus, 1);
 freq = [freq, freq+fmod];
+amp=(amp * 4);
 osc=(LFPar.ar(freq, mul: 1) * Blip.ar(((rate + 1) * 4)));
 env=EnvGen.ar(Env.perc(attackTime: 0.01,releaseTime: sus,level: amp,curve: 0), doneAction: 0);
 osc=(osc * env);

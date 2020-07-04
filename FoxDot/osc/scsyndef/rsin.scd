@@ -14,7 +14,7 @@ SynthDef(\rsin,
 	sig = sig  * env * 0.4;
 	sig = BLowShelf.ar(sig,40,1.0,-12);
 	sig = Splay.ar(LeakDC.ar(Limiter.ar(sig, 1)));
-	sig = Mix(sig) * 2;
+	sig = Mix(sig) * 1.8;
 	sig = Pan2.ar(sig, pan).tanh;
 	ReplaceOut.ar(bus, (sig * amp));
 }).add;

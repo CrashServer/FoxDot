@@ -4,7 +4,6 @@ var osc, env;
 sus = sus * blur;
 freq = In.kr(bus, 1);
 freq = [freq, freq+fmod];
-amp=(amp / 6);
 osc=(Pulse.ar((freq / 4), 0.2, 0.25) + Pulse.ar((freq + 1), 0.5, 0.5));
 osc=(osc * SinOsc.ar((rate / sus), 0, 0.5, 1));
 env=EnvGen.ar(Env(times: [(0.55 * sus), (0.55 * sus)],levels: [0, amp, 0],curve: 'lin'), doneAction: 0);
