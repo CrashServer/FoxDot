@@ -53,11 +53,11 @@ lapin.add()
 lfnoise = FileSynthDef("lfnoise")
 lfnoise.add()
 
-mpluck = FileSynthDef("mpluck")
-mpluck.add()
+# mpluck = FileSynthDef("mpluck")
+# mpluck.add()
 
-moogpluck = FileSynthDef("moogpluck")
-moogpluck.add()
+mpluck = FileSynthDef("moogpluck")
+mpluck.add()
 
 organ = FileSynthDef("organ")
 organ.add()
@@ -85,9 +85,6 @@ sine.add()
 
 sos = FileSynthDef("sos")
 sos.add()
-
-square = FileSynthDef("square")
-square.add()
 
 total = FileSynthDef("total")
 total.add()
