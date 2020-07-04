@@ -54,7 +54,7 @@ hiphop = {'HIP HOP 1 - A': ['d1 >> play("x.....xx...x..x.", dur=1/4)', 'd2 >> pl
 		'TRAP - A': ['d1 >> play("x.....x.....x...", dur=1/4)', 'd2 >> play("........u.......", dur=1/4)', 'd3 >> play("-.-.-.-.-.-.-.-.", dur=1/4)'], 
 		'TRAP - B': ['d1 >> play("..x.x...........", dur=1/4)', 'd2 >> play("........u.......", dur=1/4)', 'd3 >> play("..-.-.-.-.-...-.", dur=1/4)']}
 
-amen = {'AMEN BREAK - A': ['d1 >> play("x.x.......xx....", dur=1/4)', 'd2 >> play("....u..u.u..u..u", dur=1/4)', 'd3 >> play("-.-.-.-.-.-.-.-.", dur=1/4)'], 
+amenbreak = {'AMEN BREAK - A': ['d1 >> play("x.x.......xx....", dur=1/4)', 'd2 >> play("....u..u.u..u..u", dur=1/4)', 'd3 >> play("-.-.-.-.-.-.-.-.", dur=1/4)'], 
 		'AMEN BREAK - B': ['d1 >> play("x.x.......xx....", dur=1/4)', 'd2 >> play(".......u.u..u..u", dur=1/4)', 'd3 >> play("-.-.-.-.-.-.-.-.", dur=1/4)', 'd4 >> play("....r...........", dur=1/4)'], 
 		'AMEN BREAK - C': ['d1 >> play("x.x.......x.....", dur=1/4)', 'd2 >> play(".......u.u..u..u", dur=1/4)', 'd3 >> play("-.-.-.-.-.-.-.-.", dur=1/4)', 'd4 >> play("..............r.", dur=1/4)'], 
 		'AMEN BREAK - D': ['d1 >> play("x.x.......x.....", dur=1/4)', 'd2 >> play(".u..u..u.u....u.", dur=1/4)', 'd3 >> play("-.-.-.-.-...-.-.", dur=1/4)', 'd4 >> play("..........~.....", dur=1/4)']}
@@ -173,7 +173,7 @@ edm = {'TECHNO': ['d1 >> play("x...x...x...x.x.", dur=1/4)', 'd2 >> play("....u.
 		'UK GARAGE - B': ['d1 >> play("x.........x.....", dur=1/4)', 'd2 >> play("....*.......*...", dur=1/4)', 'd3 >> play("..-...-...-...-.", dur=1/4)', 'd4 >> play(".......r.....r..", dur=1/4)', 'd5 >> play(".....m.....m....", dur=1/4)'], 
 		'SYNTH WAVE': ['d1 >> play("x.......x.......", dur=1/4)', 'd2 >> play("....u.......u...", dur=1/4)', 'd3 >> play("----------------", dur=1/4)', 'd4 >> play(".............=..", dur=1/4)'], 'HALF DROP': ['d1 >> play("x...............", dur=1/4)', 'd2 >> play("........u.......", dur=1/4)', 'd3 >> play("-.-.-.-.-.-.-.-.", dur=1/4)']}
 
-dub = {'HALF DROP': ['d1 >> play("x...............", dur=1/4)', 'd2 >> play("........u.......", dur=1/4)', 'd3 >> play("-.-.-.-.-.-.-.-.", dur=1/4)'], 
+dubdrum = {'HALF DROP': ['d1 >> play("x...............", dur=1/4)', 'd2 >> play("........u.......", dur=1/4)', 'd3 >> play("-.-.-.-.-.-.-.-.", dur=1/4)'], 
 		'ONE DROP': ['d1 >> play("........x.......", dur=1/4)', 'd2 >> play("........u.......", dur=1/4)', 'd3 >> play("-.-.-.-.-.-.-.-.", dur=1/4)'], 
 		'TWO DROP': ['d1 >> play("x.......x.......", dur=1/4)', 'd2 >> play("........u.......", dur=1/4)', 'd3 >> play("-.-.-.-.-.-.-.-.", dur=1/4)'], 
 		'STEPPERS': ['d1 >> play("x...x...x...x...", dur=1/4)', 'd2 >> play("........u.......", dur=1/4)', 'd3 >> play("-.-.-.-.-.-.-.-.", dur=1/4)'], 
@@ -274,4 +274,4 @@ rolls2 = {'DRUM ROLL 11': ['d1 >> play(".T...........T..", dur=1/4)', 'd2 >> pla
 		'DRUM ROLL 20': ['d1 >> play("..T.T...........", dur=1/4)', 'd2 >> play("......m.......m.", dur=1/4)', 'd3 >> play("...............m", dur=1/4)', 'd4 >> play("u.......u.u..u..", dur=1/4)', 'd5 >> play(".x.x.x.x.x.xx...", dur=1/4)', 'd6 >> play("........~.......", dur=1/4)']}
 
 
-DrumsPattern2 = {'afro':afro, 'amen':amen, 'basic':basic, 'break_std':break_std, 'breaks':breaks, 'dnb':dnb, 'dub':dub, 'edm':edm, 'electro':electro, 'funk1':funk1, 'funk2':funk2, 'funk3':funk3, 'funk5':funk5, 'funk6':funk6, 'funk7':funk7, 'funk8':funk8, 'funk9':funk9, 'ghost':ghost, 'hbreak':hbreak, 'hiphop':hiphop, 'house':house, 'ibreak':ibreak, 'kbreak':kbreak, 'miami':miami, 'rock':rock, 'rolling':rolling, 'rolls':rolls, 'rolls2':rolls2, 'snbreak':snbreak}
+DrumsPattern2 = {'afro':afro, 'amen':amenbreak, 'basic':basic, 'break_std':break_std, 'breaks':breaks, 'dnb':dnb, 'dub':dubdrum, 'edm':edm, 'electro':electro, 'funk1':funk1, 'funk2':funk2, 'funk3':funk3, 'funk5':funk5, 'funk6':funk6, 'funk7':funk7, 'funk8':funk8, 'funk9':funk9, 'ghost':ghost, 'hbreak':hbreak, 'hiphop':hiphop, 'house':house, 'ibreak':ibreak, 'kbreak':kbreak, 'miami':miami, 'rock':rock, 'rolling':rolling, 'rolls':rolls, 'rolls2':rolls2, 'snbreak':snbreak}
