@@ -297,7 +297,6 @@ fx.doc("High shelf Equalizer")
 fx.add('osc = BHiShelf.ar(osc, freq: highfreq, db: abs(high).ampdb)')
 fx.save()
 
-
 fx = FxList.new('phaser', 'phaser', {'phaser': 0, 'phaserdepth': 0.5}, order=2)
 fx.add_var("delayedSignal")
 fx.add("delayedSignal = osc")
@@ -305,6 +304,15 @@ fx.add("for(1, 4, {|i| delayedSignal = AllpassL.ar(delayedSignal, 0.01 * 4.recip
 fx.add("osc = osc + delayedSignal")
 fx.save()
 
+fx = FxList.new('room2', 'reverb_stereo', {'room2': 0, 'mix2': 0.2, 'damp2':0.8, 'revatk':0, 'revsus':1}, order=2)
+fx.add_var("dry")
+fx.add("dry = osc")
+fx.add("osc = HPF.ar(osc, 100)")
+fx.add("osc = LPF.ar(osc, 10000)")
+fx.add("osc = FreeVerb2.ar(osc[0], osc[1], 1, room2, damp2)")
+fx.add("osc = osc * EnvGen.ar(Env([0,1,0], [revatk,revsus], curve: 'welch'))")
+fx.add("osc = SelectX.ar(mix2, [dry, osc])")
+fx.save()
 
 ###########
 
