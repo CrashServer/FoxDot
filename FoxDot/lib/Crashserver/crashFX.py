@@ -1,14 +1,20 @@
 from ..Effects import *
 
 # Fx LOOP
-fx = FxList.new('fx1','fxout', {'fx1': 0}, order=1)
+fx = FxList.new('fx1','fxout', {'fx1': 0, 'lpfx1':22000, 'hpfx1':0}, order=1)
 fx.doc("FX1 Bus")
-fx.add("Out.ar(2, Mix.ar(osc*fx1))")
+fx.add_var("fxsig")
+fx.add("fxsig = LPF.ar(osc, lpfx1)")
+fx.add("fxsig = HPF.ar(fxsig, hpfx1)")
+fx.add("Out.ar(2, Mix.ar(fxsig*fx1))")
 fx.save()
 
-fx = FxList.new('fx2','fx2out', {'fx2': 0}, order=1)
+fx = FxList.new('fx2','fx2out', {'fx2': 0, 'lpfx2':22000, 'hpfx2':0}, order=1)
 fx.doc("FX2 Bus")
-fx.add("Out.ar(3, Mix.ar(osc*fx2))")
+fx.add_var("fxsig")
+fx.add("fxsig = LPF.ar(osc, lpfx2)")
+fx.add("fxsig = HPF.ar(fxsig, hpfx2)")
+fx.add("Out.ar(3, Mix.ar(fxsig*fx2))")
 fx.save()
 
 # Legato slide
