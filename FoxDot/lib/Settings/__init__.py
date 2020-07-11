@@ -135,7 +135,7 @@ class _SamplePlayer:
         return other not in self.names
 
 class _LoopPlayer:
-    names = ("loop", "gsynth", 'stretch')
+    names = ("loop", "gsynth", 'stretch', 'breakcore')
     def __eq__(self, other):
         return other in self.names
     def __ne__(self, other):

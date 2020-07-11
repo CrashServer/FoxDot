@@ -477,6 +477,28 @@ class GranularSynthDef(SampleSynthDef):
         proxy.kwargs["filename"] = filename
         return proxy
 
+
+class BreakcoreSynthDef(SampleSynthDef):
+    def __init__(self):
+        SampleSynthDef.__init__(self, "breakcore")
+        self.sample = self.new_attr_instance("sample")
+        self.core = self.new_attr_instance("core")
+        self.brk = self.new_attr_instance("brk")
+        self.defaults['pos']   = 0
+        self.defaults['sample']   = 0
+        self.defaults['core'] = 1
+        self.defaults['brk'] = 12
+        self.base.append("target = Array.fill([4,4,8,4,8,4,4,8,8].size, buf);")
+        self.base.append("osc = Breakcore.ar(buf, playbuf,  Impulse.kr(LFNoise0.ar(4, 10, brk)), LFNoise0.kr(8, 19000*core, 2000),0);")
+        self.base.append("osc = osc * EnvGen.ar(Env([0,1,1,0],[0.05, sus-0.05, 0.05]));")
+        self.osc = self.osc * self.amp
+        self.add()
+    def __call__(self, filename, pos=0, sample=0, **kwargs):
+        kwargs["buf"] = Samples.loadBuffer(filename, sample)
+        return SampleSynthDef.__call__(self, pos, **kwargs)
+
+
 loop = LoopSynthDef()
 stretch = StretchSynthDef()
 gsynth = GranularSynthDef()
+breakcore = BreakcoreSynthDef()

@@ -52,6 +52,13 @@ class SynthDefBaseClass(object):
         self.base = ["sus = sus * blur;"]
         self.attr = [] # stores custom attributes
 
+        # Crash Mod for breakbeat
+        if self.name == "breakcore":
+            self.var.append("target")
+            self.var.append("playbuf= PlayBuf.ar(2,buf, loop:1, rate: rate)")
+        else:
+            self.var = ['osc', 'env']
+
         # Name of the file to store the SynthDef
         self.filename     = SYNTHDEF_DIR + "/{}.scd".format(self.name)
 
