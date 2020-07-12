@@ -1859,14 +1859,29 @@ class Player(Repeatable):
         
         return self
 
-    def follow(self, other=False):
+    # crash mod
+    def follow(self, other=False, durCycle=0, positionTuple=0):
         """ Takes a Player object and then follows the notes """
 
         if isinstance(other, self.__class__):
+            if durCycle > 0 :
+                if isinstance(other.attr["degree"][0], int):
+                    self.degree = var(other.attr["degree"][positionTuple], durCycle)
+                else:
+                    self.degree = var(other.attr["degree"][0][positionTuple], durCycle)
+            else:
+                self.degree = other.degree
 
-            self.degree = other.degree
+        return self 
 
-        return self
+    # def follow(self, other=False):
+    #     """ Takes a Player object and then follows the notes """
+
+    #     if isinstance(other, self.__class__):
+
+    #         self.degree = other.degree
+
+    #     return self
 
     def versus(self, other_key, rule=lambda x, y: x > y, attr=None):
         """ Sets the 'amplify' key for both players to be dependent on the comparison of keys """
