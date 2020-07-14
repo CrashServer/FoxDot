@@ -4,7 +4,7 @@ SynthDef.new(\pads,
 		var osc, env, filter;
 		freq = In.kr(bus, 1);
 		freq = [freq, freq+fmod];
-		amp=(amp * 3);
+		amp=(amp * 1.5);
 		freq = freq * [1, 1.01];
 
 		osc = SinOsc.ar(Line.kr(freq * 4, freq, 0.01) + (Line.kr(10, (freq * 2), sus) * Pulse.ar(freq * rate, width: SinOsc.kr(0.225/sus))), mul:0.5);

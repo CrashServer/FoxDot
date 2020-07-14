@@ -3,7 +3,6 @@ SynthDef.new(\breakcore,
 var osc, env, target, playbuf= PlayBuf.ar(2,buf, loop:1, rate: rate);
 sus = sus * blur;
 rate = In.kr(bus, 1);
-target = Array.fill([4,4,8,4,8,4,4,8,8].size, buf);
 osc = Breakcore.ar(buf, playbuf,  Impulse.kr(LFNoise0.ar(4, 10, brk)), LFNoise0.kr(8, 19000*core, 2000),0);
 osc = osc * EnvGen.ar(Env([0,1,1,0],[0.05, sus-0.05, 0.05]));
 osc=(osc * amp);

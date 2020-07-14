@@ -649,7 +649,7 @@ def clone(self, player):
 
 class SynthIterator:
     def __init__(self):
-        self.notSynth = ["loop", "stretch", "play1", "play2", "audioin", "video", "gsynth", "vrender"]
+        self.notSynth = ["loop", "stretch", "play1", "play2", "audioin", "video", "gsynth", "vrender", "breakcore"]
         self.synthList = [i for i in sorted(SynthDefs) if i not in self.notSynth]
         self.idx = 0
     def __iter__(self):
@@ -888,3 +888,21 @@ krhytm = {
     1: [0.75,0.25],
     0.75: [0.25,1,0.125,0.125]
     }
+
+
+def quatrevin(instr="", rnd=0):
+    """ 80s set choice """
+    quatrevinList = {
+    "pads" : ["ambi", "angst", "charm", "creep", "glass", "organ", "ripple", "sinepad", "soprano", "space", "swell", "total", "varsaw"],
+    "lead" : ["arpy", "blip", "dirt", "karp", "lapin", "nylon", "pasha", "piano", "pluck", "prof", "prophet", "pulse", "quin", "razz", "saw", "scatter", "sine", "sitar", "spark", "star", "supersaw", "tb303", "tritri", "varicelle", "zap"],
+    "fx" : ["noise", "lazer", "scratch", "snick"],
+    "bass" : ["bass", "bbass", "dab", "dafbass", "dbass", "dirt", "faim", "glitchbass", "jbass", "pbass", "sawbass"],
+    "effects" : ["fmod", "vib", "rate", "room2", "phaser"]
+    }
+    if instr in quatrevinList.keys():
+        if rnd == 42:
+            print(choice(quatrevinList[instr]))
+        else:
+            print(quatrevinList[instr])
+    else:
+        print(quatrevinList.keys())    
