@@ -59,7 +59,8 @@ scale_intro = str(server_data["scale_intro"])
 root_intro = str(server_data["root_intro"])
 ### Video
 video_player = int(server_data["video"])
-adresse = str(server_data["adresse"])
+#adresse = str(server_data["adresse"])
+#adresse = video_adress 
 
 rate_voice = 110
 
@@ -129,9 +130,9 @@ try:
                 def send(self, message, *args):
                         if "video" in str(message.message):
                                 OSCClient.send(self, message, *args)
-        def OSCVideo(adresse):
+        def OSCVideo(video_adress):
             my_client = FilterOSCClient()
-            my_client.connect((adresse, 12345))
+            my_client.connect((video_adress, 12345))
             Server.forward = my_client
 except:
     print("Error forwarding OSC to video", sys.exc_info()[0])
@@ -189,7 +190,7 @@ def connect(video=video):
     Root.default = root_intro
     video_line = ""
     if video_player == 1:
-        OSCVideo(adresse)
+        OSCVideo(video_adress)
         vi >> video(vid1=0, vid2=0, vid1rate=1, vid2rate=1, vid1kal=0, vid2kal=0, vid1glitch=0, vid2glitch=0, vidblend=0, vidmix=0, vid1index=0, vid2index=0)
         video_line = "vi >> video(vid1=0, vid2=0, vid1rate=1, vid2rate=1, vid1kal=0, vid2kal=0, vid1glitch=0, vid2glitch=0, vidblend=0, vidmix=0, vid1index=0, vid2index=0)"
     i3 >> sos(dur=8, lpf=linvar([60,4800],[tmps*1.5, tmps*3], start=now), hpf=expvar([0,500],[tmps*6, tmps*2]), amplify=0.5)
