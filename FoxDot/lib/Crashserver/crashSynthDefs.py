@@ -20,17 +20,29 @@ bounce.add()
 bnoise = FileSynthDef("bnoise")
 bnoise.add()
 
+brown = FileSynthDef("brown")
+brown.add()
+
 click = FileSynthDef("click")
 click.add()
 
 cluster = FileSynthDef("cluster")
 cluster.add()
 
+crackle = FileSynthDef("crakle")
+cracle.add()
+
 dafbass = FileSynthDef("dafbass")
 dafbass.add()
 
+dustV = FileSynthDef("dustV")
+dustV.add()
+
 eeri = FileSynthDef("eeri")
 eeri.add()
+
+ews = FileSynthDef("ews")
+ews.add()
 
 faim = FileSynthDef("faim")
 faim.add()
@@ -38,14 +50,23 @@ faim.add()
 four = FileSynthDef("four")
 four.add()
 
+gaze = FileSynthDef("gaze")
+gaze.add()
+
 glitcher = FileSynthDef("glitcher")
 glitcher.add()
 
 glitchbass = FileSynthDef("glitchbass")
 glitchbass.add()
 
+gray = FileSynthDef("gray")
+gray.add()
+
 hnoise = FileSynthDef("hnoise")
 hnoise.add()
+
+latoo = FileSynthDef("latoo")
+latoo.add()
 
 lapin = FileSynthDef("lapin")
 lapin.add()
@@ -64,6 +85,9 @@ organ.add()
 
 pianovel = FileSynthDef("pianovel")
 pianovel.add()
+
+pink = FileSynthDef("pink")
+pink.add()
 
 prof = FileSynthDef("prof")
 prof.add()
