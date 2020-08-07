@@ -30,7 +30,7 @@ cluster = FileSynthDef("cluster")
 cluster.add()
 
 crackle = FileSynthDef("crakle")
-cracle.add()
+crackle.add()
 
 dafbass = FileSynthDef("dafbass")
 dafbass.add()
