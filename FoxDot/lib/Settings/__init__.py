@@ -96,7 +96,7 @@ from . import conf
 reload(conf) # incase of a reload
 
 FOXDOT_CONFIG_FILE  = conf.filename
-    
+
 ADDRESS                   = conf.ADDRESS
 PORT                      = conf.PORT
 PORT2                     = conf.PORT2
@@ -135,7 +135,7 @@ class _SamplePlayer:
         return other not in self.names
 
 class _LoopPlayer:
-    names = ("loop", "gsynth", 'stretch', 'breakcore')
+    names = ("loop", "gsynth", 'stretch', 'breakcore', 'splitter')
     def __eq__(self, other):
         return other in self.names
     def __ne__(self, other):

@@ -29,7 +29,7 @@ click.add()
 cluster = FileSynthDef("cluster")
 cluster.add()
 
-crackle = FileSynthDef("crakle")
+crackle = FileSynthDef("crackle")
 crackle.add()
 
 dafbass = FileSynthDef("dafbass")
@@ -130,4 +130,3 @@ waves.add()
 
 video = FileSynthDef("video")
 video.add()
-

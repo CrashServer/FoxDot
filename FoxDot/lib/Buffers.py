@@ -98,11 +98,11 @@ DESCRIPTIONS = { 'a' : "Gameboy hihat",      'A' : "Gameboy kick drum",
 # Function-like class for searching directory for sample based on symbol
 
 class _symbolToDir:
-    
+
     def __init__(self, root):
-    
+
         self.set_root(root)
-    
+
     def set_root(self, root):
         """ Check if root is a valid directory then points FoxDot to that
             folder for searching for samples. Raises an OSError if 'root'
@@ -497,8 +497,35 @@ class BreakcoreSynthDef(SampleSynthDef):
         kwargs["buf"] = Samples.loadBuffer(filename, sample)
         return SampleSynthDef.__call__(self, pos, **kwargs)
 
+class SplitterSynthDef(SampleSynthDef):
+    def __init__(self):
+        SampleSynthDef.__init__(self, "splitter")
+        self.pos = self.new_attr_instance("pos")
+        self.sample = self.new_attr_instance("sample")
+        self.rd = self.new_attr_instance("rd")
+        self.beat_stretch = self.new_attr_instance("beat_stretch")
+        self.defaults['pos']   = 0
+        self.defaults['sample']   = 0
+        self.defaults['rd'] = 0
+        self.defaults['beat_stretch'] = 0
+        self.base.append("rate = (rate * (1-(beat_stretch>0))) + ((BufDur.kr(buf) / ((beat_stretch<=0) + abs(beat_stretch))) * (beat_stretch>0));")
+        self.base.append("osc1 = PlayBuf.ar(2,buf, BufRateScale.kr(buf)*rate, 1, BufFrames.ir(buf)*(0+pos+LFNoise1.kr(50,rd)), 0)*(EnvGen.kr(Env.perc(0.01,sus),doneAction:2)-0.001);")
+        self.base.append("osc2 = PlayBuf.ar(2,buf, BufRateScale.kr(buf)*rate, 1, BufFrames.ir(buf)*(0.25+pos+LFNoise1.kr(50,rd)), 0)*(EnvGen.kr(Env.perc(0.01,sus),doneAction:2)-0.001);")
+        self.base.append("osc3 = PlayBuf.ar(2,buf, BufRateScale.kr(buf)*rate, 1, BufFrames.ir(buf)*(0.5+pos+LFNoise1.kr(50,rd)), 0)*(EnvGen.kr(Env.perc(0.01,sus),doneAction:2)-0.001);")
+        self.base.append("osc4 = PlayBuf.ar(2,buf, BufRateScale.kr(buf)*rate, 1, BufFrames.ir(buf)*(0.75+pos+LFNoise1.kr(50,rd)), 0)*(EnvGen.kr(Env.perc(0.01,sus),doneAction:2)-0.001);")
+        self.base.append("osc = Mix(osc1+osc2+osc3+osc4);")
+        self.osc = self.osc * self.amp
+        self.add()
+    def __call__(self, filename, pos=0, sample=0, **kwargs):
+        kwargs["buf"] = Samples.loadBuffer(filename, sample)
+        proxy = SampleSynthDef.__call__(self, pos, **kwargs)
+        proxy.kwargs["filename"] = filename
+        return proxy
+
+
 
 loop = LoopSynthDef()
 stretch = StretchSynthDef()
 gsynth = GranularSynthDef()
 breakcore = BreakcoreSynthDef()
+splitter = SplitterSynthDef()

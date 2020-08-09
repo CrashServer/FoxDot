@@ -60,7 +60,7 @@ root_intro = str(server_data["root_intro"])
 ### Video
 video_player = int(server_data["video"])
 #adresse = str(server_data["adresse"])
-#adresse = video_adress 
+#adresse = video_adress
 
 rate_voice = 110
 
@@ -475,10 +475,10 @@ class PGauss(RandomGenerator):
         self.deviation = deviation
         self.init_random(**kwargs)
     def func(self, index):
-        if isinstance(self.mean, float): 
+        if isinstance(self.mean, float):
             return random.gauss(self.mean, self.deviation)
         elif isinstance(self.mean, int):
-            return int(round(random.gauss(self.mean, self.deviation)))    
+            return int(round(random.gauss(self.mean, self.deviation)))
 
 class PLog(RandomGenerator):
     ''' Returns random floating point values using logarithmic distribution '''
@@ -489,7 +489,7 @@ class PLog(RandomGenerator):
         self.deviation = deviation
         self.init_random(**kwargs)
     def func(self, index):
-        if isinstance(self.mean, float): 
+        if isinstance(self.mean, float):
             return random.lognormvariate(self.mean, self.deviation)
         elif isinstance(self.mean, int):
             return int(round(random.lognormvariate(self.mean, self.deviation)))
@@ -650,7 +650,7 @@ def clone(self, player):
 
 class SynthIterator:
     def __init__(self):
-        self.notSynth = ["loop", "stretch", "play1", "play2", "audioin", "video", "gsynth", "vrender", "breakcore"]
+        self.notSynth = ["loop", "stretch", "play1", "play2", "audioin", "video", "gsynth", "vrender", "breakcore", "splitter"]
         self.synthList = [i for i in sorted(SynthDefs) if i not in self.notSynth]
         self.idx = 0
     def __iter__(self):
@@ -665,8 +665,8 @@ class SynthIterator:
             return 'stopIter'
             raise StopIteration
         finally:
-            self.idx += 1           
-                        
+            self.idx += 1
+
 synthList = SynthIterator()
 
 @PlayerMethod
@@ -906,4 +906,4 @@ def quatrevin(instr="", rnd=0):
         else:
             print(quatrevinList[instr])
     else:
-        print(quatrevinList.keys())    
+        print(quatrevinList.keys())

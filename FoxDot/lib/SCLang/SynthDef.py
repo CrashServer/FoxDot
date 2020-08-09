@@ -52,12 +52,16 @@ class SynthDefBaseClass(object):
         self.base = ["sus = sus * blur;"]
         self.attr = [] # stores custom attributes
 
-        # Crash Mod for breakbeat
+        # Crash Mod for breakbeat & splitter
         if self.name == "breakcore":
             self.var.append("target")
             self.var.append("playbuf= PlayBuf.ar(2,buf, loop:1, rate: rate)")
+        elif self.name == "splitter":
+            self.var.append("osc1, osc2, osc3, osc4")
         else:
             self.var = ['osc', 'env']
+
+
 
         # Name of the file to store the SynthDef
         self.filename     = SYNTHDEF_DIR + "/{}.scd".format(self.name)
@@ -77,7 +81,7 @@ class SynthDefBaseClass(object):
         # Envelope
         self.atk         = instance("atk")
         self.decay       = instance("decay")
-        self.rel         = instance("rel") 
+        self.rel         = instance("rel")
 
         self.defaults = {   "amp"       : 1,
                             "sus"       : 1,
@@ -93,7 +97,7 @@ class SynthDefBaseClass(object):
                             "decay"     : 0.01,
                             "rel"       : 0.01,
                             "peak"      : 1,
-                            "level"     : 0.8, 
+                            "level"     : 0.8,
                             "wide"      : 0.0}
 
         # The amp is multiplied by this before being sent to SC
@@ -124,7 +128,7 @@ class SynthDefBaseClass(object):
         Def += "{}".format(self.get_custom_behaviour())
         stereo_synth = ["play2", "loop"]
         if self.name in stereo_synth:
-            Def += "osc = Splay.ar(osc, level:1,spread:wide, center:pan, levelComp: true);\n"     
+            Def += "osc = Splay.ar(osc, level:1,spread:wide, center:pan, levelComp: true);\n"
         else:
             Def += "osc = Mix(osc) * 0.5;\n"
             Def += "osc = Pan2.ar(osc, pan);\n"
@@ -245,7 +249,7 @@ class SynthDefBaseClass(object):
             try:
 
                 with open(self.filename, 'w') as f:
-                
+
                     f.write(this_string)
 
             except IOError:
@@ -278,7 +282,7 @@ class SynthDefBaseClass(object):
             self.synth_added = True
 
             # Load to server
-            
+
             self.write()
 
             self.load()
