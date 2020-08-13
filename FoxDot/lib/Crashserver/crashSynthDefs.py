@@ -35,6 +35,9 @@ crackle.add()
 dafbass = FileSynthDef("dafbass")
 dafbass.add()
 
+dopple = FileSynthDef("dopple")
+dopple.add()
+
 dustV = FileSynthDef("dustV")
 dustV.add()
 
