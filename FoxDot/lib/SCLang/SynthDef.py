@@ -58,8 +58,11 @@ class SynthDefBaseClass(object):
             self.var.append("playbuf= PlayBuf.ar(2,buf, loop:1, rate: rate)")
         elif self.name == "splitter":
             self.var.append("osc1, osc2, osc3, osc4")
+        elif self.name == "splaffer":
+            self.var.append("posses, pitches")
         else:
             self.var = ['osc', 'env']
+
 
 
 
