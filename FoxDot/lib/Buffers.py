@@ -522,10 +522,33 @@ class SplitterSynthDef(SampleSynthDef):
         proxy.kwargs["filename"] = filename
         return proxy
 
-
+class SplafferSynthDef(SampleSynthDef):
+    def __init__(self):
+        SampleSynthDef.__init__(self, "splaffer")
+        self.pos = self.new_attr_instance("pos")
+        self.sample = self.new_attr_instance("sample")
+        self.beat_stretch = self.new_attr_instance("beat_stretch")
+        self.fmod = self.new_attr_instance("fmod")
+        self.defaults['pos']   = 0
+        self.defaults['sample']   = 0
+        self.defaults['fmod']   = 0
+        self.defaults['beat_stretch'] = 0
+        self.base.append("rate = (rate * (1-(beat_stretch>0))) + ((BufDur.kr(buf) / sus) * (beat_stretch>0));")
+        self.base.append("posses = (pos + ((0..2)/5)).wrap(0.0, 1.0);")
+        self.base.append("pitches = (0.2 * 2.0.pow(posses *rate) + SinOsc.kr(fmod, mul: fmod));")
+        self.base.append("osc = PlayBuf.ar(2, buf, pitches, startPos: BufSampleRate.kr(buf) * pos, loop: 1.0);")
+        self.base.append("osc = osc * EnvGen.ar(Env([0,1,1,0],[0.05, sus-0.05, 0.05]));")
+        self.osc = self.osc * self.amp
+        self.add()
+    def __call__(self, filename, pos=0, sample=0, **kwargs):
+        kwargs["buf"] = Samples.loadBuffer(filename, sample)
+        proxy = SampleSynthDef.__call__(self, pos, **kwargs)
+        proxy.kwargs["filename"] = filename
+        return proxy
 
 loop = LoopSynthDef()
 stretch = StretchSynthDef()
 gsynth = GranularSynthDef()
 breakcore = BreakcoreSynthDef()
 splitter = SplitterSynthDef()
+splaffer = SplafferSynthDef()
