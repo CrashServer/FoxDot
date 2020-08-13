@@ -20,5 +20,5 @@ rate = EnvGen.kr(Env([1,1,1],[0,1], -3), 0);
 osc = sig1;
 osc = Limiter.ar(osc).softclip;
 osc = Mix(osc) * 1/16;
-osc = Pan2.ar(osc, pan);
+osc = Pan2.ar(osc * amp, pan);
 ReplaceOut.ar(bus, osc)}).add;
