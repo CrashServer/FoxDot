@@ -315,7 +315,7 @@ fx.doc("Ringmodulation")
 fx.add('osc = Ringz.ar(osc, freq: ringzfreq, decaytime: ringz, mul: 0.05)')
 fx.save()
 
-fx = FxList.new('reason','resonz', {'rfreq': 50, 'resonz': 0.1}, order=2)
+fx = FxList.new('resonz','resonz', {'rfreq': 50, 'resonz': 0.1}, order=2)
 fx.doc("Resonz")
 fx.add('osc = Resonz.ar(osc, freq: rfreq, bwr: resonz)')
 fx.save()
