@@ -62,6 +62,9 @@ glitcher.add()
 glitchbass = FileSynthDef("glitchbass")
 glitchbass.add()
 
+grat = FileSynthDef("grat")
+grat.add()
+
 gray = FileSynthDef("gray")
 gray.add()
 
