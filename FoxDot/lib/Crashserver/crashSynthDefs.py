@@ -125,6 +125,9 @@ tritri.add()
 supersaw = FileSynthDef("supersaw")
 supersaw.add()
 
+ssaw = FileSynthDef("ssaw")
+ssaw.add()
+
 tb303 = FileSynthDef("tb303")
 tb303.add()
 
