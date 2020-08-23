@@ -44,5 +44,5 @@ SynthDef.new(\ssaw,
 		env=EnvGen.ar(Env([0,1,0.8,0.8,0], [0.02, 0.01, sus/2, sus/2]), doneAction: 0);
 		osc=(osc * env);
 		osc = Mix(osc) * 1/8;
-		osc = Pan2.ar(osc, pan);
+		osc = Pan2.ar(osc * amp, pan);
 		ReplaceOut.ar(bus, osc)}).add;
