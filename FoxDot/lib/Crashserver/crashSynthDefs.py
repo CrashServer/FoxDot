@@ -139,3 +139,7 @@ waves.add()
 
 video = FileSynthDef("video")
 video.add()
+
+virus = FileSynthDef("virus")
+virus.add()
+
