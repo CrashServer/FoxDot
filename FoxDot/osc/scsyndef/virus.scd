@@ -1,4 +1,4 @@
-SynthDef(\cg, {
+SynthDef(\virus, {
 	arg len = 2, freq = 420, fmod = 0.1, vib = 0.25, rate = 1, gate = 1, bus=0, amp=1;
 	var mainEnv = EnvGen.kr(Env.triangle(len,1), gate, doneAction:2);
 	var speed = Array.geom(4, rate, [1.75, 1.25].choose);
