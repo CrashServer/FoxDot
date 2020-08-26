@@ -330,6 +330,18 @@ fx.add("osc = osc * EnvGen.ar(Env([0,1,0], [revatk,revsus], curve: 'welch'))")
 fx.add("osc = SelectX.ar(mix2, [dry, osc])")
 fx.save()
 
+fx = FxList.new('stut', 'stutterfx', {'t_reset': 0, 'stut': 1, 'stutrate':1, 'stutlen':0.02}, order=2)
+fx.add_var("dry")
+fx.add_var("reset")
+fx.add_var("wet")
+fx.add("~stutter = { |snd, reset, stutlen, maxdelay = 1| var phase, fragment, del; phase = Sweep.ar(reset); fragment = { |ph| (ph - Delay1.ar(ph)) < 0 + Impulse.ar(0) }.value(phase / stutlen % 1); del = Latch.ar(phase, fragment) + ((stutlen - Sweep.ar(fragment)) * (stutrate - 1)); DelayC.ar(snd, maxdelay, del); }")
+fx.add("dry = osc")
+fx.add("reset = Onsets.kr(FFT(LocalBuf(1024), osc), t_reset)")
+fx.add("wet = ~stutter.(osc, reset, stutlen)")
+fx.add("osc = SelectX.ar(stut, [dry, wet], wrap:1)")
+fx.save()
+
+
 ###########
 
 Effect.server.setFx(FxList)
