@@ -12,7 +12,7 @@ SynthDef(\bounce,
 	snd = CombN.ar( Decay2.ar(Impulse.ar([[para1, para2], 0.5])) * Blip.ar(freq, rate + 4), 0.2, 0.2, 0.5);
 
 		env = EnvGen.ar(Env.adsr(atk,decay,sus,rel,peak), gate:1, doneAction:0);
-	snd = Mix(snd*env);
+	snd = Mix(snd*env)/4;
 	snd = Splay.ar(snd, level:1,spread:wide, center:pan, levelComp: true);
 	snd = ReplaceOut.ar(bus, snd * amp);
 }).add;
