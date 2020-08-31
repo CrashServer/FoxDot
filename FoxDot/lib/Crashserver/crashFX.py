@@ -17,6 +17,11 @@ fx.add("fxsig = HPF.ar(fxsig, hpfx2)")
 fx.add("Out.ar(3, Mix.ar(fxsig*fx2))")
 fx.save()
 
+fx = FxList.new('output','output', {'output': 0}, order=1)
+fx.doc("Output select Bus")
+fx.add("Out.ar(output, osc)")
+fx.save()
+
 # Legato slide
 fx = FxList.new("leg", "leg", {"leg":0, "sus":1 }, order = 0)
 fx.add("osc = osc * XLine.ar(Rand(0.5,1.5)*leg,1,0.05*sus)")
@@ -214,6 +219,12 @@ fx.save()
 
 fx = FxList.new("comp", "comp", {"comp": 0, "comp_down": 1, "comp_up": 0.8}, order=2)
 fx.add("osc = Compander.ar(osc, osc, thresh: comp, slopeAbove: comp_down, slopeBelow: comp_up, clampTime: 0.01, relaxTime: 0.01, mul: 1)")
+fx.save()
+
+fx = FxList.new("sidechain", "sidechain", {"sidechain": 0, "sidechain_atk": 0.05, "sidechain_rel": 0.1, "thresh":0.006}, order=2)
+fx.add_var("schain")
+fx.add("schain = In.ar(sidechain,1)")
+fx.add("osc = Compander.ar(osc, schain, thresh: thresh, slopeAbove: 0.1, slopeBelow: 1, clampTime: sidechain_atk, relaxTime: sidechain_rel, mul: 1)")
 fx.save()
 
 # ### Marshall JCM800 amp from echo21
