@@ -1,27 +1,5 @@
 from ..Effects import *
 
-# Fx LOOP
-fx = FxList.new('fx1','fxout', {'fx1': 0, 'lpfx1':22000, 'hpfx1':0}, order=1)
-fx.doc("FX1 Bus")
-fx.add_var("fxsig")
-fx.add("fxsig = LPF.ar(osc, lpfx1)")
-fx.add("fxsig = HPF.ar(fxsig, hpfx1)")
-fx.add("Out.ar(2, Mix.ar(fxsig*fx1))")
-fx.save()
-
-fx = FxList.new('fx2','fx2out', {'fx2': 0, 'lpfx2':22000, 'hpfx2':0}, order=1)
-fx.doc("FX2 Bus")
-fx.add_var("fxsig")
-fx.add("fxsig = LPF.ar(osc, lpfx2)")
-fx.add("fxsig = HPF.ar(fxsig, hpfx2)")
-fx.add("Out.ar(3, Mix.ar(fxsig*fx2))")
-fx.save()
-
-fx = FxList.new('output','output', {'output': 0}, order=1)
-fx.doc("Output select Bus")
-fx.add("Out.ar(output, osc)")
-fx.save()
-
 # Legato slide
 fx = FxList.new("leg", "leg", {"leg":0, "sus":1 }, order = 0)
 fx.add("osc = osc * XLine.ar(Rand(0.5,1.5)*leg,1,0.05*sus)")
@@ -350,6 +328,28 @@ fx.add("dry = osc")
 fx.add("reset = Onsets.kr(FFT(LocalBuf(1024), osc), t_reset)")
 fx.add("wet = ~stutter.(osc, reset, stutlen)")
 fx.add("osc = SelectX.ar(stut, [dry, wet], wrap:1)")
+fx.save()
+
+# Fx LOOP
+fx = FxList.new('fx1','fxout', {'fx1': 0, 'lpfx1':22000, 'hpfx1':0}, order=2)
+fx.doc("FX1 Bus")
+fx.add_var("fxsig")
+fx.add("fxsig = LPF.ar(osc, lpfx1)")
+fx.add("fxsig = HPF.ar(fxsig, hpfx1)")
+fx.add("Out.ar(2, Mix.ar(fxsig*fx1))")
+fx.save()
+
+fx = FxList.new('fx2','fx2out', {'fx2': 0, 'lpfx2':22000, 'hpfx2':0}, order=2)
+fx.doc("FX2 Bus")
+fx.add_var("fxsig")
+fx.add("fxsig = LPF.ar(osc, lpfx2)")
+fx.add("fxsig = HPF.ar(fxsig, hpfx2)")
+fx.add("Out.ar(3, Mix.ar(fxsig*fx2))")
+fx.save()
+
+fx = FxList.new('output','output', {'output': 0}, order=2)
+fx.doc("Output select Bus")
+fx.add("Out.ar(output, osc)")
 fx.save()
 
 
