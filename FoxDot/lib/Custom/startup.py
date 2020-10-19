@@ -62,7 +62,11 @@ video_player = int(server_data["video"])
 #adresse = str(server_data["adresse"])
 #adresse = video_adress
 
-rate_voice = 110
+
+### Voice parameters ####
+rate_voice = 100
+pitch = 0
+voiceamp = 1
 
 ### Path Snd
 #crash_path = os.path.realpath(FOXDOT_ROOT + "/lib/Crashserver/crash_snd/")
@@ -92,7 +96,7 @@ try:
     if sys.platform == "Windows":
         from .Crashserver.speech.voice import *   ### Text2Speech Windows
     elif sys.platform.startswith("linux"):
-        from .Crashserver.speech.voice_linux import *   ### Text2Speech linux
+        from .Crashserver.speech.voice_linux_mbrola import *   ### Text2Speech linux
     else:
         print("Txt2Speech don't work for ", sys.platform)
 except:
@@ -142,16 +146,10 @@ def init_voice():
     if sys.platform.startswith("win"):
         voix = Voice(lang=lang, rate=0.45, amp=1.0)
         voix.initi(lieu)
-        #Clock.future(tmps, lambda: voix.intro())
     elif sys.platform.startswith("linux"):
         serv = init_server(lang, lieu)
         txt_init = serv.initi()
-        #crash_txt = serv.crash_txt()
-        Voice(txt_init, rate=rate_voice, amp=1, lang=lang, voice=voice)
-        #def txt_intro():
-        #   Voice(crash_txt, rate=rate_voice, amp=1, lang=lang, voice=voice)
-
-        #Clock.future(tmps, lambda: txt_intro())
+        Voice(txt_init, rate=rate_voice, amp=voiceamp, pitch=pitch, lang=lang, voice=voice)
     else:
         print("Sorry, we crash only from windows or linux")
 
@@ -238,7 +236,7 @@ def attack(part="", active_voice=1):
     if voice_txt != None:   ### Voice generator
         if voice_txt != "" and active_voice==1:
             voice_lpf(400)
-            Voice(voice_txt, rate=rate_voice + randint(0,20), lang=lang, voice=randint(1,5))
+            Voice(voice_txt, rate=rate_voice, amp=voiceamp, pitch=pitch + randint(-10,50), lang=lang, voice=voice)
             Clock.future(calc_dur_voice(voice_txt), lambda: voice_lpf(0))
 
 ################# END #################################################
@@ -645,6 +643,14 @@ def clone(self, player):
     self.attr = copy(player.attr)
     return self
 
+@PatternMethod
+def add(self, value):
+    return self + value    
+
+@PatternMethod
+def mul(self, value):
+    return self * value   
+
 ##################################
 #### Test synth method ###########
 
@@ -695,8 +701,11 @@ def drop(playTime=15, dropTime=1, nbloop=8):
         if clkPly:
             for p in clkPly:
                 p.amplify=1
-        if on != 0 and clkPly:
-            rndPlayerIndex = random.sample(range(0,len(clkPly)), random.randint(1,len(clkPly)))
+            if nbloop == 1:
+                rndPlayerIndex = random.sample(range(0,len(clkPly)), len(clkPly))
+                print("Final Drop !!!")
+            else:
+                rndPlayerIndex = random.sample(range(0,len(clkPly)), random.randint(1,len(clkPly)-1))
             if rndPlayerIndex:
                 for i in rndPlayerIndex:
                     clkPly[i].amplify = var([1,0],[playTime, dropTime])
@@ -907,3 +916,38 @@ def quatrevin(instr="", rnd=0):
             print(quatrevinList[instr])
     else:
         print(quatrevinList.keys())
+
+class TapDur:
+    ''' Tap duration with the <space> bar. 
+        Always tap the fist beat, you can offset the pattern if you need to start on the 2nd beat
+        TapDur(loop_lenght, quantize, offset)
+        TapDur(8,0.25,0)
+    '''
+    def __init__(self, total_dur=8, quantize=0.125, offset=0):
+        self.prev_time = None
+        self.total_dur = total_dur
+        self.time_count = []
+        self.quantize = quantize
+        self.offset = offset
+        GUI.text.bind("<space>", lambda e: self.count())
+    def rounder(self, value, base):
+        ''' Round the value ''' 
+        if isinstance(base, float):
+            decimal = str(base)[::-1].find(".")
+        if base > 0 :    
+            return round(base * round(float(value) / base),decimal)
+    def count(self):
+        if self.prev_time == None:
+            self.prev_time = time.time()
+        duration = self.rounder(Clock.seconds_to_beats(time.time() - self.prev_time),self.quantize)
+        self.time_count.append(duration)
+        print(duration) 
+        self.prev_time = time.time()    
+        if sum(self.time_count) >= self.total_dur:
+            self.time_count[0] -= self.offset
+            print("dur=", self.time_count[1:], ",delay=", self.offset)
+            total_sum = sum(self.time_count) + self.offset 
+            if total_sum != self.total_dur:
+                print("!! Warning Total Dur = ", total_sum)
+            GUI.text.unbind("<space>")
+            return "break"
