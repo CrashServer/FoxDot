@@ -9,14 +9,12 @@ import subprocess
 from threading import Thread 
 
 from ...Settings import FOXDOT_ROOT
-
+from ..crash_conf import crash_path
 
 class Voice(Thread):
 	""" Text 2 Speech Linux Mbrola Mod
-	
-
 	"""
-	def __init__(self, text="", rate=100, amp=1.0, lang="fr", voice=1, pitch=80, octave=0, gap=0):
+	def __init__(self, text="", rate=100, amp=1.0, lang="fr", voice=1, pitch=80, octave=0, gap=0, record = ""):
 		Thread.__init__(self)
 		self.text = str(text)
 		if self.text=="":
@@ -28,14 +26,31 @@ class Voice(Thread):
 		self.pitch = pitch
 		self.octave = octave
 		self.gap = gap
+		self.record = record
 		self.mbrola_voice = self.set_voice()
 		self.thread = Thread(target=self.say, kwargs={'text': self.text})
 		self.thread.start()
 	
-	def say(self, text):
-		""" Say the text """
-		subprocess.call(["espeak", "-a", f"{self.amp}", "-g", f"{self.gap}" ,"-v", f"{self.mbrola_voice}", "-s", f"{self.rate}", "-p",f"{self.pitch}", f"{self.text}"])
+	def say(self, text, record=""):
+		""" Say the text and possibility to record """
+		espeak_cmd = self.create_cmd()
+		subprocess.call(espeak_cmd)	
+		#subprocess.call(["espeak", "-a", f"{self.amp}", "-g", f"{self.gap}" ,"-v", f"{self.mbrola_voice}", "-s", f"{self.rate}", "-p",f"{self.pitch}", f"{self.text}", "-w", f"{record_path}"])
 		
+	def create_cmd(self):
+		""" Configure the espeak comd line """
+		cmd = ["espeak"]
+		cmd.extend(["-a", f"{self.amp}"]) # amp
+		cmd.extend(["-g", f"{self.gap}"]) # gap
+		cmd.extend(["-v", f"{self.mbrola_voice}"]) # voice (lang + voice + octave)
+		cmd.extend(["-s", f"{self.rate}"]) # speed
+		cmd.extend(["-p",f"{self.pitch}"]) # pitch
+		cmd.extend([f"{self.text}"]) # text
+		if self.record != "":
+			record_path = os.path.join(crash_path, "_loop_", "voicetxt", f"{self.record}.wav")
+			cmd.extend(["-w", f"{record_path}"]) # enable record
+		return cmd	
+
 	def stop(self):
 		if self.thread.isAlive():
 			self.thread.join()
@@ -74,6 +89,7 @@ class Voice(Thread):
 				self.voice = len(voices_list[self.lang]) - 1 
 			mbrola_voice = f'mb-{self.lang}{voices_list[self.lang][self.voice]}{self.octave}'
 			return mbrola_voice
+
 
 class init_server():
 	def __init__(self, lang="fr", lieu="ici"):
