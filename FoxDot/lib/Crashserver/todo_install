@@ -1,17 +1,20 @@
 TODO For a good Crash Server Edition install
 
-# copy the directory to FoxDot/lib/
-# copy the 'a copier dans' directory to osc/scyndef
-# copy the startup.py to /Custom/startup.py
-# replace the readme.md
-# change in ServerManager, self.num_output_busses to 4, line 143 & 202
-# Windows :pip install pywin32 & comtypes  for text2speech
-# Linux : pip3 install pytssx 
-#
-# Python Lib :
-# ------------------
-# Windows : pywin32 & comtypes    // Text2Speech
-# Linux : pysttsx3     // Text2Speech
-# pyperclip   //   Copy & Paste
-#    -> sudo apt-get install xclip    // copy & paste linux
-# pyfiglet    //   Ascii generator
+# git clone https://github.com/CrashServer/FoxDot.git
+# git clone ultimate crash samples 
+
+# change path and video server in lib/Crashserver/crash_conf.py
+
+# install python lib with pip3 install ____ :
+    # pyperclip ( for linux maybe you need to install sudo apt-get install xclip ) (copy & paste lib)
+    # pyfiglet    (ascii generator)
+    # [Windows text2speech] pywin32 & comtypes 
+
+# upgrade voice quality [linux]:
+  # install espeak (sudo apt install espeak)
+  # install mbrola (sudo apt install mbrola)
+  # install more mbrola voices
+
+# for fx and multi output 
+  # change in ServerManager, self.num_output_busses to 4 (or more), line 143 & 202
+  # in the foxdot quark, change ouput -> 4 (or more)
