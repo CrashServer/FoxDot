@@ -74,3 +74,19 @@ class PChords(GeneratorPattern):
         self.last_value = choice(self.list_of_choice)
         self.chord = self.last_value
         return self.last_value      
+
+
+class voice_count():
+    def __init__(self):
+        self.loop = True
+    def stop(self):
+        if self.loop:
+            self.loop = False
+        else:
+            self.loop = True
+    def start(self):
+        Voice(str(random.randint(0,1000)), voice=2)
+        if self.loop:
+            nextBar(Clock.future(8, lambda: self.start()))
+
+voicecount = voice_count()

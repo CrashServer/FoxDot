@@ -47,7 +47,7 @@ eeri.add()
 ews = FileSynthDef("ews")
 ews.add()
 
-faim = FileSynthDef("faim")
+faim = FileSynthDef("faim2")
 faim.add()
 
 four = FileSynthDef("four")
