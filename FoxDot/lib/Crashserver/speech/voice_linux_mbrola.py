@@ -14,7 +14,7 @@ from ..crash_conf import crash_path
 class Voice(Thread):
 	""" Text 2 Speech Linux Mbrola Mod
 	"""
-	def __init__(self, text="", rate=100, amp=1.0, lang="fr", voice=1, pitch=80, octave=0, gap=0, record = ""):
+	def __init__(self, text="", rate=100, amp=1.0, lang="fr", voice=0, pitch=0, octave=0, gap=0, record = ""):
 		Thread.__init__(self)
 		self.text = str(text)
 		if self.text=="":
@@ -47,9 +47,17 @@ class Voice(Thread):
 		cmd.extend(["-p",f"{self.pitch}"]) # pitch
 		cmd.extend([f"{self.text}"]) # text
 		if self.record != "":
-			record_path = os.path.join(crash_path, "_loop_", "voicetxt", f"{self.record}.wav")
-			cmd.extend(["-w", f"{record_path}"]) # enable record
+			record_cmd = self.record_cmd()
+			cmd.extend(record_cmd) # enable record
 		return cmd	
+
+	def record_cmd(self):
+		record_dir_path = os.path.join(crash_path, "_loop_", "voicetxt")
+		record_idx = len(os.listdir(record_dir_path))
+		record_path = os.path.join(record_dir_path, f"{record_idx:02d}-{self.record}.wav")
+		print(f"voicetxt no: {record_idx}")
+		record_cmd = ["-w", f"{record_path}"]
+		return record_cmd
 
 	def stop(self):
 		if self.thread.isAlive():

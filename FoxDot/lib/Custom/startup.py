@@ -9,11 +9,10 @@ from .Settings import FOXDOT_ROOT
 from .Buffers import alpha, nonalpha
 from .Crashserver.crash_conf import *
 
-# copy / paste code
+# copy / paste code + ascii art lib
 try:
-    import pyperclip as clip
-    # ASCII GENERATOR
-    from pyfiglet import figlet_format, FigletFont
+    import pyperclip as clip # copy to clipboard
+    from pyfiglet import figlet_format, FigletFont # ASCII GENERATOR
     fig_font = FigletFont()
     fig_fonts_list = fig_font.getFonts()
     fig_skip = ['fbr12___', 'mshebrew210', 'term', 'runic', 'pyramid', 'eftifont', 'DANC4', 'dietcola']
@@ -28,8 +27,10 @@ except:
 ### SERVER CONFIG     ###
 #########################
 
+### Read the config file data
 file = os.path.realpath(FOXDOT_ROOT + "/lib/Crashserver/crash_gui/server_data.cs")
 lostfile = os.path.realpath(FOXDOT_ROOT + "/lib/Crashserver/crash_gui/lostfile.cs")
+
 with open(file, "rb") as fichier:
     mon_depickler = pickle.Unpickler(fichier)
     code_server = mon_depickler.load()
@@ -57,31 +58,27 @@ bpm_intro = int(server_data["bpm_intro"])
 scale_intro = str(server_data["scale_intro"])
 ### Root intro
 root_intro = str(server_data["root_intro"])
-### Video
+### Video on/off
 video_player = int(server_data["video"])
 #adresse = str(server_data["adresse"])
 #adresse = video_adress
 
-
 ### Voice parameters ####
 rate_voice = 100
 pitch = 0
-voiceamp = 1
+voiceamp = 0.5
 
-### Path Snd
-#crash_path = os.path.realpath(FOXDOT_ROOT + "/lib/Crashserver/crash_snd/")
-
+### sample description ###
 sample_description_path = os.path.join(crash_path, "description.cs")
 if os.path.isfile(sample_description_path):
     with open(sample_description_path, "rb") as file:
         sample_description = pickle.load(file)
 
+### Useful path and list
+push_path = os.path.realpath(FOXDOT_ROOT + "/lib/Crashserver/" + "code_storage/" + "archiveCode.py")
 gamme = ["locrianMajor", "locrian", "phrygian", "minor", "dorian", "mixolydian", "major", "lydian", "lydianAug"]
 crash_function = ["lost", "binary", "desynchro", "PTime", "PTimebin" "lininf", "PDrum", "darker", "lighter", \
 "human", "unison", "ascii_gen", "attack", "PChords", "fourths", "thirds", "seconds", "duree", "print_synth", "print_sample", "print_fx", "PChain2"]
-
-join_path = ''.join
-push_path = os.path.realpath(FOXDOT_ROOT + "/lib/Crashserver/" + "code_storage/" + "archiveCode.py")
 
 ### LOAD CUSTOM SYNTHDEFS #####
 try:
@@ -117,7 +114,7 @@ try:
 except:
     print("Error in generating weapons code")
 
-
+### Sample custom directory 
 try:
     FOXDOT_SND   = crash_path
     FOXDOT_LOOP  = os.path.realpath(crash_path + "/_loop_/")
@@ -141,8 +138,11 @@ try:
 except:
     print("Error forwarding OSC to video", sys.exc_info()[0])
 
-### Voice initialisation
+####################
+###    VOICE     ###
+####################
 def init_voice():
+    ''' Voice initalisation, windows / linux '''
     if sys.platform.startswith("win"):
         voix = Voice(lang=lang, rate=0.45, amp=1.0)
         voix.initi(lieu)
@@ -153,11 +153,12 @@ def init_voice():
     else:
         print("Sorry, we crash only from windows or linux")
 
-### LPF during Txt 2 Speech
 def voice_lpf(freq=400):
+    ''' Low pass everything during speech voice '''
     Master().lpf=freq
 
 def calc_dur_voice(phrase=""):
+    ''' return the voice duration in beats '''  
     phrase = len(phrase.split())
     try:
         if phrase or phrase > 0:
@@ -167,16 +168,28 @@ def calc_dur_voice(phrase=""):
     except:
         return 8
 
-### Generate ASCII from text into the clipboard
 def ascii_gen(text="", font="standard"):
+    ''' Generate ASCII art from text '''
     if type(font) != str:
         font = fig_fonts_list[int(font)]
     if text != None:
         clip.copy(figlet_format(text, font=font))
 
-##############   BEGIN ##############################################
+def clear_voice_dir():
+    ''' delete all voice sample in _loop_/voicetxt dir '''
+    voicetxt_path = os.path.join(crash_path, "_loop_", "voicetxt")
+    voices_files = os.listdir(voicetxt_path)
+    for f in voices_files:
+        os.remove(os.path.join(voicetxt_path, f))
+
+clear_voice_dir()
+
+##########################################
+###     CRASH SERVER LIVE FUNCTIONS    ###
+##########################################
 
 def connect(video=video):
+    ''' Full reset and set bpm, root, sos & video player '''
     Master().reset()
     Clock.set_time(0)
     lost(2)
@@ -196,6 +209,7 @@ def connect(video=video):
 
 
 def attack(part="", active_voice=1):
+    ''' Lanch an attack and copy it to the clipboard, attack voice '''
     if type(part) != str:  ### so we can type attack(42) or attack(43)
         part = str(part)
 
@@ -239,10 +253,9 @@ def attack(part="", active_voice=1):
             Voice(voice_txt, rate=rate_voice, amp=voiceamp, pitch=pitch + randint(-10,50), lang=lang, voice=voice)
             Clock.future(calc_dur_voice(voice_txt), lambda: voice_lpf(0))
 
-################# END #################################################
-
-### PLAYERS METHODS
-import random
+###########################
+###   PLAYERS METHODS   ###
+###########################
 
 @player_method
 def unison(self, unison=2, detune=0.125, analog=40):
@@ -330,7 +343,9 @@ class PChain2(RandomGenerator):
         self.last_value = random.choices(key, prob)[0]
         return self.last_value
 
-# END OF PLAYERS METHODS
+###############################
+###     PATTERN METHODS     ###
+############################### 
 
 @PatternMethod
 def renv(self, nbr=1):
@@ -343,6 +358,7 @@ def renv(self, nbr=1):
     return PGroup(sorted_chord)
 
 def lost(total=0):
+    ''' Print the part for live show'''
     global lost_played
     global lost_list
     if total==0:
@@ -354,17 +370,23 @@ def lost(total=0):
         lost_played=lost_list[:]
         print(lost_played)
 
+###########################
+###   Useful FUNCTIONS  ###
+###########################
+
 def binary(number):
     """return a list converted to binary from a number"""
     binlist = [int(i) for i in str(bin(number)[2:])]
     return binlist
 
 def duree():
+    ''' print the duration of the show from init() to now '''
     global time_init
     duree = time.time()- time_init
     print("Durée de la tentative de Crash :", time.strftime('%H:%M:%S', time.gmtime(duree)))
 
 def desynchro():
+    ''' Generate a random bpm var, need ctrl+v '''
     clip.copy(random_bpm())
 
 def PTime():
@@ -376,7 +398,12 @@ def PTimebin():
     return binary(int(Clock.get_time_at_beat(int(Clock.now()))))
 
 def lininf(start=0, finish=1, time=32):
+    ''' linvar from start to finish but stay at finish after time '''
     return linvar([start,finish],[time,inf], start=now)
+
+def expinf(start=0, finish=1, time=32):
+    ''' expvar from start to finish but stay at finish after time '''
+    return expvar([start,finish],[time,inf], start=now)    
 
 def PDrum(style=None, pat='', listen=False, khsor='', duree=1/2, spl = 0, charPlayer="d") :
     ''' Generate a drum pattern style '''
@@ -493,10 +520,11 @@ class PLog(RandomGenerator):
             return int(round(random.lognormvariate(self.mean, self.deviation)))
 
 def print_video():
+    ''' copy to the clipboard the video line '''
     clip.copy("v1 >> video(vid1=0, vid2=0, vid1rate=1, vid2rate=1, vid1kal=0, vid2kal=0, vid1glitch=0, vid2glitch=0, vidblend=0, vidmix=0, vid1index=0, vid2index=0)")
 
 def print_synth(synth=""):
-    ### Show the name and the args of a custom synth
+    ''' Show the name and the args of a synth '''
     path = os.path.realpath(FOXDOT_ROOT + "/osc/scsyndef/")
     if synth == "":
         dir_list = os.listdir(path)
@@ -516,7 +544,7 @@ def print_synth(synth=""):
         print(str(synthname[0]), " : ", str(synthargs[0]))
 
 def print_fx(fx=""):
-    ### Show the name and the args of a custom synth
+    ''' Show the name and the args of a fx '''
     path = os.path.realpath(FOXDOT_ROOT + "/osc/sceffects/")
     if fx == "":
         dir_list = os.listdir(path)
@@ -536,7 +564,7 @@ def print_fx(fx=""):
         print(str(fxname[0]), " : ", str(fxargs[0]))
 
 def print_sample(sample=""):
-    # print description of samples or find the corresponding letter
+    ''' print description of samples or find the corresponding letter '''
     if sample=="":
         print("")
         for k, v in sorted(sample_description.items(), key= lambda x: x[0].casefold()):
@@ -552,6 +580,7 @@ def print_sample(sample=""):
                     print(f'{key}: {value}')
 
 def print_loops(loop=""):
+    ''' print all available loops samples '''
     if loop=="":
         print(loops)
     else:
@@ -645,18 +674,18 @@ def clone(self, player):
 
 @PatternMethod
 def add(self, value):
+    ''' pattern method add, eg:  s1.sometimes("degree.add",2) '''
     return self + value    
 
 @PatternMethod
 def mul(self, value):
+    ''' pattern method mul, eg: d1.often("rate.mul", -1) '''
     return self * value   
 
-##################################
-#### Test synth method ###########
-
 class SynthIterator:
+    ''' a synth iterator class to use with test_synth '''
     def __init__(self):
-        self.notSynth = ["loop", "stretch", "play1", "play2", "audioin", "video", "gsynth", "vrender", "breakcore", "splitter"]
+        self.notSynth = ["loop", "stretch", "play1", "play2", "audioin", "video", "gsynth", "vrender", "breakcore", "splitter", "splaffer"]
         self.synthList = [i for i in sorted(SynthDefs) if i not in self.notSynth]
         self.idx = 0
     def __iter__(self):
@@ -688,9 +717,7 @@ def test_synth(self):
         print(actualSynth)
         self.synthdef = actualSynth
 
-##############################
-########## Drop ##############
-
+import random
 def drop(playTime=15, dropTime=1, nbloop=8):
     """ Drop the amplify to 0 for random players.
         ex : drop(6,2,4) => amplify=0 for random playing players at the 2 last beats of 8, 4 times
@@ -706,11 +733,11 @@ def drop(playTime=15, dropTime=1, nbloop=8):
                 print("Final Drop !!!")
             else:
                 rndPlayerIndex = random.sample(range(0,len(clkPly)), random.randint(1,len(clkPly)-1))
+                print(f"Drop loop left : {nbloop}")
             if rndPlayerIndex:
                 for i in rndPlayerIndex:
                     clkPly[i].amplify = var([1,0],[playTime, dropTime])
         nbloop -= 1
-        print(f"Drop loop left : {nbloop}")
         Clock.future(totalTime, drop, args=(playTime, dropTime, nbloop))
     else:
         for p in Clock.playing:
@@ -777,21 +804,6 @@ def PMorse(text, point=1/4, tiret=3/4):
     morse[-1] += rest(2*point)
     return morse
 
-
-class voice_count():
-    def __init__(self):
-        self.loop = True
-    def stop(self):
-        if self.loop:
-            self.loop = False
-        else:
-            self.loop = True
-    def start(self):
-        Voice(str(random.randint(0,1000)), voice=2)
-        if self.loop:
-            nextBar(Clock.future(8, lambda: self.start()))
-
-voicecount = voice_count()
 
 #### Convert sample
 def convert(note, scale=Scale.default):

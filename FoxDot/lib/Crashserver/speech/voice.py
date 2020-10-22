@@ -29,7 +29,7 @@ class Voice(Thread):
 		Foxdot implantation
 		"""
 
-	def __init__(self, text="", rate=0.5, amp=1.0, voix=0, lang=""):
+	def __init__(self, text="", rate=100, amp=1.0, lang="fr", voice=1, pitch=80, octave=0, gap=0, record = ""):
 		Thread.__init__(self)
 		pythoncom.CoInitialize()
 		self.voice = comtypes.client.CreateObject('Sapi.SpVoice')
