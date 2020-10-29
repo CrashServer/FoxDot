@@ -31,3 +31,6 @@ pip3 install pyperclip pyfiglet pywin32 comtypes
 # for fx and multi output 
   # change in ServerManager, self.num_output_busses to 4 (or more), line 143 & 202
   # in the foxdot quark, change ouput -> 4 (or more)
+  
+### quarks required
+Miscellenaneous_lib
