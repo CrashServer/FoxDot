@@ -519,6 +519,48 @@ class PLog(RandomGenerator):
         elif isinstance(self.mean, int):
             return int(round(random.lognormvariate(self.mean, self.deviation)))
 
+class PCoin(RandomGenerator):
+    ''' Choose between 2 values with probability, eg : PCoin(0.25,2,0.2)'''
+    def __init__(self, low=0, high=1, proba=0.5, **kwargs):
+        RandomGenerator.__init__(self, **kwargs)
+        self.init_random(**kwargs)
+        self.low = low
+        self.high = high
+        self.proba = proba
+        if self.proba > 1:
+            self.proba /= 100
+    def func(self, index):
+        return random.choices([self.low, self.high], [1-self.proba, self.proba])[0]
+        
+class PChar(RandomGenerator):
+    ''' Generate characters randomly, PChar(case, alpha) 
+        case = 0 , only lowercase 
+        case = 1 , only uppercase
+        case = 2 , lower case and uppercase
+        alpha = 0, only alpha 
+        alpha = 1, only nonalpha
+        alpha = 2, alpha + nonalpha'''
+    def __init__(self, case=2, alpha=2, **kwargs):
+        RandomGenerator.__init__(self, **kwargs)
+        self.init_random(**kwargs)
+        self.case = case
+        self.alpha = alpha
+    def func(self, index):
+        if self.alpha == 0:
+            charList = alpha
+        if self.alpha == 1:
+            charList = ''.join([x for x in nonalpha.keys()])
+        else:
+            charList = ''.join([x for x in nonalpha.keys()]) + alpha    
+        if self.case == 0:
+            char = random.choice(charList)
+        elif self.case == 1:
+            char = random.choice(charList).upper()
+        else:
+            char = random.choice([random.choice(charList), random.choice(charList).upper()])
+        return char
+
+
 def print_video():
     ''' copy to the clipboard the video line '''
     clip.copy("v1 >> video(vid1=0, vid2=0, vid1rate=1, vid2rate=1, vid1kal=0, vid2kal=0, vid1glitch=0, vid2glitch=0, vidblend=0, vidmix=0, vid1index=0, vid2index=0)")
