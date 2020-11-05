@@ -1,5 +1,5 @@
 SynthDef.new(\bell,
-{|amp=1, sus=1, pan=0, freq=0, vib=0,  fmod=0, rate=1, bus=0, lag = 10, blur=1, beat_dur=1, atk=0.01, decay=0.01, rel=0.01, peak=1, level=0.8, wide=0.0, input, s1=1, s2=1, s3=1|
+{|amp=1, sus=1, pan=0, freq=0, vib=0,  fmod=0, rate=1, bus=0, lag = 10, blur=1, beat_dur=1, atk=0.01, decay=0.01, rel=0.01, peak=1, level=0.8, wide=0.0, input, s1=1, s2=0, s3=0|
 
 var osc, env, sig1, sig2, sig3;
 env=EnvGen.ar(Env.perc(attackTime: atk,releaseTime: sus,level: amp,curve: 'lin'), doneAction: 0);
