@@ -78,6 +78,17 @@ fx.add("osc = LPF.ar(osc, fdistfreq)")
 fx.add("osc = (osc * 2 * fdist).tanh")
 fx.save()
 
+fx = FxList.new("fdistc", "fdistc", {"fdistc":0, "fdistcfreq1":1600,"fdistcfreq2":1600,"fdistcfreq3":1600,"fdistcfreq4":1600, "fdistcm1": 1.1, "fdistcm2": 1.1, "fdistcm3": 1.4, "fdistcm4": 2, "fdistcq1": 1, "fdistcq2": 1, "fdistcq3":1, "fdistcq4":1}, order=2)
+fx.add("osc = RLPF.ar(osc, fdistcfreq1, fdistcq1)")
+fx.add("osc = (osc * fdistcm1 * fdistc).tanh")
+fx.add("osc = RLPF.ar(osc, fdistcfreq2, fdistcq2)")
+fx.add("osc = (osc * fdistcm2 * fdistc).tanh")
+fx.add("osc = RLPF.ar(osc, fdistcfreq3, fdistcq3)")
+fx.add("osc = (osc * fdistcm3 * fdistc).tanh")
+fx.add("osc = RLPF.ar(osc, fdistcfreq4, fdistcq4)")
+fx.add("osc = (osc * fdistcm4 * fdistc).tanh")
+fx.save()
+
 # #based on Derek Kwan chorus
 # fx = FxList.new("chorus", "chorus", {"chorus":0, "chorusmix":1,  "chorusrate":1, "chorusmax":0.25, "chorusmin": 0.025}, order=2)
 # fx.add_var("lfos")

@@ -23,6 +23,9 @@ bnoise.add()
 brown = FileSynthDef("brown")
 brown.add()
 
+bell = FileSynthDef("bellmod")
+bell.add()
+
 click = FileSynthDef("click")
 click.add()
 
@@ -41,6 +44,9 @@ dopple.add()
 dustV = FileSynthDef("dustV")
 dustV.add()
 
+ebass = FileSynthDef("bassguitar")
+ebass.add()
+
 eeri = FileSynthDef("eeri")
 eeri.add()
 
@@ -49,6 +55,9 @@ ews.add()
 
 faim = FileSynthDef("faim2")
 faim.add()
+
+fbass = FileSynthDef("fbass")
+fbass.add()
 
 four = FileSynthDef("four")
 four.add()
@@ -115,6 +124,9 @@ sine.add()
 
 sos = FileSynthDef("sos")
 sos.add()
+
+subbass = FileSynthDef("subbass")
+subbass.add()
 
 total = FileSynthDef("total")
 total.add()

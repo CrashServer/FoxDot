@@ -5,7 +5,7 @@ SynthDef.new(\ssaw,
 		freq = [freq, freq+fmod] * Line.ar(Rand(0.5,1.5),1,0.02);
 		freq=(freq / 2);
 		amp=(amp * 0.4);
-		
+
 		detuneCurve = { |x|
 		(10028.7312891634*x.pow(11)) -
 		(50818.8652045924*x.pow(10)) +
@@ -20,11 +20,11 @@ SynthDef.new(\ssaw,
 		(0.6717417634*x) +
 		0.0030115596
 		};
-		
+
 		centerGain = { |x| (-0.55366 * x) + 0.99785 };
 		sideGain = { |x| (-0.73764 * x.pow(2)) + (1.2841 * x) + 0.044372 };
 		center = LFSaw.ar(freq, Rand());
-		
+
 		freqs = [
 		(freq - (freq*(detuneCurve.(sawtune))*0.11002313)),
 		(freq - (freq*(detuneCurve.(sawtune))*0.06288439)),
@@ -36,13 +36,13 @@ SynthDef.new(\ssaw,
 		side = Mix.fill(6, { |n|
 			SelectX.ar(sawtype, [VarSaw.ar(freqs[n], Rand(0, 2)),LFSaw.ar(freqs[n], Rand(0, 2))], 1);
 	});
-		
-		
+
+
 		osc = (center * centerGain.(sawmix)) + (side * sideGain.(sawmix));
 		osc = HPF.ar(osc, freq);
-		
+
 		env=EnvGen.ar(Env([0,1,0.8,0.8,0], [0.02, 0.01, sus/2, sus/2]), doneAction: 0);
 		osc=(osc * env);
-		osc = Mix(osc) * 1/8;
+		osc = Mix(osc) * 1/4;
 		osc = Pan2.ar(osc * amp, pan);
 		ReplaceOut.ar(bus, osc)}).add;
