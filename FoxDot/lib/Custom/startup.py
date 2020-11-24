@@ -13,6 +13,7 @@ from .Crashserver.crash_conf import *
 try:
     import pyperclip as clip # copy to clipboard
     from pyfiglet import figlet_format, FigletFont # ASCII GENERATOR
+    cool_ascii = [1,6,8,11,13,15,17,18,19,21,22,24,26,30,31,32,33,34,35,37,38,43,44,45,46,47,48,50,59,62,64,65,68,69,77,79,81,82,83,84,85,88,89,96,98,103,104,105,107,111,113,114,117,119,123,124,131,135,143,150,151,152,159,187,190,193,19,201,203,217,225,227,230,240,243,244,245,251,273,275,280,308,325,329,347,363,385,410]
     fig_font = FigletFont()
     fig_fonts_list = fig_font.getFonts()
     fig_skip = ['fbr12___', 'mshebrew210', 'term', 'runic', 'pyramid', 'eftifont', 'DANC4', 'dietcola']
@@ -168,10 +169,12 @@ def calc_dur_voice(phrase=""):
     except:
         return 8
 
-def ascii_gen(text="", font="standard"):
+def ascii_gen(text="", font=""):
     ''' Generate ASCII art from text '''
+    if font == "":
+        font = randint(0,len(cool_ascii))
     if type(font) != str:
-        font = fig_fonts_list[int(font)]
+        font = fig_fonts_list[cool_ascii[int(font)]]
     if text != None:
         clip.copy(figlet_format(text, font=font))
 
@@ -205,7 +208,7 @@ def connect(video=video):
         vi >> video(vid1=0, vid2=0, vid1rate=1, vid2rate=1, vid1kal=0, vid2kal=0, vid1glitch=0, vid2glitch=0, vidblend=0, vidmix=0, vid1index=0, vid2index=0)
         video_line = "vi >> video(vid1=0, vid2=0, vid1rate=1, vid2rate=1, vid1kal=0, vid2kal=0, vid1glitch=0, vid2glitch=0, vidblend=0, vidmix=0, vid1index=0, vid2index=0)"
     i3 >> sos(dur=8, lpf=linvar([60,4800],[tmps*1.5, tmps*3], start=now), hpf=expvar([0,500],[tmps*6, tmps*2]), amplify=0.5)
-    clip.copy(figlet_format(attack_data["connect"][0].strip()) + "\n" + attack_data["connect"][2].strip() + "\n" + video_line)
+    clip.copy(figlet_format(attack_data["connect"][0].strip(), font=fig_fonts_list[cool_ascii[51]]) + "\n" + attack_data["connect"][2].strip() + "\n" + video_line)
 
 
 def attack(part="", active_voice=1):
@@ -244,7 +247,7 @@ def attack(part="", active_voice=1):
 
     ### Select Part and generate Ascii text
     else:
-        clip.copy((figlet_format(blase) if blase != None else "") + "\n" + prompt + define_virus()+ "\n" + (code_txt if code_txt is not None else ""))
+        clip.copy((figlet_format(blase, font=fig_fonts_list[choice(cool_ascii)]) if blase != None else "") + "\n" + prompt + define_virus()+ "\n" + (code_txt if code_txt is not None else ""))
 
     ### Generate Voice
     if voice_txt != None:   ### Voice generator
