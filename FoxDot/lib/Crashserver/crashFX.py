@@ -117,7 +117,7 @@ fx.save()
 
 
 # dub delay based on «Dub Echo» by Bjorn Westergard [sccode https://sccode.org/1-h]
-fx = FxList.new('dubd', 'dubdelay', {'dubd': 0, 'dublen': 0.1, 'dubwidth': 0.12, 'dubfeed':0.8}, order=2)
+fx = FxList.new('dubd', 'dubdelay', {'dubd': 0, 'dublen': 0.1, 'dubwidth': 0.12, 'dubfeed': 0.8}, order=2)
 fx.add_var("dry")
 fx.add("dry = osc")
 fx.add("osc = osc + Fb({ |feedback| var left, right; var magic = LeakDC.ar(feedback*dubfeed + osc); magic = HPF.ar(magic, 400); magic = LPF.ar(magic, 5000); magic = magic.tanh; #left, right = magic; magic = [DelayC.ar(left, 1, LFNoise2.ar(12).range(0,dubwidth)), DelayC.ar(right, 1, LFNoise2.ar(12).range(dubwidth,0))].reverse;	},dublen)")
