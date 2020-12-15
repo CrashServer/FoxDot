@@ -89,16 +89,6 @@ fx.add("osc = RLPF.ar(osc, fdistcfreq4, fdistcq4)")
 fx.add("osc = (osc * fdistcm4 * fdistc).tanh")
 fx.save()
 
-# #based on Derek Kwan chorus
-# fx = FxList.new("chorus", "chorus", {"chorus":0, "chorusmix":1,  "chorusrate":1, "chorusmax":0.25, "chorusmin": 0.025}, order=2)
-# fx.add_var("lfos")
-# fx.add_var("voices=8")
-# fx.add("lfos = Array.fill(8, {SinOsc.ar(chorusrate * rrand(0.95, 1.05), rrand(0.0, 1.0), (chorusmax * 0.5) - chorusmin,  (chorusmax * 0.5) + chorusmin)})")
-# fx.add("voices = DelayC.ar(osc, chorusmax,lfos)")
-# fx.add("voices = Mix.ar(voices)")
-# fx.add("osc = LinXFade2.ar(voices + osc, osc, 1-chorusmix)")
-# fx.save()
-
 #based on Derek Kwan chorus
 fx = FxList.new("chorus", "chorus", {"chorus":0, "chorusrate":0.5}, order=2)
 fx.add_var("lfos")
@@ -115,7 +105,6 @@ fx.add("osc = DelayC.ar(osc, (maxDelayTime * 2), lfos).sum")
 fx.add("osc = Mix(osc)")
 fx.save()
 
-
 # dub delay based on «Dub Echo» by Bjorn Westergard [sccode https://sccode.org/1-h]
 fx = FxList.new('dubd', 'dubdelay', {'dubd': 0, 'dublen': 0.1, 'dubwidth': 0.12, 'dubfeed': 0.8}, order=2)
 fx.add_var("dry")
@@ -129,8 +118,8 @@ fx.add_var("dis")
 fx.add_var("osc_base")
 fx.add("osc_base = osc")
 fx.add("dis = [1,1.01,2,2.02,4.5,6.01,7.501]")
-fx.add("dis = dis ++ (dis*12)")
-fx.add("osc = ((osc * dis*octafuz).sum.distort*4)")
+fx.add("dis = dis ++ (dis*6)")
+fx.add("osc = ((osc * dis*octafuz).sum.distort)")
 fx.add("osc = (osc * 1/16)!2")
 fx.add("osc = LinXFade2.ar(osc_base, osc, octamix)")
 fx.save()
