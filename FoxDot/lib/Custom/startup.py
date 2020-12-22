@@ -522,6 +522,24 @@ class PLog(RandomGenerator):
         elif isinstance(self.mean, int):
             return int(round(random.lognormvariate(self.mean, self.deviation)))
 
+class PTrir(RandomGenerator):
+    ''' Returns random floating or int point values using triangular distribution '''
+    def __init__(self, low=0, high=8, mode=None, **kwargs):
+        RandomGenerator.__init__(self, **kwargs)
+        self.args = (low, high)
+        self.low = low
+        self.high = high
+        if mode is None:
+            self.mode = (self.high-self.low) / 2
+        else:
+            self.mode = mode 
+        self.init_random(**kwargs)
+    def func(self, index):
+        if isinstance(self.low, float) or isinstance(self.high, float):
+            return random.triangular(self.low, self.high, self.mode)
+        else:
+            return int(round(random.triangular(self.low, self.high, self.mode)))
+
 class PCoin(RandomGenerator):
     ''' Choose between 2 values with probability, eg : PCoin(0.25,2,0.2)'''
     def __init__(self, low=0, high=1, proba=0.5, **kwargs):
