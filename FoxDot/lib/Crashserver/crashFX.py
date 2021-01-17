@@ -76,6 +76,7 @@ fx.add("osc = LPF.ar(osc, fdistfreq)")
 fx.add("osc = (osc * 1.4 * fdist).tanh")
 fx.add("osc = LPF.ar(osc, fdistfreq)")
 fx.add("osc = (osc * 2 * fdist).tanh")
+fx.add("osc = osc*0.2")
 fx.save()
 
 fx = FxList.new("fdistc", "fdistc", {"fdistc":0, "fdistcfreq1":1600,"fdistcfreq2":1600,"fdistcfreq3":1600,"fdistcfreq4":1600, "fdistcm1": 1.1, "fdistcm2": 1.1, "fdistcm3": 1.4, "fdistcm4": 2, "fdistcq1": 1, "fdistcq2": 1, "fdistcq3":1, "fdistcq4":1}, order=2)
@@ -320,6 +321,12 @@ fx.add("reset = Onsets.kr(FFT(LocalBuf(1024), osc), t_reset)")
 fx.add("wet = ~stutter.(osc, reset, stutlen)")
 fx.add("osc = SelectX.ar(stut, [dry, wet], wrap:1)")
 fx.save()
+
+fx = FxList.new('vol','volume', {'vol': 1}, order=2)
+fx.doc("Volume")
+fx.add("osc = osc*vol")
+fx.save()
+
 
 # Fx LOOP
 fx = FxList.new('fx1','fxout', {'fx1': 0, 'lpfx1':22000, 'hpfx1':0}, order=2)

@@ -273,13 +273,13 @@ def PBern(size=16, ratio=0.5):
 
 def PBeat(string, start=0, dur=0.5):
     """ Returns a Pattern of durations based on an input string where
-        non-whitespace denote a pulse e.g.
+        non-whitespace or non-point denote a pulse e.g.
         ::
 
             >>> PBeat("x xxx x")
             P[1, 0.5, 0.5, 1, 0.5]
     """
-    data = [int(char != " ") for char in list(string)]
+    data = [int(char != " " and char != ".") for char in list(string)]
     pattern = Pattern(PulsesToDurations( data ))
     if start != 0:
         pattern = pattern.rotate(int(start))
