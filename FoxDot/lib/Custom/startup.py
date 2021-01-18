@@ -261,14 +261,15 @@ def attack(part="", active_voice=1):
 ###########################
 
 @player_method
-def unison(self, unison=2, detune=0.125, analog=40):
+def unison(self, unison=2, detune=0.125, analog=0):
     """ Like spread(), but can specify number of voices(unison)
     Sets pan to (-1,-0.5,..,0.5,1) and pshift to (-0.125,-0.0625,...,0.0625,0.125)
     If unison is odd, an unchanged voice is added in the center
     Eg : p1.unison(4, 0.5) => pshift=(-0.5,-0.25,0.25,0.5), pan=(-1.0,-0.5,0.5,1.0)
          p1.unison(5, 0.8) => pshift=(-0.8,-0.4,0,0.4,0.8), pan=(-1.0,-0.5,0,0.5,1.0)
+         p1.unison(5,(0.3,2)) => pshift=(-2.0,-0.3,0,0.3,2.0), pan=(-1,-0.5,0,0.5,1)
     """
-    if unison != 0:
+    if unison > 1:
         pan=[]
         pshift=[]
         uni = int(unison if unison%2==0 else unison-1)
@@ -276,8 +277,12 @@ def unison(self, unison=2, detune=0.125, analog=40):
             pan.append(2*i/uni)
             pan.insert(0, -2*i/uni)
         for i in range(1, int(uni/2)+1):
-            pshift.append(detune*(i/(uni/2))+PWhite(0,detune*(analog/100)))
-            pshift.insert(0,detune*-(i/(uni/2))+PWhite(0,-1*detune*(analog/100)))
+            if type(detune)==tuple:
+                pshift.append(detune[i-1]+PWhite(0,detune[i-1]*(analog/100)))
+                pshift.insert(0,detune[i-1]*-1+PWhite(0,-1*detune[i-1]*(analog/100)))
+            else:   
+                pshift.append(detune*(i/(uni/2))+PWhite(0,detune*(analog/100)))
+                pshift.insert(0,detune*-(i/(uni/2))+PWhite(0,-1*detune*(analog/100)))
         if unison%2!=0 and unison > 1:
             pan.insert(int(len(pan)/2), 0)
             pshift.insert(int(len(pan)/2), 0)
